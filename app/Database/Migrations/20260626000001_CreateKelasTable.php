@@ -18,6 +18,6 @@ class CreateKelasTable extends Migration
 
     public function down()
     {
-        //
+        $this->forge->dropTable('kelas', true);
     }
 }
