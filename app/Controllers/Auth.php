@@ -32,7 +32,7 @@ class Auth extends BaseController
                 'id'      => $data['id'],
                 'role'    => $data['role'],
                 'name'  => $data['name'],
-                'foto'  => $data['foto'] ? base_url('upload/profile/' . $data['foto']) : base_url('upload/profile/default.png'),
+                'foto' => !empty($data['foto']) ? base_url('upload/profile/' . $data['foto']) : base_url('upload/profile/default.png'),
                 'ref_id'  => $data['ref_id'], // ID Ustadz atau Wali
                 'logged_in' => TRUE
             ]);
