@@ -8,15 +8,7 @@ class Dashboard extends BaseController
 {
     public function index()
     {
-        $role = session()->get('role');
-
-        // Redirect ke controller spesifik per role
-        if ($role == 'admin') {
-            return view('admin/dashboard');
-        } elseif ($role == 'ustadz') {
-            return redirect()->to('/ustadz/dashboard');
-        } else {
-            return redirect()->to('/wali/dashboard');
-        }
+        // Ambil data statistik khusus admin jika diperlukan di sini
+        return view('admin/dashboard');
     }
 }

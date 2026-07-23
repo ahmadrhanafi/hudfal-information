@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 
-class Santri extends BaseController
+class Hafalan extends BaseController
 {
     public function index()
     {
@@ -12,9 +12,9 @@ class Santri extends BaseController
 
         // Redirect ke controller spesifik per role
         if ($role == 'admin') {
-            return view('admin/data_santri');
+            return view('admin/data_hafalan');
         } elseif ($role == 'ustadz') {
-            return redirect()->to('/ustadz/data_santri');
+            return redirect()->to('/ustadz/data_hafalan');
         } else {
             return redirect()->to('/login');
         }

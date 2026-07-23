@@ -7,59 +7,116 @@
     <title>Hudfal Information | <?= $title ?? 'Dashboard' ?></title>
     <link rel="shortcut icon" href="<?= base_url('logo_hudfal.png') ?>" type="image/png">
 
+    <!-- Bootstrap 5.3 & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --primary-bg: #091413;
-            --text-muted: #8BAE66;
+            --sidebar-bg: #0b1917;
+            --main-bg: #f4f7f6;
+            --accent-green: #8BAE66;
+            --dark-card: #ffffff;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #D9E9CF;
+            background-color: var(--main-bg);
+            color: #334155;
+            overflow-x: hidden;
         }
 
-        /* Sidebar Styling */
+        /* --- Sidebar Styling Profesional --- */
         .sidebar {
-            background: var(--primary-bg);
+            background: var(--sidebar-bg);
             min-height: 100vh;
-            width: 280px;
-            transition: 0.3s;
+            width: 270px;
+            transition: all 0.3s ease-in-out;
+            z-index: 1050;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar .logo-box {
+            padding: 24px 20px 16px 20px;
         }
 
         .nav-link {
-            color: var(--text-muted) !important;
-            padding: 12px 20px;
-            font-size: 0.95rem;
+            color: #94a3b8 !important;
+            padding: 12px 18px;
+            font-size: 0.9rem;
+            font-weight: 500;
             display: flex;
             align-items: center;
+            border-radius: 10px;
+            margin: 4px 12px;
+            transition: all 0.2s ease;
         }
 
-        .nav-link:hover,
+        /* --- Pengaturan Ikon FontAwesome agar Lebih Mantap --- */
+        .nav-link i {
+            font-size: 1.1rem;
+            width: 28px;
+            /* Memberikan ruang tetap agar teks menu sejajar rapi */
+            text-align: center;
+            margin-right: 12px;
+            /* Jarak pas antara ikon dan teks */
+            transition: transform 0.2s ease, color 0.2s ease;
+            color: #8BAE66;
+            /* Memberikan warna aksen hijau khas pada ikon */
+        }
+
+        .nav-link:hover {
+            background: rgba(139, 174, 102, 0.1);
+            color: var(--accent-green) !important;
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.15) translateX(2px);
+            /* Efek membesar sedikit saat di-hover */
+            color: #ffffff;
+        }
+
         .nav-link.active {
-            background: #8BAE66;
-            color: #fff !important;
-            border-radius: 8px;
-            margin: 0 10px;
+            background: var(--accent-green);
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(139, 174, 102, 0.3);
+        }
+
+        /* Ikon pada menu yang sedang aktif otomatis berubah jadi putih */
+        .nav-link.active i {
+            color: #ffffff !important;
         }
 
         .custom-divider {
-            width: 80%;
-            height: 3px;
-            background: #8BAE66;
-            margin: 3px auto;
+            width: 75%;
+            height: 2px;
+            background: rgba(139, 174, 102, 0.3);
+            margin: 12px auto;
             border-radius: 2px;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* --- Navbar Atas (Header) --- */
+        .navbar-main {
+            background: #ffffff !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            height: 70px;
+            padding: 0 24px;
+        }
+
+        /* --- Main Content Area --- */
+        main {
+            padding: 28px;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Responsive Mobile Handling */
+        @media (max-width: 992px) {
             .sidebar {
                 position: fixed;
-                left: -280px;
-                z-index: 1000;
+                left: -270px;
             }
 
             .sidebar.active {
@@ -71,17 +128,22 @@
 
 <body>
     <div class="d-flex">
+        <!-- Sidebar -->
         <?= $this->include('layout/sidebar') ?>
 
-        <div class="flex-grow-1">
+        <!-- Content Wrapper -->
+        <div class="flex-grow-1 d-flex flex-column">
+            <!-- Navbar / Header -->
             <?= $this->include('layout/navbar') ?>
 
-            <main class="p-4">
+            <!-- Page Main Content -->
+            <main>
                 <?= $this->renderSection('content') ?>
             </main>
         </div>
     </div>
 
+    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

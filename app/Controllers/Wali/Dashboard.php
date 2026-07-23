@@ -10,7 +10,7 @@ class Dashboard extends BaseController
     {
         $santriModel = new \App\Models\SantriModel();
 
-        // Ambil data santri yang memiliki id_wali sama dengan session
+        // Ambil data anak berdasarkan id_wali dari session
         $data['anak'] = $santriModel->where('id_wali', session()->get('ref_id'))->findAll();
 
         return view('wali/dashboard', $data);

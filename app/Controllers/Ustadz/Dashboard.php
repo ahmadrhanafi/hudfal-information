@@ -14,9 +14,9 @@ class Dashboard extends BaseController
         // Ambil info ustadz dari session
         $ustadz = $ustadzModel->find(session()->get('ref_id'));
 
-        // Ambil data santri berdasarkan ID Kelas yang diajar
-        $data['santri'] = $santriModel->where('id_kelas', $ustadz['id_kelas_diampu'])->findAll();
+        // Kirim data ringkasan ke view dashboard ustadz
+        $data['santri'] = $ustadz ? $santriModel->where('id_kelas', $ustadz['id_kelas_diampu'])->findAll() : [];
 
-        return view('ustadz/santri/index', $data);
+        return view('ustadz/dashboard', $data); // <-- Arahkan ke view dashboard, bukan view santri!
     }
 }

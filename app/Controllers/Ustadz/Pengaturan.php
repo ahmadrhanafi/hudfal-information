@@ -4,10 +4,10 @@ namespace App\Controllers\Ustadz;
 
 use App\Controllers\BaseController;
 
-class Hafalan extends BaseController
+class Pengaturan extends BaseController
 {
     public function index()
     {
-        return view('ustadz/data_hafalan');
+        return view('ustadz/pengaturan');
     }
 }

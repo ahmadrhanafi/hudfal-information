@@ -4,10 +4,10 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 
-class Administrasi extends BaseController
+class Pengaturan extends BaseController
 {
     public function index()
     {
-        return view('admin/administrasi');
+        return view('admin/pengaturan');
     }
 }
