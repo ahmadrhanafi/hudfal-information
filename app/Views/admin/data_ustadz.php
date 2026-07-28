@@ -27,15 +27,15 @@ $kelas = $kelas ?? [];
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Manajemen Data Ustadz</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola informasi pengajar, penugasan kelas, dan data ustadz di lingkungan pesantren.</p>
+            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Manajemen Data Pengajar</h3>
+            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola informasi data pengajar dan penugasan kelas di pesantren.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
                 <i class="fa-solid fa-file-excel text-success me-1"></i> Ekspor Data
             </button>
             <button type="button" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah" style="text-transform: none !important;">
-                <i class="fa-solid fa-plus me-1"></i> Tambah Ustadz
+                <i class="fa-solid fa-plus me-1"></i> Tambah Pengajar
             </button>
         </div>
     </div>
@@ -44,15 +44,22 @@ $kelas = $kelas ?? [];
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
         <div class="card-body p-3">
             <div class="row g-3 align-items-center">
-                <div class="col-lg-8">
+                <div class="col-lg-6">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light border-0 ps-3 text-muted">
                             <i class="fa-solid fa-search"></i>
                         </span>
-                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2" placeholder="Cari berdasarkan nama ustadz, NIP, atau kelas...">
+                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2" placeholder="Cari berdasarkan nama pengajar, NIP, atau kelas yang diampu...">
                     </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3 col-md-6">
+                    <select id="genderFilter" class="form-select form-select-sm bg-light border-0 py-2">
+                        <option value="semua" selected>Gender: Semua</option>
+                        <option value="l">Laki-laki</option>
+                        <option value="p">Perempuan</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6">
                     <select id="statusFilter" class="form-select form-select-sm bg-light border-0 py-2">
                         <option value="semua" selected>Status: Semua</option>
                         <option value="aktif">Aktif Mengajar</option>
@@ -71,7 +78,7 @@ $kelas = $kelas ?? [];
                     <thead class="bg-light text-muted small text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
                         <tr>
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
-                            <th class="py-3" style="width: 30%;">NIP & Nama Ustadz</th>
+                            <th class="py-3" style="width: 30%;">NIP & Nama Pengajar</th>
                             <th class="py-3" style="width: 15%;">Jenis Kelamin</th>
                             <th class="py-3" style="width: 25%;">Kelas Diampu</th>
                             <th class="py-3" style="width: 25%;">Status</th>
@@ -83,11 +90,13 @@ $kelas = $kelas ?? [];
                             <?php $no = 1;
                             foreach ($guru as $g): ?>
                                 <?php
-                                // Inisial nama buat avatar estetik ala template lu
                                 $words = explode(' ', $g['nama_guru']);
                                 $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
                                 ?>
-                                <tr class="guru-row" data-status="<?= esc($g['status'] ?? 'aktif'); ?>">
+                                <!-- Ubah data-status agar mengambil $g['status_aktif'] -->
+                                <tr class="guru-row"
+                                    data-gender="<?= strtolower($g['jenis_kelamin']); ?>"
+                                    data-status="<?= strtolower($g['status_aktif'] ?? 'aktif'); ?>">
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
@@ -137,18 +146,21 @@ $kelas = $kelas ?? [];
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="5" class="text-center py-4 text-muted">Belum ada data ustadz.</td>
-                            </tr>
                         <?php endif; ?>
+
+                        <!-- BARIS KOSONG JIKA TIDAK DITEMUKAN -->
+                        <tr id="emptyRowUstadz" class="d-none">
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-folder-open me-1"></i> Tidak ada data pengajar yang ditemukan.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
         <!-- Card Footer / Pagination -->
         <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small">Menampilkan total <?= count($guru); ?> data ustadz</span>
+            <span class="text-muted small" id="totalDataTextUstadz">Menampilkan total <?= count($guru); ?> data pengajar</span>
         </div>
     </div>
 
@@ -170,7 +182,7 @@ $kelas = $kelas ?? [];
                         <input type="text" name="nip" class="form-control" placeholder="Contoh: 198501012023..." required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-medium small text-muted">Nama Ustadz</label>
+                        <label class="form-label fw-medium small text-muted">Nama Pengajar</label>
                         <input type="text" name="nama_guru" class="form-control" placeholder="Contoh: Ustadz Ahmad, S.Pd." required>
                     </div>
                     <div class="mb-3">
@@ -204,7 +216,7 @@ $kelas = $kelas ?? [];
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">Edit Data Ustadz</h5>
+                <h5 class="modal-title fw-bold">Edit Data Pengajar</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="formEdit" action="" method="post">
@@ -215,7 +227,7 @@ $kelas = $kelas ?? [];
                         <input type="text" name="nip" id="editNip" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-medium small text-muted">Nama Ustadz</label>
+                        <label class="form-label fw-medium small text-muted">Nama Pengajar</label>
                         <input type="text" name="nama_guru" id="editNamaGuru" class="form-control" required>
                     </div>
                     <div class="mb-3">
@@ -254,38 +266,52 @@ $kelas = $kelas ?? [];
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
+        const genderFilter = document.getElementById('genderFilter');
         const statusFilter = document.getElementById('statusFilter');
-        const tableRows = document.querySelectorAll('#tableBodyUstadz .guru-row');
+        const rows = document.querySelectorAll('#tableBodyUstadz .guru-row');
+        const totalDataText = document.getElementById('totalDataTextUstadz');
+        const emptyRow = document.getElementById('emptyRowUstadz');
 
-        // Fungsi untuk menyaring data tabel
-        function filterTable() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const filterValue = statusFilter.value.toLowerCase();
+        function filterUstadz() {
+            const keyword = searchInput ? searchInput.value.toLowerCase() : '';
+            const genderVal = genderFilter ? genderFilter.value.toLowerCase() : 'semua';
+            const statusVal = statusFilter ? statusFilter.value.toLowerCase() : 'semua';
 
-            tableRows.forEach(row => {
+            let visibleCount = 0;
+
+            rows.forEach(row => {
                 const rowText = row.textContent.toLowerCase();
-                const rowStatus = row.getAttribute('data-status').toLowerCase();
+                const rowGender = row.getAttribute('data-gender');
+                const rowStatus = row.getAttribute('data-status');
 
-                const matchesSearch = rowText.includes(searchTerm);
-                const matchesStatus = (filterValue === 'semua') || (rowStatus === filterValue);
+                const matchesKeyword = rowText.includes(keyword);
+                const matchesGender = (genderVal === "" || genderVal === "semua" || rowGender === genderVal);
+                const matchesStatus = (statusVal === "" || statusVal === "semua" || rowStatus === statusVal);
 
-                if (matchesSearch && matchesStatus) {
+                if (matchesKeyword && matchesGender && matchesStatus) {
                     row.style.display = '';
+                    visibleCount++;
                 } else {
                     row.style.display = 'none';
                 }
             });
+
+            if (emptyRow) {
+                if (visibleCount === 0) {
+                    emptyRow.classList.remove('d-none');
+                } else {
+                    emptyRow.classList.add('d-none');
+                }
+            }
+
+            if (totalDataText) {
+                totalDataText.textContent = `Menampilkan total ${visibleCount} data pengajar`;
+            }
         }
 
-        // Jalankan fungsi saat user mengetik di kolom pencarian
-        if (searchInput) {
-            searchInput.addEventListener('keyup', filterTable);
-        }
-
-        // Jalankan fungsi saat user mengubah pilihan dropdown
-        if (statusFilter) {
-            statusFilter.addEventListener('change', filterTable);
-        }
+        if (searchInput) searchInput.addEventListener('keyup', filterUstadz);
+        if (genderFilter) genderFilter.addEventListener('change', filterUstadz);
+        if (statusFilter) statusFilter.addEventListener('change', filterUstadz);
     });
 
     // --JavaScript untuk Lempar Data ke Modal Edit--

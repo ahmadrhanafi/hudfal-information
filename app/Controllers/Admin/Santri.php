@@ -22,32 +22,23 @@ class Santri extends BaseController
 
     public function index()
     {
-        $role = session()->get('role');
+        $keyword       = $this->request->getGet('keyword');
+        $selectedKelas = $this->request->getGet('id_kelas');
+        $selectedStatus = $this->request->getGet('status');
 
-        // Ambil parameter dari URL (GET)
-        $keyword = $this->request->getGet('keyword');
-        $idKelas = $this->request->getGet('id_kelas');
-        $status  = $this->request->getGet('status');
-
-        $santri = $this->santriModel->searchSantri($keyword, $idKelas, $status);
+        $kelasModel = new \App\Models\KelasModel();
 
         $data = [
-            'title'          => 'Manajemen Data Santri',
-            'santri'         => $santri,
-            'kelas'          => $this->kelasModel->findAll(),
-            'wali'           => $this->waliModel->findAll(),
+            'title'          => 'Data Santri',
+            'santri'         => $this->santriModel->searchSantri($keyword, $selectedKelas, $selectedStatus),
+            'kelas'          => $kelasModel->findAll(),
             'keyword'        => $keyword,
-            'selectedKelas'  => $idKelas,
-            'selectedStatus' => $status,
+            'selectedKelas'  => $selectedKelas,
+            'selectedStatus' => $selectedStatus,
+            'role'           => session()->get('role') ?? 'admin'
         ];
 
-        if ($role == 'admin') {
-            return view('admin/data_santri', $data);
-        } elseif ($role == 'ustadz') {
-            return redirect()->to('/ustadz/data_santri');
-        } else {
-            return redirect()->to('/login');
-        }
+        return view('admin/data_santri', $data);
     }
 
     public function store()

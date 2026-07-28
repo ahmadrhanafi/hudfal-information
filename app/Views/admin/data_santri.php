@@ -40,45 +40,42 @@ $wali   = $wali ?? [];
         </div>
     </div>
 
-    <!-- Filter & Search Toolbar Card -->
-    <form action="" method="get">
-        <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
-            <div class="card-body p-3">
-                <div class="row g-3 align-items-center">
-                    <!-- Input Search -->
-                    <div class="col-lg-6">
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text bg-light border-0 ps-3 text-muted">
-                                <i class="fa-solid fa-search"></i>
-                            </span>
-                            <input type="text" name="keyword" value="<?= esc($keyword ?? ''); ?>" class="form-control bg-light border-0 py-2" placeholder="Cari berdasarkan nama santri atau nomor induk...">
-                        </div>
+    <!-- Filter & Search Toolbar Card (Realtime) -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+        <div class="card-body p-3">
+            <div class="row g-3 align-items-center">
+                <!-- Input Search -->
+                <div class="col-lg-6">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-light border-0 ps-3 text-muted">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <input type="text" id="searchKeyword" class="form-control bg-light border-0 py-2" placeholder="Cari berdasarkan nama santri, NIS, atau wali...">
                     </div>
+                </div>
 
-                    <!-- Filter Kelas -->
-                    <div class="col-lg-3 col-md-6">
-                        <select name="id_kelas" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
-                            <option value="">Semua Kelas</option>
-                            <?php foreach ($kelas as $k): ?>
-                                <option value="<?= $k['id']; ?>" <?= (isset($selectedKelas) && $selectedKelas == $k['id']) ? 'selected' : ''; ?>>
-                                    <?= esc($k['nama_kelas']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                <!-- Filter Kelas -->
+                <div class="col-lg-3 col-md-6">
+                    <select id="filterKelas" class="form-select form-select-sm bg-light border-0 py-2">
+                        <option value="">Semua Kelas</option>
+                        <?php foreach ($kelas as $k): ?>
+                            <option value="<?= esc($k['nama_kelas']); ?>"><?= esc($k['nama_kelas']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-                    <div class="col-lg-3 col-md-6">
-                        <select name="status" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
-                            <option value="">Semua Status</option>
-                            <option value="Aktif" <?= (isset($selectedStatus) && $selectedStatus == 'Aktif') ? 'selected' : ''; ?>>Aktif</option>
-                            <option value="Lulus" <?= (isset($selectedStatus) && $selectedStatus == 'Lulus') ? 'selected' : ''; ?>>Lulus</option>
-                            <option value="Keluar" <?= (isset($selectedStatus) && $selectedStatus == 'Keluar') ? 'selected' : ''; ?>>Keluar</option>
-                        </select>
-                    </div>
+                <!-- Filter Status -->
+                <div class="col-lg-3 col-md-6">
+                    <select id="filterStatus" class="form-select form-select-sm bg-light border-0 py-2">
+                        <option value="">Semua Status</option>
+                        <option value="Aktif">Aktif</option>
+                        <option value="Lulus">Lulus</option>
+                        <option value="Keluar">Keluar</option>
+                    </select>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
 
     <!-- Main Table Card -->
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
@@ -95,7 +92,7 @@ $wali   = $wali ?? [];
                             <th class="py-3 text-end pe-4" style="width: 25%;">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tableBodySantri">
                         <?php if (!empty($santri)): ?>
                             <?php $no = 1;
                             foreach ($santri as $s): ?>
@@ -103,7 +100,9 @@ $wali   = $wali ?? [];
                                 $words = explode(' ', $s['nama_santri']);
                                 $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
                                 ?>
-                                <tr>
+                                <tr class="santri-row"
+                                    data-kelas="<?= strtolower($s['nama_kelas'] ?? ''); ?>"
+                                    data-status="<?= strtolower($s['status_aktif'] ?? ''); ?>">
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
@@ -152,17 +151,20 @@ $wali   = $wali ?? [];
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">Belum ada data santri yang tersimpan.</td>
-                            </tr>
                         <?php endif; ?>
+
+                        <!-- BARIS KOSONG JIKA TIDAK DITEMUKAN -->
+                        <tr id="emptyRow" class="d-none">
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-folder-open me-1"></i> Tidak ada data santri yang ditemukan.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
         <!-- Card Footer / Pagination -->
-        <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <div id="totalDataText" class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
             <span class="text-muted small">Menampilkan total <?= count($santri); ?> data santri</span>
         </div>
     </div>
@@ -285,7 +287,6 @@ $wali   = $wali ?? [];
     </div>
 </div>
 
-<!-- JavaScript untuk Lempar Data ke Modal Edit -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Inisialisasi Select2
@@ -321,15 +322,64 @@ $wali   = $wali ?? [];
                 modalEdit.querySelector('#editIdKelas').value = idKelas;
                 modalEdit.querySelector('#editStatus').value = status;
 
-                // Set value untuk Select2 Wali dan trigger change supaya tampilannya ikut berubah
                 const selectWaliEdit = modalEdit.querySelector('#selectWaliEdit');
                 selectWaliEdit.value = idWali;
                 $(selectWaliEdit).trigger('change');
 
-                // PERBAIKAN: Memastikan slash '/' aman dalam pembentukan URL update
                 modalEdit.querySelector('#formEdit').action = '<?= base_url('admin/santri/update'); ?>/' + id;
             });
         }
+    });
+
+    // Pencarian data
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchKeyword');
+        const filterKelas = document.getElementById('filterKelas');
+        const filterStatus = document.getElementById('filterStatus');
+        const rows = document.querySelectorAll('#tableBodySantri .santri-row');
+        const totalDataText = document.getElementById('totalDataText');
+        const emptyRow = document.getElementById('emptyRow'); // Ambil elemen baris kosong
+
+        function filterTable() {
+            const keyword = searchInput.value.toLowerCase();
+            const kelasVal = filterKelas.value.toLowerCase();
+            const statusVal = filterStatus.value.toLowerCase();
+
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                const rowKelas = row.getAttribute('data-kelas');
+                const rowStatus = row.getAttribute('data-status');
+
+                const matchesKeyword = rowText.includes(keyword);
+                const matchesKelas = (kelasVal === "" || rowKelas.includes(kelasVal));
+                const matchesStatus = (statusVal === "" || rowStatus === statusVal);
+
+                if (matchesKeyword && matchesKelas && matchesStatus) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (emptyRow) {
+                if (visibleCount === 0) {
+                    emptyRow.classList.remove('d-none');
+                } else {
+                    emptyRow.classList.add('d-none');
+                }
+            }
+
+            if (totalDataText) {
+                totalDataText.textContent = `Menampilkan total ${visibleCount} data santri`;
+            }
+        }
+
+        if (searchInput) searchInput.addEventListener('keyup', filterTable);
+        if (filterKelas) filterKelas.addEventListener('change', filterTable);
+        if (filterStatus) filterStatus.addEventListener('change', filterTable);
     });
 </script>
 

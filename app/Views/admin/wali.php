@@ -24,22 +24,38 @@
         <?php endif; ?>
     </div>
 
+    <!-- Filter & Search Toolbar Card -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
+        <div class="card-body p-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-lg-12">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-light border-0 ps-3 text-muted">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2" placeholder="Cari berdasarkan nama, nomor hp, atau alamat wali santri...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-hover align-middle">
-            <thead class="table-light">
+            <thead class="bg-light text-muted small text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
                 <tr>
-                    <th class="py-3">#</th>
+                    <th class="py-3">No</th>
                     <th class="py-3">Nama Wali</th>
                     <th class="py-3">No. HP / WhatsApp</th>
                     <th class="py-3">Alamat</th>
                     <th class="py-3 text-center">Aksi</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBodyWali">
                 <?php if (!empty($wali)): ?>
                     <?php $no = 1;
                     foreach ($wali as $w): ?>
-                        <tr>
+                        <tr class="wali-row">
                             <td><?= $no++; ?></td>
                             <td class="fw-semibold text-dark"><?= esc($w['nama_wali']); ?></td>
                             <td><span class="badge bg-light text-dark border"><?= esc($w['no_hp']); ?></span></td>
@@ -190,6 +206,29 @@
 </div>
 
 <script>
+    // Pencarian data
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const tableRows = document.querySelectorAll('#tableBodyWali .wali-row');
+
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                tableRows.forEach(row => {
+                    const rowText = row.textContent.toLowerCase();
+
+                    if (rowText.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+    });
+
+    // Buat buka modal
     const modalEdit = document.getElementById('modalEdit');
     modalEdit.addEventListener('show.bs.modal', function(event) {
         const button = event.relatedTarget;
