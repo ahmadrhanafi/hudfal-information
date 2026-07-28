@@ -55,6 +55,7 @@ class SantriModel extends Model
             $builder->groupStart()
                 ->like('santri.nama_santri', $keyword)
                 ->orLike('santri.nis', $keyword)
+                ->orLike('wali.nama_wali', $keyword)
                 ->groupEnd();
         }
 

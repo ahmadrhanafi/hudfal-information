@@ -49,12 +49,12 @@ $kelas = $kelas ?? [];
                         <span class="input-group-text bg-light border-0 ps-3 text-muted">
                             <i class="fa-solid fa-search"></i>
                         </span>
-                        <input type="text" class="form-control bg-light border-0 py-2" placeholder="Cari berdasarkan nama ustadz, NIP, atau kelas...">
+                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2" placeholder="Cari berdasarkan nama ustadz, NIP, atau kelas...">
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <select class="form-select form-select-sm bg-light border-0 py-2">
-                        <option selected>Status: Semua</option>
+                    <select id="statusFilter" class="form-select form-select-sm bg-light border-0 py-2">
+                        <option value="semua" selected>Status: Semua</option>
                         <option value="aktif">Aktif Mengajar</option>
                         <option value="nonaktif">Non-Aktif</option>
                     </select>
@@ -74,19 +74,20 @@ $kelas = $kelas ?? [];
                             <th class="py-3" style="width: 30%;">NIP & Nama Ustadz</th>
                             <th class="py-3" style="width: 15%;">Jenis Kelamin</th>
                             <th class="py-3" style="width: 25%;">Kelas Diampu</th>
+                            <th class="py-3" style="width: 25%;">Status</th>
                             <th class="py-3 text-end pe-4" style="width: 25%;">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tableBodyUstadz">
                         <?php if (!empty($guru)): ?>
                             <?php $no = 1;
                             foreach ($guru as $g): ?>
                                 <?php
                                 // Inisial nama buat avatar estetik ala template lu
-                                $words = explode(' ', $g['nama']);
+                                $words = explode(' ', $g['nama_guru']);
                                 $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
                                 ?>
-                                <tr>
+                                <tr class="guru-row" data-status="<?= esc($g['status'] ?? 'aktif'); ?>">
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
@@ -94,7 +95,7 @@ $kelas = $kelas ?? [];
                                                 <?= $initials; ?>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($g['nama']); ?></h6>
+                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($g['nama_guru']); ?></h6>
                                                 <small class="text-muted"><i class="fa-solid fa-id-card text-secondary me-1"></i> NIP: <?= esc($g['nip']); ?></small>
                                             </div>
                                         </div>
@@ -109,6 +110,13 @@ $kelas = $kelas ?? [];
                                             <?= esc($g['nama_kelas'] ?? 'Belum Ditentukan'); ?>
                                         </span>
                                     </td>
+                                    <td>
+                                        <?php if ($g['status_aktif'] == 'Aktif'): ?>
+                                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-semibold">Aktif</span>
+                                        <?php else: ?>
+                                            <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-1 rounded-pill small fw-semibold">Keluar</span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td class="text-end pe-4">
                                         <div class="d-flex justify-content-end gap-1">
                                             <button type="button" class="btn btn-sm btn-light text-warning border-0 rounded-2 btn-edit"
@@ -117,7 +125,7 @@ $kelas = $kelas ?? [];
                                                 data-bs-target="#modalEdit"
                                                 data-id="<?= $g['id']; ?>"
                                                 data-nip="<?= esc($g['nip']); ?>"
-                                                data-nama="<?= esc($g['nama']); ?>"
+                                                data-namaguru="<?= esc($g['nama_guru']); ?>"
                                                 data-jeniskelamin="<?= esc($g['jenis_kelamin']); ?>"
                                                 data-idkelas="<?= esc($g['id_kelas_diampu']); ?>">
                                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -163,7 +171,7 @@ $kelas = $kelas ?? [];
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Ustadz</label>
-                        <input type="text" name="nama" class="form-control" placeholder="Contoh: Ustadz Ahmad, S.Pd." required>
+                        <input type="text" name="nama_guru" class="form-control" placeholder="Contoh: Ustadz Ahmad, S.Pd." required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Jenis Kelamin</label>
@@ -208,7 +216,7 @@ $kelas = $kelas ?? [];
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Ustadz</label>
-                        <input type="text" name="nama" id="editNama" class="form-control" required>
+                        <input type="text" name="nama_guru" id="editNamaGuru" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Jenis Kelamin</label>
@@ -226,6 +234,13 @@ $kelas = $kelas ?? [];
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Status Kepegawaian</label>
+                        <select name="status_aktif" id="editStatus" class="form-select" required>
+                            <option value="Aktif">Aktif</option>
+                            <option value="Non-Aktif">Non-Aktif</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
@@ -236,8 +251,44 @@ $kelas = $kelas ?? [];
     </div>
 </div>
 
-<!-- JavaScript untuk Lempar Data ke Modal Edit -->
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const tableRows = document.querySelectorAll('#tableBodyUstadz .guru-row');
+
+        // Fungsi untuk menyaring data tabel
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filterValue = statusFilter.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                const rowStatus = row.getAttribute('data-status').toLowerCase();
+
+                const matchesSearch = rowText.includes(searchTerm);
+                const matchesStatus = (filterValue === 'semua') || (rowStatus === filterValue);
+
+                if (matchesSearch && matchesStatus) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Jalankan fungsi saat user mengetik di kolom pencarian
+        if (searchInput) {
+            searchInput.addEventListener('keyup', filterTable);
+        }
+
+        // Jalankan fungsi saat user mengubah pilihan dropdown
+        if (statusFilter) {
+            statusFilter.addEventListener('change', filterTable);
+        }
+    });
+
+    // --JavaScript untuk Lempar Data ke Modal Edit--
     document.addEventListener('DOMContentLoaded', function() {
         const modalEdit = document.getElementById('modalEdit');
         if (modalEdit) {
@@ -246,14 +297,16 @@ $kelas = $kelas ?? [];
 
                 const id = button.getAttribute('data-id');
                 const nip = button.getAttribute('data-nip');
-                const nama = button.getAttribute('data-nama');
+                const namaGuru = button.getAttribute('data-namaguru');
                 const jenisKelamin = button.getAttribute('data-jeniskelamin');
                 const idKelas = button.getAttribute('data-idkelas');
+                const status = button.getAttribute('data-status');
 
                 modalEdit.querySelector('#editNip').value = nip;
-                modalEdit.querySelector('#editNama').value = nama;
+                modalEdit.querySelector('#editNamaGuru').value = namaGuru;
                 modalEdit.querySelector('#editJenisKelamin').value = jenisKelamin;
                 modalEdit.querySelector('#editIdKelas').value = idKelas;
+                modalEdit.querySelector('#editStatus').value = status;
 
                 modalEdit.querySelector('#formEdit').action = '<?= base_url('admin/ustadz/update/'); ?>' + id;
             });

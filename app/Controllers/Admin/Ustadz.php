@@ -42,7 +42,7 @@ class Ustadz extends BaseController
     {
         if (!$this->validate([
             'nip'             => 'required|numeric|is_unique[guru.nip]',
-            'nama'            => 'required|min_length[3]',
+            'nama_guru'            => 'required|min_length[3]',
             'jenis_kelamin'   => 'required|in_list[L,P]',
             'id_kelas_diampu' => 'required|numeric'
         ])) {
@@ -51,9 +51,10 @@ class Ustadz extends BaseController
 
         $this->guruModel->save([
             'nip'             => $this->request->getVar('nip'),
-            'nama'            => $this->request->getVar('nama'),
+            'nama_guru'            => $this->request->getVar('nama_guru'),
             'jenis_kelamin'   => $this->request->getVar('jenis_kelamin'),
             'id_kelas_diampu' => $this->request->getVar('id_kelas_diampu'),
+            'status_aktif'  => 'Aktif',
         ]);
 
         return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data ustadz berhasil ditambahkan!');
@@ -62,10 +63,11 @@ class Ustadz extends BaseController
     public function update($id)
     {
         $this->guruModel->update($id, [
-            'nip'             => $this->request->getVar('nip'),
-            'nama'            => $this->request->getVar('nama'),
-            'jenis_kelamin'   => $this->request->getVar('jenis_kelamin'),
-            'id_kelas_diampu' => $this->request->getVar('id_kelas_diampu'),
+            'nip'               => $this->request->getVar('nip'),
+            'nama_guru'         => $this->request->getVar('nama_guru'),
+            'jenis_kelamin'     => $this->request->getVar('jenis_kelamin'),
+            'id_kelas_diampu'   => $this->request->getVar('id_kelas_diampu'),
+            'status_aktif'      => $this->request->getVar('status_aktif'),
         ]);
 
         return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data ustadz berhasil diperbarui!');

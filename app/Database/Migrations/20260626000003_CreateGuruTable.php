@@ -33,6 +33,11 @@ class CreateGuruTable extends Migration
                 'constraint' => 11,
                 'unsigned' => true
             ],
+            'status_aktif' => [
+                'type' => 'ENUM',
+                'constraint' => ['Aktif', 'Non-Aktif',],
+                'default' => 'Aktif'
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true

@@ -58,7 +58,7 @@ $wali   = $wali ?? [];
                     <!-- Filter Kelas -->
                     <div class="col-lg-3 col-md-6">
                         <select name="id_kelas" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
-                            <option value="">Semua Kelas / Angkatan</option>
+                            <option value="">Semua Kelas</option>
                             <?php foreach ($kelas as $k): ?>
                                 <option value="<?= $k['id']; ?>" <?= (isset($selectedKelas) && $selectedKelas == $k['id']) ? 'selected' : ''; ?>>
                                     <?= esc($k['nama_kelas']); ?>
@@ -69,7 +69,7 @@ $wali   = $wali ?? [];
 
                     <div class="col-lg-3 col-md-6">
                         <select name="status" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
-                            <option value="">Status</option>
+                            <option value="">Semua Status</option>
                             <option value="Aktif" <?= (isset($selectedStatus) && $selectedStatus == 'Aktif') ? 'selected' : ''; ?>>Aktif</option>
                             <option value="Lulus" <?= (isset($selectedStatus) && $selectedStatus == 'Lulus') ? 'selected' : ''; ?>>Lulus</option>
                             <option value="Keluar" <?= (isset($selectedStatus) && $selectedStatus == 'Keluar') ? 'selected' : ''; ?>>Keluar</option>

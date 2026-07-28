@@ -71,6 +71,7 @@ class Santri extends BaseController
             'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
             'id_kelas'      => $this->request->getVar('id_kelas'),
             'id_wali'       => $this->request->getVar('id_wali'),
+            'status_aktif'  => 'Aktif',
         ]);
 
         return redirect()->to(base_url('admin/santri'))->with('success', 'Data santri berhasil ditambahkan!');
@@ -84,6 +85,7 @@ class Santri extends BaseController
             'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
             'id_kelas'      => $this->request->getVar('id_kelas'),
             'id_wali'       => $this->request->getVar('id_wali'),
+            'status_aktif'  => $this->request->getVar('status_aktif'),
         ]);
 
         return redirect()->to(base_url('admin/santri'))->with('success', 'Data santri berhasil diperbarui!');
