@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateWaliTable extends Migration
+class CreateGuruTable extends Migration
 {
     public function up()
     {
@@ -15,17 +15,23 @@ class CreateWaliTable extends Migration
                 'unsigned' => true,
                 'auto_increment' => true
             ],
+            'nip' => [
+                'type' => 'VARCHAR',
+                'constraint' => 30
+            ],
             'nama' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100
             ],
-            'no_hp' => [
-                'type' => 'VARCHAR',
-                'constraint' => 20
+            'jenis_kelamin' => [
+                'type' => 'ENUM',
+                'constraint' => ['L', 'P'],
+                'default' => 'L'
             ],
-            'alamat' => [
-                'type' => 'TEXT',
-                'null' => true
+            'id_kelas_diampu' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -38,11 +44,12 @@ class CreateWaliTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->createTable('wali');
+        $this->forge->addForeignKey('id_kelas_diampu', 'kelas', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->createTable('guru');
     }
 
     public function down()
     {
-        $this->forge->dropTable('wali');
+        $this->forge->dropTable('guru');
     }
 }

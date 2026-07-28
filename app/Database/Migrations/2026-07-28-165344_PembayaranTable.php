@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateHafalanTable extends Migration
+class CreatePembayaranTable extends Migration
 {
     public function up()
     {
@@ -20,36 +20,22 @@ class CreateHafalanTable extends Migration
                 'constraint' => 11,
                 'unsigned' => true
             ],
-            'id_guru' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'unsigned' => true
+            'tanggal' => [
+                'type' => 'DATETIME',
+                'null' => true
             ],
-            'jenis' => [
-                'type' => 'ENUM',
-                'constraint' => ['ziyadah', 'murojaah'],
-                'default' => 'ziyadah'
-            ],
-            'juz' => [
-                'type' => 'INT',
-                'constraint' => 2
-            ],
-            'surah' => [
+            'jenis_pembayaran' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100
+            ], // Contoh: SPP Bulanan, Ujian, Infaq
+            'jumlah' => [
+                'type' => 'DECIMAL',
+                'constraint' => '12,2'
             ],
-            'ayat_mulai' => [
-                'type' => 'INT',
-                'constraint' => 5
-            ],
-            'ayat_selesai' => [
-                'type' => 'INT',
-                'constraint' => 5
-            ],
-            'predikat' => [
+            'status' => [
                 'type' => 'ENUM',
-                'constraint' => ['Mumtaz', 'Jayyid Jiddan', 'Jayyid', 'Maqbul'],
-                'default' => 'Mumtaz'
+                'constraint' => ['Lunas', 'Pending', 'Gagal'],
+                'default' => 'Lunas'
             ],
             'keterangan' => [
                 'type' => 'TEXT',
@@ -67,12 +53,11 @@ class CreateHafalanTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('id_santri', 'santri', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('id_guru', 'guru', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('hafalan');
+        $this->forge->createTable('pembayaran');
     }
 
     public function down()
     {
-        $this->forge->dropTable('hafalan', true);
+        $this->forge->dropTable('pembayaran', true);
     }
 }
