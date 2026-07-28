@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Ustadz;
+namespace App\Controllers\Guru;
 
 use App\Controllers\BaseController;
 
@@ -8,6 +8,6 @@ class Statistik extends BaseController
 {
     public function index()
     {
-        return view('ustadz/statistik_hafalan');
+        return view('guru/statistik_hafalan');
     }
 }

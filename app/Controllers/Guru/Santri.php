@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Ustadz;
+namespace App\Controllers\Guru;
 
 use App\Controllers\BaseController;
 
@@ -10,9 +10,8 @@ class Santri extends BaseController
     {
         $role = session()->get('role');
 
-        // Redirect ke controller spesifik per role
-        if ($role == 'ustadz') {
-            return view('ustadz/data_santri');
+        if ($role == 'guru') {
+            return view('guru/data_santri');
         } elseif ($role == 'admin') {
             return redirect()->to('/admin/data_santri');
         } else {

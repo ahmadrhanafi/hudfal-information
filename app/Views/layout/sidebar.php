@@ -50,19 +50,19 @@
             </a>
         <?php endif; ?>
 
-        <!-- MENU KHUSUS USTADZ -->
-        <?php if ($role === 'ustadz'): ?>
-            <div class="text-uppercase small px-4 mt-3 mb-1" style="font-size: 0.65rem; color: #8BAE66; letter-spacing: 1px;">Menu Ustadz</div>
-            <a href="<?= base_url('ustadz/santri') ?>" class="nav-link <?= (url_is('ustadz/santri*')) ? 'active' : '' ?>">
+        <!-- MENU KHUSUS GURU/PENGAJAR -->
+        <?php if ($role === 'guru'): ?>
+            <div class="text-uppercase small px-4 mt-3 mb-1" style="font-size: 0.65rem; color: #8BAE66; letter-spacing: 1px;">Menu Pengajar</div>
+            <a href="<?= base_url('guru/santri') ?>" class="nav-link <?= (url_is('guru/santri*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-people-group"></i> <span>Data Santri</span>
             </a>
-            <a href="<?= base_url('ustadz/hafalan') ?>" class="nav-link <?= (url_is('ustadz/hafalan*')) ? 'active' : '' ?>">
+            <a href="<?= base_url('guru/hafalan') ?>" class="nav-link <?= (url_is('guru/hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-book-open"></i> <span>Data Hafalan</span>
             </a>
-            <a href="<?= base_url('ustadz/statistik-hafalan') ?>" class="nav-link <?= (url_is('ustadz/statistik*')) ? 'active' : '' ?>">
+            <a href="<?= base_url('guru/statistik-hafalan') ?>" class="nav-link <?= (url_is('guru/statistik*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-chart-bar"></i> <span>Statistik Hafalan</span>
             </a>
-            <a href="<?= base_url('ustadz/riwayat-hafalan') ?>" class="nav-link <?= (url_is('ustadz/riwayat_hafalan*')) ? 'active' : '' ?>">
+            <a href="<?= base_url('guru/riwayat-hafalan') ?>" class="nav-link <?= (url_is('guru/riwayat_hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-history"></i> <span>Riwayat Hafalan</span>
             </a>
         <?php endif; ?>
@@ -95,8 +95,8 @@
             <a href="<?= base_url('admin/pengaturan') ?>" class="nav-link text-white <?= (url_is('settings*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-gear"></i> <span>Settings</span>
             </a>
-        <?php elseif ($role === 'ustadz'): ?>
-            <a href="<?= base_url('ustadz/pengaturan') ?>" class="nav-link text-white <?= (url_is('settings*')) ? 'active' : '' ?>">
+        <?php elseif ($role === 'guru'): ?>
+            <a href="<?= base_url('guru/pengaturan') ?>" class="nav-link text-white <?= (url_is('settings*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-gear"></i> <span>Settings</span>
             </a>
         <?php elseif ($role === 'wali'): ?>

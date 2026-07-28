@@ -26,13 +26,13 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('pengaturan', 'Admin\Pengaturan::index');
 });
 
-$routes->group('ustadz', ['filter' => 'auth'], function ($routes) {
-    $routes->get('dashboard', 'Ustadz\Dashboard::index');
-    $routes->get('santri', 'Ustadz\Santri::index');
-    $routes->get('hafalan', 'Ustadz\Hafalan::index');
-    $routes->get('riwayat-hafalan', 'Ustadz\RiwayatHafalan::index');
-    $routes->get('statistik-hafalan', 'Ustadz\Statistik::index');
-    $routes->get('pengaturan', 'Ustadz\Pengaturan::index');
+$routes->group('guru', ['filter' => 'auth'], function ($routes) {
+    $routes->get('dashboard', 'Guru\Dashboard::index');
+    $routes->get('santri', 'Guru\Santri::index');
+    $routes->get('hafalan', 'Guru\Hafalan::index');
+    $routes->get('riwayat-hafalan', 'Guru\RiwayatHafalan::index');
+    $routes->get('statistik-hafalan', 'Guru\Statistik::index');
+    $routes->get('pengaturan', 'Guru\Pengaturan::index');
 });
 
 $routes->group('wali', ['filter' => 'auth'], function ($routes) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Ustadz;
+namespace App\Controllers\Guru;
 
 use App\Controllers\BaseController;
 
@@ -8,6 +8,6 @@ class RiwayatHafalan extends BaseController
 {
     public function index()
     {
-        return view('ustadz/riwayat_hafalan');
+        return view('guru/riwayat_hafalan');
     }
 }
