@@ -18,4 +18,22 @@ class WaliModel extends Model
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+
+    public function getWaliWithSantri()
+    {
+        $db = \Config\Database::connect();
+
+        $wali = $this->findAll();
+
+        foreach ($wali as &$w) {
+            $w['santri'] = $db->table('santri')
+                ->select('santri.*, kelas.nama_kelas')
+                ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+                ->where('santri.id_wali', $w['id'])
+                ->get()
+                ->getResultArray();
+        }
+
+        return $wali;
+    }
 }

@@ -45,6 +45,17 @@
                             <td><span class="badge bg-light text-dark border"><?= esc($w['no_hp']); ?></span></td>
                             <td class="text-muted small"><?= esc($w['alamat']); ?></td>
                             <td class="text-center">
+                                <!-- Tombol Detail Baru -->
+                                <button type="button" class="btn btn-sm btn-outline-info me-2 btn-detail"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalDetail"
+                                    data-nama="<?= esc($w['nama_wali']); ?>"
+                                    data-nohp="<?= esc($w['no_hp']); ?>"
+                                    data-alamat="<?= esc($w['alamat']); ?>"
+                                    data-santri='<?= json_encode($w['santri'] ?? []); ?>'>
+                                    <i class="fa-solid fa-eye"></i> Detail
+                                </button>
+
                                 <button type="button" class="btn btn-sm btn-outline-primary me-2 btn-edit"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalEdit"
@@ -136,6 +147,48 @@
     </div>
 </div>
 
+<!-- ================= MODAL DETAIL ================= -->
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Informasi Detail Wali & Santri</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4">
+                <!-- Informasi Singkat Wali -->
+                <div class="bg-light p-3 rounded-3 mb-4">
+                    <h6 class="fw-bold text-dark mb-2" id="detailNamaWali">-</h6>
+                    <p class="mb-1 small text-muted"><i class="fa-solid fa-phone me-2"></i><span id="detailNoHp">-</span></p>
+                    <p class="mb-0 small text-muted"><i class="fa-solid fa-location-dot me-2"></i><span id="detailAlamat">-</span></p>
+                </div>
+
+                <!-- Daftar Anak / Santri -->
+                <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-child me-2"></i>Daftar Anak / Santri Asuhan:</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center" width="5%">#</th>
+                                <th>NIS</th>
+                                <th>Nama Santri</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Kelas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listAnakSantri">
+                            <!-- Data anak akan dimasukkan otomatis lewat JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     const modalEdit = document.getElementById('modalEdit');
     modalEdit.addEventListener('show.bs.modal', function(event) {
@@ -152,6 +205,50 @@
 
         modalEdit.querySelector('#formEdit').action = '<?= base_url('admin/wali-santri/update/'); ?>' + id;
     });
+
+    // Script untuk Modal Detail Anak/Santri
+    const modalDetail = document.getElementById('modalDetail');
+    if (modalDetail) {
+        modalDetail.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+
+            // Ambil data dari atribut tombol
+            const namaWali = button.getAttribute('data-nama');
+            const noHp = button.getAttribute('data-nohp');
+            const alamat = button.getAttribute('data-alamat');
+
+            // Parse data JSON santri/anak
+            let listSantri = [];
+            try {
+                listSantri = JSON.parse(button.getAttribute('data-santri'));
+            } catch (e) {
+                listSantri = [];
+            }
+
+            // Masukkan data ke dalam elemen modal
+            modalDetail.querySelector('#detailNamaWali').textContent = namaWali;
+            modalDetail.querySelector('#detailNoHp').textContent = noHp;
+            modalDetail.querySelector('#detailAlamat').textContent = alamat;
+
+            const tbodyAnak = modalDetail.querySelector('#listAnakSantri');
+            tbodyAnak.innerHTML = ''; // Kosongkan dulu
+
+            if (listSantri.length > 0) {
+                listSantri.forEach((anak, index) => {
+                    let row = `<tr>
+                        <td class="text-center">${index + 1}</td>
+                        <td>${anak.nis ?? '-'}</td>
+                        <td class="fw-semibold">${anak.nama_santri ?? '-'}</td>
+                        <td>${anak.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
+                        <td><span class="badge bg-success-subtle text-success">${anak.nama_kelas ?? 'Belum ada kelas'}</span></td>
+                    </tr>`;
+                    tbodyAnak.insertAdjacentHTML('beforeend', row);
+                });
+            } else {
+                tbodyAnak.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Wali ini belum memiliki data anak/santri yang terdaftar.</td></tr>`;
+            }
+        });
+    }
 </script>
 
 <?= $this->endSection() ?>
