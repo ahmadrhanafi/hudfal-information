@@ -6,17 +6,23 @@ use CodeIgniter\Model;
 
 class GuruModel extends Model
 {
-    protected $table      = 'guru';
-    protected $primaryKey = 'id';
+    protected $table            = 'guru';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = false;
+    protected $allowedFields    = ['nip', 'nama', 'jenis_kelamin', 'id_kelas_diampu'];
 
-    // Hanya kolom ini yang bisa diisi
-    protected $allowedFields = [
-        'id',
-        'nip',
-        'nama',
-        'jenis_kelamin',
-        'id_kelas_diampu',
-        'created_at',
-        'updated_at'
-    ];
+    // Dates
+    protected $useTimestamps = true;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+
+    public function getGuruWithKelas()
+    {
+        return $this->select('guru.*, kelas.nama_kelas')
+            ->join('kelas', 'kelas.id = guru.id_kelas_diampu', 'left')
+            ->findAll();
+    }
 }

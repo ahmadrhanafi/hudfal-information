@@ -25,7 +25,12 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('kelas/delete/(:num)', 'Admin\Kelas::delete/$1');
 
     $routes->get('santri', 'Admin\Santri::index');
+
+    // Manajemen Ustadz/Guru/Pengajar
     $routes->get('ustadz', 'Admin\Ustadz::index');
+    $routes->post('ustadz/store', 'Admin\Ustadz::store');
+    $routes->post('ustadz/update/(:num)', 'Admin\Ustadz::update/$1');
+    $routes->get('ustadz/delete/(:num)', 'Admin\Ustadz::delete/$1');
 
     // Manajemen Wali Santri
     $routes->get('wali-santri', 'Admin\Wali::index');
