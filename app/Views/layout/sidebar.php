@@ -19,6 +19,7 @@
         ?>
 
         <!-- Link Dashboard Umum (Aktif jika sesuai URL saat ini) -->
+        <div class="text-uppercase small px-4 mt-3 mb-1" style="font-size: 0.65rem; color: #8BAE66; letter-spacing: 1px;">Overview</div>
         <a href="<?= $dashboardUrl ?>" class="nav-link <?= (current_url() == $dashboardUrl) ? 'active' : '' ?>">
             <i class="fa-solid fa-gauge-high"></i> <span>Dashboard</span>
         </a>
@@ -58,14 +59,20 @@
             <a href="<?= base_url('ustadz/hafalan') ?>" class="nav-link <?= (url_is('ustadz/hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-book-open"></i> <span>Data Hafalan</span>
             </a>
-            <a href="<?= base_url('ustadz/statistik') ?>" class="nav-link <?= (url_is('ustadz/statistik*')) ? 'active' : '' ?>">
+            <a href="<?= base_url('ustadz/statistik-hafalan') ?>" class="nav-link <?= (url_is('ustadz/statistik*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-chart-bar"></i> <span>Statistik Hafalan</span>
+            </a>
+            <a href="<?= base_url('ustadz/riwayat-hafalan') ?>" class="nav-link <?= (url_is('ustadz/riwayat_hafalan*')) ? 'active' : '' ?>">
+                <i class="fa-solid fa-history"></i> <span>Riwayat Hafalan</span>
             </a>
         <?php endif; ?>
 
         <!-- MENU KHUSUS WALI SANTRI -->
         <?php if ($role === 'wali'): ?>
             <div class="text-uppercase small px-4 mt-3 mb-1" style="font-size: 0.65rem; color: #8BAE66; letter-spacing: 1px;">Menu Wali</div>
+            <a href="<?= base_url('wali/statistik-hafalan') ?>" class="nav-link <?= (url_is('wali/riwayat-hafalan*')) ? 'active' : '' ?>">
+                <i class="fa-solid fa-chart-bar"></i> <span>Statistik Hafalan</span>
+            </a>
             <a href="<?= base_url('wali/riwayat-hafalan') ?>" class="nav-link <?= (url_is('wali/riwayat-hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-history"></i> <span>Riwayat Hafalan</span>
             </a>

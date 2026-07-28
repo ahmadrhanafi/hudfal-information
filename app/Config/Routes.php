@@ -19,7 +19,7 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('santri', 'Admin\Santri::index');
     $routes->get('ustadz', 'Admin\Ustadz::index');
     $routes->get('hafalan', 'Admin\Hafalan::index');
-    $routes->get('statistik', 'Admin\Statistik::index');
+    $routes->get('statistik-hafalan', 'Admin\Statistik::index');
     $routes->get('administrasi', 'Admin\Administrasi::index');
     $routes->get('esertifikat', 'Admin\Esertifikat::index');
     $routes->get('ekartu', 'Admin\Ekartu::index');
@@ -30,7 +30,8 @@ $routes->group('ustadz', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'Ustadz\Dashboard::index');
     $routes->get('santri', 'Ustadz\Santri::index');
     $routes->get('hafalan', 'Ustadz\Hafalan::index');
-    $routes->get('statistik', 'Ustadz\Statistik::index');
+    $routes->get('riwayat-hafalan', 'Ustadz\RiwayatHafalan::index');
+    $routes->get('statistik-hafalan', 'Ustadz\Statistik::index');
     $routes->get('pengaturan', 'Ustadz\Pengaturan::index');
 });
 
@@ -39,6 +40,7 @@ $routes->group('wali', ['filter' => 'auth'], function ($routes) {
     $routes->get('riwayat-hafalan', 'Wali\RiwayatHafalan::index');
     $routes->get('riwayat-pembayaran', 'Wali\RiwayatPembayaran::index');
     $routes->get('esertifikat', 'Wali\Esertifikat::index');
+    $routes->get('statistik-hafalan', 'Wali\Statistik::index');
     $routes->get('ekartu', 'Wali\Ekartu::index');
     $routes->get('pengaturan', 'Wali\Pengaturan::index');
 });
