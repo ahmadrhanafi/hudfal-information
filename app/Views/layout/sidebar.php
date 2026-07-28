@@ -27,6 +27,9 @@
         <!-- MENU KHUSUS ADMIN -->
         <?php if ($role === 'admin'): ?>
             <div class="text-uppercase small px-4 mt-3 mb-1" style="font-size: 0.65rem; color: #8BAE66; letter-spacing: 1px;">Menu Admin</div>
+            <a href="<?= base_url('admin/kelas') ?>" class="nav-link <?= (url_is('admin/kelas*')) ? 'active' : '' ?>">
+                <i class="fa-solid fa-school"></i> <span>Data Kelas</span>
+            </a>
             <a href="<?= base_url('admin/ustadz') ?>" class="nav-link <?= (url_is('admin/ustadz*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-chalkboard-user"></i> <span>Data Ustadz</span>
             </a>

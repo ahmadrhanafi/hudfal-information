@@ -11,11 +11,19 @@ $routes->post('auth/process', 'Auth::process');
 $routes->get('loading', 'Auth::loading');
 $routes->get('logout', 'Auth::logout');
 
+$routes->get('kelas', 'KelasController::index');
+
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 
 // Grouping agar akses lebih aman
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'Admin\Dashboard::index');
+    // Manajemen Kelas
+    $routes->get('kelas', 'Admin\Kelas::index');
+    $routes->post('kelas/store', 'Admin\Kelas::store');
+    $routes->post('kelas/update/(:num)', 'Admin\Kelas::update/$1');
+    $routes->get('kelas/delete/(:num)', 'Admin\Kelas::delete/$1');
+
     $routes->get('santri', 'Admin\Santri::index');
     $routes->get('ustadz', 'Admin\Ustadz::index');
     $routes->get('hafalan', 'Admin\Hafalan::index');
