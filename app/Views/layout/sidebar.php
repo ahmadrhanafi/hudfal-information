@@ -30,11 +30,14 @@
             <a href="<?= base_url('admin/kelas') ?>" class="nav-link <?= (url_is('admin/kelas*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-school"></i> <span>Data Kelas</span>
             </a>
+            <a href="<?= base_url('admin/santri') ?>" class="nav-link <?= (url_is('admin/santri*')) ? 'active' : '' ?>">
+                <i class="fa-solid fa-user-graduate"></i> <span>Data Santri</span>
+            </a>
             <a href="<?= base_url('admin/ustadz') ?>" class="nav-link <?= (url_is('admin/ustadz*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-chalkboard-user"></i> <span>Data Ustadz</span>
             </a>
-            <a href="<?= base_url('admin/santri') ?>" class="nav-link <?= (url_is('admin/santri*')) ? 'active' : '' ?>">
-                <i class="fa-solid fa-user-graduate"></i> <span>Data Santri</span>
+            <a href="<?= base_url('admin/wali-santri') ?>" class="nav-link <?= (url_is('admin/wali-santri*')) ? 'active' : '' ?>">
+                <i class="fa-solid fa-users"></i> <span>Data Wali Santri</span>
             </a>
             <a href="<?= base_url('admin/hafalan') ?>" class="nav-link <?= (url_is('admin/hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-book-quran"></i> <span>Data Hafalan</span>

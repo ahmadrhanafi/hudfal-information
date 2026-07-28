@@ -26,6 +26,13 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
 
     $routes->get('santri', 'Admin\Santri::index');
     $routes->get('ustadz', 'Admin\Ustadz::index');
+
+    // Manajemen Wali Santri
+    $routes->get('wali-santri', 'Admin\Wali::index');
+    $routes->post('wali-santri/store', 'Admin\Wali::store');
+    $routes->post('wali-santri/update/(:num)', 'Admin\Wali::update/$1');
+    $routes->get('wali-santri/delete/(:num)', 'Admin\Wali::delete/$1');
+
     $routes->get('hafalan', 'Admin\Hafalan::index');
     $routes->get('statistik-hafalan', 'Admin\Statistik::index');
     $routes->get('administrasi', 'Admin\Administrasi::index');
