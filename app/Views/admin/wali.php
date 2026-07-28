@@ -6,8 +6,8 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Manajemen Kelas</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola penambahan dan update data kelas.</p>
+            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Manajemen Wali Santri</h3>
+            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola penambahan dan update data wali santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button type="button" class="btn btn-success px-4" data-bs-toggle="modal" data-bs-target="#modalTambah">
@@ -41,7 +41,7 @@
                     foreach ($wali as $w): ?>
                         <tr>
                             <td><?= $no++; ?></td>
-                            <td class="fw-semibold text-dark"><?= esc($w['nama']); ?></td>
+                            <td class="fw-semibold text-dark"><?= esc($w['nama_wali']); ?></td>
                             <td><span class="badge bg-light text-dark border"><?= esc($w['no_hp']); ?></span></td>
                             <td class="text-muted small"><?= esc($w['alamat']); ?></td>
                             <td class="text-center">
@@ -49,7 +49,7 @@
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalEdit"
                                     data-id="<?= $w['id']; ?>"
-                                    data-nama="<?= esc($w['nama']); ?>"
+                                    data-nama="<?= esc($w['nama_wali']); ?>"
                                     data-nohp="<?= esc($w['no_hp']); ?>"
                                     data-alamat="<?= esc($w['alamat']); ?>">
                                     <i class="fa-solid fa-pen-to-square"></i> Edit
@@ -83,7 +83,7 @@
                 <div class="modal-body py-4">
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Wali</label>
-                        <input type="text" name="nama" class="form-control" placeholder="Contoh: Bpk. Ahmad" required>
+                        <input type="text" name="nama_wali" class="form-control" placeholder="Contoh: Bpk. Ahmad" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">No. HP / WhatsApp</label>
@@ -116,7 +116,7 @@
                 <div class="modal-body py-4">
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Wali</label>
-                        <input type="text" name="nama" id="editNama" class="form-control" required>
+                        <input type="text" name="nama_wali" id="editNama" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">No. HP / WhatsApp</label>

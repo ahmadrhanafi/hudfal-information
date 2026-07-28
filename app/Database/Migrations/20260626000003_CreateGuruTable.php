@@ -19,7 +19,7 @@ class CreateGuruTable extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 30
             ],
-            'nama' => [
+            'nama_guru' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100
             ],

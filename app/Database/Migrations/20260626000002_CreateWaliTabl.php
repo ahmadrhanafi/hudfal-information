@@ -15,7 +15,7 @@ class CreateWaliTable extends Migration
                 'unsigned' => true,
                 'auto_increment' => true
             ],
-            'nama' => [
+            'nama_wali' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100
             ],

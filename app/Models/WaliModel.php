@@ -11,7 +11,7 @@ class WaliModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
-    protected $allowedFields    = ['nama', 'no_hp', 'alamat'];
+    protected $allowedFields    = ['nama_wali', 'no_hp', 'alamat'];
 
     // Dates
     protected $useTimestamps = true;

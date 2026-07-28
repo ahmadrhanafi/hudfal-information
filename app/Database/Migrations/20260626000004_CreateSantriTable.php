@@ -19,7 +19,7 @@ class CreateSantriTable extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 20
             ],
-            'nama' => [
+            'nama_santri' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100
             ],

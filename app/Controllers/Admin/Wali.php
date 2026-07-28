@@ -28,7 +28,7 @@ class Wali extends BaseController
     public function store()
     {
         if (!$this->validate([
-            'nama'   => 'required|min_length[3]',
+            'nama_wali'   => 'required|min_length[3]',
             'no_hp'  => 'required|numeric|min_length[10]',
             'alamat' => 'required'
         ])) {
@@ -36,7 +36,7 @@ class Wali extends BaseController
         }
 
         $this->waliModel->save([
-            'nama'   => $this->request->getVar('nama'),
+            'nama_wali'   => $this->request->getVar('nama_wali'),
             'no_hp'  => $this->request->getVar('no_hp'),
             'alamat' => $this->request->getVar('alamat'),
         ]);
@@ -47,7 +47,7 @@ class Wali extends BaseController
     public function update($id)
     {
         $this->waliModel->update($id, [
-            'nama'   => $this->request->getVar('nama'),
+            'nama_wali'   => $this->request->getVar('nama_wali'),
             'no_hp'  => $this->request->getVar('no_hp'),
             'alamat' => $this->request->getVar('alamat'),
         ]);
