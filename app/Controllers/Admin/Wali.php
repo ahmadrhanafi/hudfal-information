@@ -4,14 +4,17 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\WaliModel;
+use App\Models\UserModel;
 
 class Wali extends BaseController
 {
     protected $waliModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->waliModel = new WaliModel();
+        $this->userModel = new UserModel();
     }
 
     public function index()
@@ -28,36 +31,70 @@ class Wali extends BaseController
     public function store()
     {
         if (!$this->validate([
-            'nama_wali'   => 'required|min_length[3]',
-            'no_hp'  => 'required|numeric|min_length[10]',
-            'alamat' => 'required'
+            'nama_wali' => 'required|min_length[3]',
+            'no_hp'     => 'required|numeric|min_length[10]',
+            'alamat'    => 'required'
         ])) {
             return redirect()->back()->withInput()->with('error', 'Gagal validasi data wali santri.');
         }
 
+        $namaWali = $this->request->getVar('nama_wali');
+        $noHp     = $this->request->getVar('no_hp');
+
+        // 1. Simpan data wali
         $this->waliModel->save([
-            'nama_wali'   => $this->request->getVar('nama_wali'),
-            'no_hp'  => $this->request->getVar('no_hp'),
-            'alamat' => $this->request->getVar('alamat'),
+            'nama_wali' => $namaWali,
+            'no_hp'     => $noHp,
+            'alamat'    => $this->request->getVar('alamat'),
         ]);
 
-        return redirect()->to(base_url('admin/wali-santri'))->with('success', 'Data wali santri berhasil ditambahkan!');
+        // Ambil ID wali yang baru saja disimpan
+        $waliId = $this->waliModel->insertID();
+
+        // 2. Otomatis buatkan akun user yang sinkron dengan struktur migration
+        $this->userModel->save([
+            'name'     => $namaWali,
+            'username' => $noHp, // Menggunakan nomor HP sebagai username login
+            'password' => password_hash($noHp, PASSWORD_DEFAULT), // Default password dari no HP
+            'role'     => 'wali',
+            'ref_id'   => $waliId
+        ]);
+
+        return redirect()->to(base_url('admin/wali-santri'))->with('success', 'Data wali santri dan akun login berhasil ditambahkan!');
     }
 
     public function update($id)
     {
+        $namaWali = $this->request->getVar('nama_wali');
+        $noHp     = $this->request->getVar('no_hp');
+
+        // Update data wali
         $this->waliModel->update($id, [
-            'nama_wali'   => $this->request->getVar('nama_wali'),
-            'no_hp'  => $this->request->getVar('no_hp'),
-            'alamat' => $this->request->getVar('alamat'),
+            'nama_wali' => $namaWali,
+            'no_hp'     => $noHp,
+            'alamat'    => $this->request->getVar('alamat'),
         ]);
+
+        // Opsional: Sinkronisasi perubahan nama/username ke tabel users berdasarkan ref_id
+        $user = $this->userModel->where('ref_id', $id)->where('role', 'wali')->first();
+        if ($user) {
+            $this->userModel->update($user['id'], [
+                'name'     => $namaWali,
+                'username' => $noHp
+            ]);
+        }
 
         return redirect()->to(base_url('admin/wali-santri'))->with('success', 'Data wali santri berhasil diperbarui!');
     }
 
     public function delete($id)
     {
+        // Hapus akun user yang berelasi dengan wali ini terlebih dahulu
+        $this->userModel->where('ref_id', $id)->where('role', 'wali')->delete();
+
+        // Hapus data wali
         $this->waliModel->delete($id);
-        return redirect()->to(base_url('admin/wali-santri'))->with('success', 'Data wali santri berhasil dihapus!');
+
+        return redirect()->to(base_url('admin/wali-santri'))->with('success', 'Data wali santri dan akun login berhasil dihapus!');
     }
 }

@@ -11,15 +11,20 @@ $kelas = $kelas ?? [];
 
     <!-- Flash Message -->
     <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
-            <i class="fa-solid fa-circle-check me-2"></i><?= session()->getFlashdata('success'); ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4 position-relative z-3 d-flex justify-content-end align-items-center py-2" role="alert">
+            <div class="d-flex align-items-center my-1">
+                <i class="fa-solid fa-circle-check me-2"></i>
+                <span><?= session()->getFlashdata('success'); ?></span>
+            </div>
+            <button type="button" class="btn-close position-static ms-3 p-2 me-0" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
 
     <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
-            <i class="fa-solid fa-circle-exclamation me-2"></i><?= session()->getFlashdata('error'); ?>
+        <div class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm mb-4 position-relative z-3 d-flex justify-content-end align-items-center" role="alert">
+            <div class="me-5">
+                <i class="fa-solid fa-circle-exclamation me-2"></i><?= session()->getFlashdata('error'); ?>
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
@@ -123,7 +128,7 @@ $kelas = $kelas ?? [];
                                         <?php if ($g['status_aktif'] == 'Aktif'): ?>
                                             <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-semibold">Aktif</span>
                                         <?php else: ?>
-                                            <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-1 rounded-pill small fw-semibold">Keluar</span>
+                                            <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-1 rounded-pill small fw-semibold">Non-Aktif</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-end pe-4">
