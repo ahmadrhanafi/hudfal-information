@@ -27,11 +27,13 @@ class Santri extends BaseController
         $selectedStatus = $this->request->getGet('status');
 
         $kelasModel = new \App\Models\KelasModel();
+        $waliModel  = new \App\Models\WaliModel();
 
         $data = [
             'title'          => 'Data Santri',
             'santri'         => $this->santriModel->searchSantri($keyword, $selectedKelas, $selectedStatus),
             'kelas'          => $kelasModel->findAll(),
+            'wali'           => $waliModel->findAll(),
             'keyword'        => $keyword,
             'selectedKelas'  => $selectedKelas,
             'selectedStatus' => $selectedStatus,

@@ -1,11 +1,12 @@
+<?= $this->extend('layout/main') ?>
+
+<?= $this->section('content') ?>
+
 <?php
 $santri = $santri ?? [];
 $kelas  = $kelas ?? [];
 $wali   = $wali ?? [];
 ?>
-<?= $this->extend('layout/main') ?>
-
-<?= $this->section('content') ?>
 
 <div class="container-fluid px-0">
 
@@ -234,7 +235,7 @@ $wali   = $wali ?? [];
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- PERBAIKAN: Berikan nilai default action agar tidak kosong jika JS gagal -->
-            <form id="formEdit" action="<?= base_url('admin/santri/update'); ?>" method="post">
+            <form id="formEdit" action="" method="post">
                 <?= csrf_field(); ?>
                 <div class="modal-body py-4">
                     <div class="mb-3">
@@ -322,9 +323,10 @@ $wali   = $wali ?? [];
                 modalEdit.querySelector('#editIdKelas').value = idKelas;
                 modalEdit.querySelector('#editStatus').value = status;
 
-                const selectWaliEdit = modalEdit.querySelector('#selectWaliEdit');
-                selectWaliEdit.value = idWali;
-                $(selectWaliEdit).trigger('change');
+                // Beri jeda sedikit agar Select2 siap menerima value saat modal selesai dirender
+                setTimeout(function() {
+                    $('#selectWaliEdit').val(idWali).trigger('change');
+                }, 100);
 
                 modalEdit.querySelector('#formEdit').action = '<?= base_url('admin/santri/update'); ?>/' + id;
             });

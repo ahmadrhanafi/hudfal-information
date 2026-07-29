@@ -2,6 +2,10 @@
 
 <?= $this->section('content') ?>
 
+<?php
+$santri = $santri ?? [];
+?>
+
 <div class="container-fluid px-0">
 
     <!-- Page Header -->
@@ -10,7 +14,6 @@
             <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Data Santri Binaan</h3>
             <p class="text-muted mb-0 small" style="text-transform: none !important;">Daftar santri yang berada di bawah perwalian atau kelas yang Anda ajar.</p>
         </div>
-        <!-- Opsional: Tombol Tambah jika Ustadz diberi akses input data -->
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
                 <i class="fa-solid fa-print text-success me-1"></i> Cetak Daftar Kelas
@@ -27,14 +30,15 @@
                         <span class="input-group-text bg-light border-0 ps-3 text-muted">
                             <i class="fa-solid fa-search"></i>
                         </span>
-                        <input type="text" class="form-control bg-light border-0 py-2" placeholder="Cari nama santri...">
+                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2" placeholder="Cari nama santri, NIS, atau wali...">
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <select class="form-select form-select-sm bg-light border-0 py-2">
-                        <option selected>Filter: Semua Kelas</option>
-                        <option value="8a">Kelas 8A (Wali Kelas)</option>
-                        <option value="8b">Kelas 8B</option>
+                    <select id="kelasFilter" class="form-select form-select-sm bg-light border-0 py-2">
+                        <option value="semua" selected>Filter: Semua Kelas</option>
+                        <option value="kelas8a">Kelas 8A</option>
+                        <option value="kelas8b">Kelas 8B</option>
+                        <option value="kelas9a">Kelas 9A</option>
                     </select>
                 </div>
             </div>
@@ -56,84 +60,125 @@
                             <th class="py-3 text-end pe-4" style="width: 20%;">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Contoh Baris Data 1 (Santri Aktif) -->
-                        <tr>
-                            <td class="ps-4 fw-medium text-muted">1</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                        AZ
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;">Ahmad Zaki Al-Faruq</h6>
-                                        <small class="text-muted">Putra Bpk. Abdullah</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="font-monospace text-secondary small">202401001</span></td>
-                            <td><span class="badge bg-light text-dark border px-2 py-1">Kelas 8A</span></td>
-                            <td class="text-center">
-                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-semibold">Aktif</span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="d-flex justify-content-end gap-1">
-                                    <a href="<?= base_url('ustadz/santri/detail/1') ?>" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Lihat Detail Akademik">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                    <a href="<?= base_url('ustadz/hafalan/santri/1') ?>" class="btn btn-sm btn-light text-success border-0 rounded-2" title="Lihat Hafalan">
-                                        <i class="fa-solid fa-book-quran"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <!-- Contoh Baris Data 2 (Santri Izin/Sakit) -->
-                        <tr>
-                            <td class="ps-4 fw-medium text-muted">2</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                        FN
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;">Fatimah Nurul Aini</h6>
-                                        <small class="text-muted">Putri Bpk. Mahmud</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="font-monospace text-secondary small">202401002</span></td>
-                            <td><span class="badge bg-light text-dark border px-2 py-1">Kelas 8A</span></td>
-                            <td class="text-center">
-                                <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-1 rounded-pill small fw-semibold">Izin</span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="d-flex justify-content-end gap-1">
-                                    <a href="<?= base_url('ustadz/santri/detail/2') ?>" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Lihat Detail Akademik">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                    <a href="<?= base_url('ustadz/hafalan/santri/2') ?>" class="btn btn-sm btn-light text-success border-0 rounded-2" title="Lihat Hafalan">
-                                        <i class="fa-solid fa-book-quran"></i>
-                                    </a>
-                                </div>
+                    <tbody id="tableBodySantri">
+                        <?php if (!empty($santri)): ?>
+                            <?php $no = 1;
+                            foreach ($santri as $s): ?>
+                                <?php
+                                // Generate Inisial Avatar Dinamis
+                                $words = explode(' ', $s['nama_santri']);
+                                $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+
+                                // Format warna status aktif santri
+                                $statusColor = 'success';
+                                $statusText = ucfirst($s['status_aktif'] ?? 'Aktif');
+                                $statusLower = strtolower($s['status_aktif'] ?? 'aktif');
+
+                                if ($statusLower == 'izin') $statusColor = 'warning';
+                                if ($statusLower == 'sakit') $statusColor = 'info';
+                                if ($statusLower == 'keluar' || $statusLower == 'tidak aktif') $statusColor = 'danger';
+                                ?>
+                                <!-- Baris data dengan atribut data-* untuk filter JS -->
+                                <tr class="santri-row"
+                                    data-kelas="<?= strtolower(str_replace(' ', '', $s['nama_kelas'] ?? '')); ?>"
+                                    data-status="<?= $statusLower; ?>">
+                                    <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                <?= $initials; ?>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($s['nama_santri']); ?></h6>
+                                                <small class="text-muted">Wali: <?= esc($s['nama_wali'] ?? 'Belum diset'); ?></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="font-monospace text-secondary small"><?= esc($s['nis']); ?></span></td>
+                                    <td><span class="badge bg-light text-dark border px-2 py-1"><?= esc($s['nama_kelas'] ?? '-'); ?></span></td>
+                                    <td class="text-center">
+                                        <span class="badge bg-<?= $statusColor; ?> bg-opacity-10 text-<?= $statusColor; ?> px-3 py-1 rounded-pill small fw-semibold">
+                                            <?= $statusText; ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <div class="d-flex justify-content-end gap-1">
+                                            <a href="<?= base_url('ustadz/santri/detail/' . $s['id']) ?>" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Lihat Detail Akademik">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+                                            <a href="<?= base_url('ustadz/hafalan/santri/' . $s['id']) ?>" class="btn btn-sm btn-light text-success border-0 rounded-2" title="Lihat Hafalan">
+                                                <i class="fa-solid fa-book-quran"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
+                        <!-- Baris Kosong Jika Data Tidak Ditemukan -->
+                        <tr id="emptyRowSantri" class="d-none">
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-folder-open me-1"></i> Tidak ada data santri yang ditemukan.
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <!-- Card Footer / Pagination -->
+        <!-- Card Footer / Total Data Dinamis -->
         <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small">Menampilkan 1 hingga 2 dari total 28 santri binaan</span>
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled"><span class="page-link rounded-start-3">Sebelumnya</span></li>
-                    <li class="page-item active"><span class="page-link bg-success border-success">1</span></li>
-                    <li class="page-item"><a class="page-link text-success rounded-end-3" href="#">Berikutnya</a></li>
-                </ul>
-            </nav>
+            <span class="text-muted small" id="totalDataTextSantri">Menampilkan total <?= count($santri); ?> santri binaan</span>
         </div>
     </div>
 
 </div>
+
+<!-- Skrip JavaScript Filter & Search Realtime -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const kelasFilter = document.getElementById('kelasFilter');
+        const rows = document.querySelectorAll('#tableBodySantri .santri-row');
+        const totalDataText = document.getElementById('totalDataTextSantri');
+        const emptyRow = document.getElementById('emptyRowSantri');
+
+        function filterSantri() {
+            const keyword = searchInput ? searchInput.value.toLowerCase() : '';
+            const kelasVal = kelasFilter ? kelasFilter.value.toLowerCase().replace(/\s+/g, '') : 'semua';
+
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                const rowKelas = row.getAttribute('data-kelas');
+
+                const matchesKeyword = rowText.includes(keyword);
+                const matchesKelas = (kelasVal === 'semua' || rowKelas.includes(kelasVal));
+
+                if (matchesKeyword && matchesKelas) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (emptyRow) {
+                if (visibleCount === 0) {
+                    emptyRow.classList.remove('d-none');
+                } else {
+                    emptyRow.classList.add('d-none');
+                }
+            }
+
+            if (totalDataText) {
+                totalDataText.textContent = `Menampilkan total ${visibleCount} santri binaan`;
+            }
+        }
+
+        if (searchInput) searchInput.addEventListener('keyup', filterSantri);
+        if (kelasFilter) kelasFilter.addEventListener('change', filterSantri);
+    });
+</script>
 
 <?= $this->endSection() ?>

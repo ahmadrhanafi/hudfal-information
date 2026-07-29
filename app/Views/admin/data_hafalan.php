@@ -2,6 +2,10 @@
 
 <?= $this->section('content') ?>
 
+<?php
+$hafalan  = $hafalan ?? [];
+?>
+
 <div class="container-fluid px-0">
 
     <!-- Page Header & Action Buttons -->
@@ -20,6 +24,14 @@
         </div>
     </div>
 
+    <!-- Alert Notifikasi Flashmessage -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> <?= session()->getFlashdata('success'); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
     <!-- Filter & Search Toolbar Card -->
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
         <div class="card-body p-3">
@@ -29,22 +41,26 @@
                         <span class="input-group-text bg-light border-0 ps-3 text-muted">
                             <i class="fa-solid fa-search"></i>
                         </span>
-                        <input type="text" class="form-control bg-light border-0 py-2" placeholder="Cari nama santri atau ustadz penguji...">
+                        <!-- Tambahkan id="searchInput" -->
+                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2" placeholder="Cari nama santri atau ustadz penguji...">
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <select class="form-select form-select-sm bg-light border-0 py-2">
-                        <option selected>Semua Juz</option>
-                        <option value="juz-30">Juz 30 (Amma)</option>
-                        <option value="juz-29">Juz 29</option>
-                        <option value="juz-1">Juz 1</option>
+                    <!-- Tambahkan id="juzFilter" -->
+                    <select id="juzFilter" class="form-select form-select-sm bg-light border-0 py-2">
+                        <option value="semua" selected>Semua Juz</option>
+                        <?php for ($i = 1; $i <= 30; $i++): ?>
+                            <option value="<?= $i; ?>">Juz <?= $i; ?></option>
+                        <?php endfor; ?>
                     </select>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                    <select class="form-select form-select-sm bg-light border-0 py-2">
-                        <option selected>Predikat: Semua Nilai</option>
+                    <!-- Tambahkan id="predikatFilter" -->
+                    <select id="predikatFilter" class="form-select form-select-sm bg-light border-0 py-2">
+                        <option value="semua" selected>Predikat: Semua Nilai</option>
                         <option value="mumtaz">Mumtaz (Sangat Baik)</option>
-                        <option value="jayyid">Jayyid (Baik)</option> maqbul
+                        <option value="jayyid jiddan">Jayyid Jiddan</option>
+                        <option value="jayyid">Jayyid (Baik)</option>
                         <option value="maqbul">Maqbul (Cukup)</option>
                     </select>
                 </div>
@@ -67,97 +83,134 @@
                             <th class="py-3 text-end pe-4" style="width: 15%;">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Contoh Baris Data 1 -->
-                        <tr>
-                            <td class="ps-4 fw-medium text-muted">1</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                        AZ
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;">Ahmad Zaki Al-Faruq</h6>
-                                        <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i> 23 Juli 2026</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="fw-semibold text-dark d-block">Juz 30</span>
-                                <small class="text-muted">Surah An-Nazi'at (Ayat 1-46)</small>
-                            </td>
-                            <td><span class="text-secondary small fw-medium">Ustadz Ahmad Hidayat, Lc.</span></td>
-                            <td class="text-center">
-                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-semibold">Mumtaz</span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="d-flex justify-content-end gap-1">
-                                    <a href="#" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Detail">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-light text-warning border-0 rounded-2" title="Edit">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus" onclick="return confirm('Yakin ingin menghapus data hafalan ini?')">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <!-- Contoh Baris Data 2 -->
-                        <tr>
-                            <td class="ps-4 fw-medium text-muted">2</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                        FN
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;">Fatimah Nurul Aini</h6>
-                                        <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i> 22 Juli 2026</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="fw-semibold text-dark d-block">Juz 1</span>
-                                <small class="text-muted">Surah Al-Baqarah (Ayat 1-25)</small>
-                            </td>
-                            <td><span class="text-secondary small fw-medium">Ustadz M. Ridwan, M.Pd.</span></td>
-                            <td class="text-center">
-                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill small fw-semibold">Jayyid</span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="d-flex justify-content-end gap-1">
-                                    <a href="#" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Detail">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-light text-warning border-0 rounded-2" title="Edit">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus" onclick="return confirm('Yakin ingin menghapus data hafalan ini?')">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </div>
+                    <tbody id="tableBodyHafalan">
+                        <?php if (!empty($hafalan)): ?>
+                            <?php $no = 1;
+                            foreach ($hafalan as $h): ?>
+                                <?php
+                                // Generate Inisial Avatar
+                                $words = explode(' ', $h['nama_santri']);
+                                $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+
+                                // Format warna badge predikat
+                                $badgeColor = 'success';
+                                $predikatLower = strtolower($h['predikat']);
+                                if ($predikatLower == 'jayyid') $badgeColor = 'primary';
+                                if ($predikatLower == 'jayyid jiddan') $badgeColor = 'info';
+                                if ($predikatLower == 'maqbul') $badgeColor = 'warning';
+                                ?>
+                                <!-- Baris data dengan atribut data-* untuk keperluan filter JS -->
+                                <tr class="hafalan-row"
+                                    data-juz="<?= $h['juz']; ?>"
+                                    data-predikat="<?= strtolower($h['predikat']); ?>">
+                                    <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                <?= $initials; ?>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($h['nama_santri']); ?></h6>
+                                                <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y', strtotime($h['created_at'])); ?></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="fw-semibold text-dark d-block">Juz <?= esc($h['juz']); ?> <span class="badge bg-light text-secondary border ms-1"><?= ucfirst($h['jenis']); ?></span></span>
+                                        <small class="text-muted">Surah <?= esc($h['surah']); ?> (Ayat <?= $h['ayat_mulai']; ?>-<?= $h['ayat_selesai']; ?>)</small>
+                                    </td>
+                                    <td><span class="text-secondary small fw-medium"><?= esc($h['nama_guru']); ?></span></td>
+                                    <td class="text-center">
+                                        <span class="badge bg-<?= $badgeColor; ?> bg-opacity-10 text-<?= $badgeColor; ?> px-3 py-1 rounded-pill small fw-semibold">
+                                            <?= esc($h['predikat']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <div class="d-flex justify-content-end gap-1">
+                                            <a href="#" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Detail">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-sm btn-light text-warning border-0 rounded-2" title="Edit">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                            <a href="<?= base_url('admin/hafalan/delete/' . $h['id']); ?>" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus" onclick="return confirm('Yakin ingin menghapus data hafalan ini?')">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
+                        <!-- Baris Kosong Jika Data Tidak Ditemukan -->
+                        <tr id="emptyRowHafalan" class="d-none">
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-folder-open me-1"></i> Tidak ada data setoran hafalan yang ditemukan.
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <!-- Card Footer / Pagination -->
+        <!-- Card Footer / Total Data Dinamis -->
         <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small">Menampilkan 1 hingga 2 dari total 520 data setoran bulan ini</span>
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled"><span class="page-link rounded-start-3">Sebelumnya</span></li>
-                    <li class="page-item active"><span class="page-link bg-success border-success">1</span></li>
-                    <li class="page-item"><a class="page-link text-success" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link text-success rounded-end-3" href="#">Berikutnya</a></li>
-                </ul>
-            </nav>
+            <span class="text-muted small" id="totalDataTextHafalan">Menampilkan total <?= count($hafalan); ?> data setoran hafalan</span>
         </div>
     </div>
 
 </div>
+
+<!-- Skrip JavaScript Filter & Search Realtime -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const juzFilter = document.getElementById('juzFilter');
+        const predikatFilter = document.getElementById('predikatFilter');
+        const rows = document.querySelectorAll('#tableBodyHafalan .hafalan-row');
+        const totalDataText = document.getElementById('totalDataTextHafalan');
+        const emptyRow = document.getElementById('emptyRowHafalan');
+
+        function filterHafalan() {
+            const keyword = searchInput ? searchInput.value.toLowerCase() : '';
+            const juzVal = juzFilter ? juzFilter.value.toLowerCase() : 'semua';
+            const predikatVal = predikatFilter ? predikatFilter.value.toLowerCase() : 'semua';
+
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                const rowJuz = row.getAttribute('data-juz');
+                const rowPredikat = row.getAttribute('data-predikat');
+
+                const matchesKeyword = rowText.includes(keyword);
+                const matchesJuz = (juzVal === 'semua' || rowJuz === juzVal);
+                const matchesPredikat = (predikatVal === 'semua' || rowPredikat === predikatVal);
+
+                if (matchesKeyword && matchesJuz && matchesPredikat) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (emptyRow) {
+                if (visibleCount === 0) {
+                    emptyRow.classList.remove('d-none');
+                } else {
+                    emptyRow.classList.add('d-none');
+                }
+            }
+
+            if (totalDataText) {
+                totalDataText.textContent = `Menampilkan total ${visibleCount} data setoran hafalan`;
+            }
+        }
+
+        if (searchInput) searchInput.addEventListener('keyup', filterHafalan);
+        if (juzFilter) juzFilter.addEventListener('change', filterHafalan);
+        if (predikatFilter) predikatFilter.addEventListener('change', filterHafalan);
+    });
+</script>
 
 <?= $this->endSection() ?>
