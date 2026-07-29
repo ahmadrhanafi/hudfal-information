@@ -88,13 +88,12 @@
                                                 <i class="fa-solid fa-eye"></i>
                                             </button>
 
-                                            <button type="button" class="btn btn-sm btn-light text-warning border-0 rounded-2 btn-edit"
+                                            <button type="button" class="btn btn-sm btn-light text-warning border-0 rounded-2"
                                                 title="Edit"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalEdit"
                                                 data-id="<?= $row['id']; ?>"
                                                 data-idsantri="<?= $row['id_santri']; ?>"
-                                                data-idguru="<?= $row['id_guru']; ?>"
                                                 data-jenis="<?= esc($row['jenis']); ?>"
                                                 data-juz="<?= esc($row['juz']); ?>"
                                                 data-surah="<?= esc($row['surah']); ?>"
@@ -427,37 +426,38 @@
     });
 
     // Modal edit setoran
-    document.getElementById('edit-id-guru').value = button.getAttribute('data-idguru');
     document.addEventListener("DOMContentLoaded", function() {
         const modalEdit = document.getElementById('modalEdit');
-        modalEdit.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
+        if (modalEdit) {
+            modalEdit.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
 
-            // Ambil data dari tombol
-            const id = button.getAttribute('data-id');
-            const idSantri = button.getAttribute('data-idsantri');
-            const jenis = button.getAttribute('data-jenis');
-            const juz = button.getAttribute('data-juz');
-            const surah = button.getAttribute('data-surah');
-            const ayatMulai = button.getAttribute('data-ayatmulai');
-            const ayatSelesai = button.getAttribute('data-ayatselesai');
-            const predikat = button.getAttribute('data-predikat');
-            const keterangan = button.getAttribute('data-keterangan');
+                // Ambil data dari tombol
+                const id = button.getAttribute('data-id');
+                const idSantri = button.getAttribute('data-idsantri');
+                const jenis = button.getAttribute('data-jenis');
+                const juz = button.getAttribute('data-juz');
+                const surah = button.getAttribute('data-surah');
+                const ayatMulai = button.getAttribute('data-ayatmulai');
+                const ayatSelesai = button.getAttribute('data-ayatselesai');
+                const predikat = button.getAttribute('data-predikat');
+                const keterangan = button.getAttribute('data-keterangan');
 
-            // Set URL action pada form ke route update yang sesuai
-            const form = document.getElementById('formEditHafalan');
-            form.action = "<?= base_url('guru/hafalan/update/'); ?>" + id;
+                // Set URL form action
+                const form = document.getElementById('formEditHafalan');
+                form.action = "<?= base_url('guru/hafalan/update/'); ?>" + id;
 
-            // Masukkan data ke dalam input form modal
-            document.getElementById('edit-id-santri').value = idSantri;
-            document.getElementById('edit-jenis').value = jenis;
-            document.getElementById('edit-juz').value = juz;
-            document.getElementById('edit-surah').value = surah;
-            document.getElementById('edit-ayat-mulai').value = ayatMulai;
-            document.getElementById('edit-ayat-selesai').value = ayatSelesai;
-            document.getElementById('edit-predikat').value = predikat;
-            document.getElementById('edit-keterangan').value = (keterangan === 'null' || keterangan === '') ? '' : keterangan;
-        });
+                // Masukkan nilai ke input form modal
+                document.getElementById('edit-id-santri').value = idSantri;
+                document.getElementById('edit-jenis').value = jenis;
+                document.getElementById('edit-juz').value = juz;
+                document.getElementById('edit-surah').value = surah;
+                document.getElementById('edit-ayat-mulai').value = ayatMulai;
+                document.getElementById('edit-ayat-selesai').value = ayatSelesai;
+                document.getElementById('edit-predikat').value = predikat;
+                document.getElementById('edit-keterangan').value = (keterangan === 'null' || keterangan === null) ? '' : keterangan;
+            });
+        }
     });
 </script>
 

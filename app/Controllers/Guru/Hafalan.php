@@ -24,14 +24,12 @@ class Hafalan extends BaseController
     {
         $idGuru = session()->get('ref_id');
 
-        $hafalan = $this->hafalanModel->getHafalanByGuru($idGuru);
-
-        $santri = $this->santriModel->findAll();
+        $idKelas = session()->get('id_kelas');
 
         $data = [
             'title'   => 'Input & Rekap Hafalan Santri',
-            'hafalan' => $hafalan,
-            'santri'  => $santri,
+            'hafalan' => $this->hafalanModel->getHafalanByGuru($idGuru),
+            'santri'  => $this->santriModel->getSantriByKelas($idKelas),
             'guru'    => $this->guruModel->findAll()
         ];
 

@@ -70,4 +70,12 @@ class SantriModel extends Model
 
         return $builder->findAll();
     }
+
+    public function getSantriByKelas($idKelas)
+    {
+        return $this->select('santri.*, kelas.nama_kelas')
+            ->join('kelas', 'kelas.id = santri.id_kelas', 'inner')
+            ->where('santri.id_kelas', $idKelas)
+            ->findAll();
+    }
 }
