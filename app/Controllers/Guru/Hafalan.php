@@ -64,7 +64,7 @@ class Hafalan extends BaseController
             'keterangan'   => $this->request->getVar('keterangan')
         ]);
 
-        return redirect()->to(base_url('admin/hafalan'))->with('success', 'Data setoran hafalan berhasil ditambahkan!');
+        return redirect()->to(base_url('guru/hafalan'))->with('success', 'Data setoran hafalan berhasil ditambahkan!');
     }
 
     // Method untuk Memperbarui Data Hafalan
@@ -104,11 +104,11 @@ class Hafalan extends BaseController
         $hafalan = $this->hafalanModel->find($id);
 
         if (!$hafalan) {
-            return redirect()->to(base_url('admin/hafalan'))->with('error', 'Data hafalan tidak ditemukan.');
+            return redirect()->to(base_url('guru/hafalan'))->with('error', 'Data hafalan tidak ditemukan.');
         }
 
         $this->hafalanModel->delete($id);
 
-        return redirect()->to(base_url('admin/hafalan'))->with('success', 'Data hafalan berhasil dihapus!');
+        return redirect()->to(base_url('guru/hafalan'))->with('success', 'Data hafalan berhasil dihapus!');
     }
 }
