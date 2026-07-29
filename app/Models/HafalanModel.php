@@ -64,4 +64,12 @@ class HafalanModel extends Model
             ->where('hafalan.id_guru', $idGuru)
             ->orderBy('hafalan.created_at', 'DESC');
     }
+
+    public function getRiwayatHafalan()
+    {
+        return $this->select('tabel_setoran_hafalan.*, santri.nama_lengkap')
+            ->join('santri', 'santri.id = tabel_setoran_hafalan.santri_id', 'left')
+            ->orderBy('tabel_setoran_hafalan.tanggal', 'DESC')
+            ->findAll();
+    }
 }
