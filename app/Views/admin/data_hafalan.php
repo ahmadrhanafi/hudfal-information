@@ -3,6 +3,7 @@
 <?= $this->section('content') ?>
 
 <?php
+/** @var \CodeIgniter\Pager\Pager $pager */
 $hafalan  = $hafalan ?? [];
 ?>
 
@@ -181,15 +182,26 @@ $hafalan  = $hafalan ?? [];
                 </table>
             </div>
         </div>
-        <!-- Card Footer / Total Data Dinamis & Pager -->
+        <!-- Card Footer / Pagination -->
         <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small" id="totalDataTextHafalan">Menampilkan data setoran hafalan</span>
+            <span class="text-muted small">
+                <?php
+                // Ambil informasi detail pagination
+                $details = $pager->getDetails('hafalan'); // Pastikan grup name sesuai
+                // Jika data kosong, tampilkan 0
+                $total = $details['total'] ?? 0;
+                $perPage = $details['perPage'] ?? 10;
+                $currentPage = $details['currentPage'] ?? 1;
 
-            <!-- Bagian Link Pagination -->
+                $start = $total > 0 ? (($currentPage - 1) * $perPage) + 1 : 0;
+                $end = min($currentPage * $perPage, $total);
+                ?>
+                Menampilkan <?= $start; ?> hingga <?= $end; ?> dari total <?= $total; ?> data hafalan
+            </span>
+
+            <!-- Panggil Template Pager Kustom -->
             <?php if (!empty($pager)): ?>
-                <div class="pagination-container">
-                    <?= $pager->links('hafalan', 'default_full'); ?>
-                </div>
+                <?= $pager->links('hafalan', 'hafalan_pagination'); ?>
             <?php endif; ?>
         </div>
     </div>
@@ -612,6 +624,40 @@ $hafalan  = $hafalan ?? [];
             document.getElementById('edit-predikat').value = predikat;
             document.getElementById('edit-keterangan').value = (keterangan === 'null' || keterangan === '') ? '' : keterangan;
         });
+    });
+
+    // <!-- Script untuk Update Teks Menampilkan Sesuai Filter -->
+    document.addEventListener("DOMContentLoaded", function() {
+        function updatePaginationText() {
+            const rows = document.querySelectorAll("#tableBodyHafalan tr.hafalan-row, #tableBodyHafalan tr:not(#emptyRowHafalan)");
+
+            let totalVisible = 0;
+            rows.forEach(row => {
+                if (row.style.display !== "none" && !row.id.includes("emptyRow")) {
+                    totalVisible++;
+                }
+            });
+
+            const textInfo = document.getElementById("textInfoPagination");
+            if (totalVisible > 0) {
+                textInfo.innerText = `Menampilkan total ${totalVisible} riwayat setoran yang sesuai`;
+            } else {
+                textInfo.innerText = `Tidak ada data riwayat setoran yang cocok`;
+            }
+        }
+
+        updatePaginationText();
+
+        const observer = new MutationObserver(updatePaginationText);
+        const targetNode = document.getElementById("tableBodyHafalan");
+        if (targetNode) {
+            observer.observe(targetNode, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style']
+            });
+        }
     });
 </script>
 

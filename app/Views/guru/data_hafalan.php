@@ -2,6 +2,10 @@
 
 <?= $this->section('content') ?>
 
+<?php
+/** @var \CodeIgniter\Pager\Pager $pager */
+?>
+
 <div class="container-fluid px-0">
 
     <!-- Page Header & Action Buttons -->
@@ -116,15 +120,26 @@
                 </table>
             </div>
         </div>
-        <!-- Card Footer untuk Pagination -->
+        <!-- Card Footer / Pagination -->
         <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small">Menampilkan data setoran hafalan</span>
+            <span class="text-muted small">
+                <?php
+                // Ambil informasi detail pagination
+                $details = $pager->getDetails('hafalan'); // Pastikan grup name sesuai
+                // Jika data kosong, tampilkan 0
+                $total = $details['total'] ?? 0;
+                $perPage = $details['perPage'] ?? 10;
+                $currentPage = $details['currentPage'] ?? 1;
 
-            <!-- Render Pager CodeIgniter -->
+                $start = $total > 0 ? (($currentPage - 1) * $perPage) + 1 : 0;
+                $end = min($currentPage * $perPage, $total);
+                ?>
+                Menampilkan <?= $start; ?> hingga <?= $end; ?> dari total <?= $total; ?> data hafalan
+            </span>
+
+            <!-- Panggil Template Pager Kustom -->
             <?php if (!empty($pager)): ?>
-                <div class="pagination-container">
-                    <?= $pager->links('hafalan', 'default_full'); ?>
-                </div>
+                <?= $pager->links('hafalan', 'hafalan_pagination'); ?>
             <?php endif; ?>
         </div>
     </div>
