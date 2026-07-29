@@ -116,6 +116,17 @@
                 </table>
             </div>
         </div>
+        <!-- Card Footer untuk Pagination -->
+        <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <span class="text-muted small">Menampilkan data setoran hafalan</span>
+
+            <!-- Render Pager CodeIgniter -->
+            <?php if (!empty($pager)): ?>
+                <div class="pagination-container">
+                    <?= $pager->links('hafalan', 'default_full'); ?>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 

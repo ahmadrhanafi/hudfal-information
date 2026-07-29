@@ -22,13 +22,13 @@ class Hafalan extends BaseController
 
     public function index()
     {
-        $idGuru = session()->get('ref_id');
-
+        $idGuru  = session()->get('ref_id');
         $idKelas = session()->get('id_kelas');
 
         $data = [
             'title'   => 'Input & Rekap Hafalan Santri',
-            'hafalan' => $this->hafalanModel->getHafalanByGuru($idGuru),
+            'hafalan' => $this->hafalanModel->getHafalanByGuru($idGuru)->paginate(10, 'hafalan'),
+            'pager'   => $this->hafalanModel->pager, // Wajib ada agar link pagination bisa dirender di view
             'santri'  => $this->santriModel->getSantriByKelas($idKelas),
             'guru'    => $this->guruModel->findAll()
         ];

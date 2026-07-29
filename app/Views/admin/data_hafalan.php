@@ -181,9 +181,16 @@ $hafalan  = $hafalan ?? [];
                 </table>
             </div>
         </div>
-        <!-- Card Footer / Total Data Dinamis -->
+        <!-- Card Footer / Total Data Dinamis & Pager -->
         <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small" id="totalDataTextHafalan">Menampilkan total <?= count($hafalan); ?> data setoran hafalan</span>
+            <span class="text-muted small" id="totalDataTextHafalan">Menampilkan data setoran hafalan</span>
+
+            <!-- Bagian Link Pagination -->
+            <?php if (!empty($pager)): ?>
+                <div class="pagination-container">
+                    <?= $pager->links('hafalan', 'default_full'); ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

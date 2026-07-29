@@ -62,7 +62,6 @@ class HafalanModel extends Model
             ->join('santri', 'santri.id = hafalan.id_santri')
             ->join('guru', 'guru.id = hafalan.id_guru')
             ->where('hafalan.id_guru', $idGuru)
-            ->orderBy('hafalan.created_at', 'DESC')
-            ->findAll();
+            ->orderBy('hafalan.created_at', 'DESC');
     }
 }
