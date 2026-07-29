@@ -5,16 +5,19 @@ namespace App\Controllers\Guru;
 use App\Controllers\BaseController;
 use App\Models\HafalanModel;
 use App\Models\SantriModel;
+use App\Models\GuruModel;
 
 class Hafalan extends BaseController
 {
     protected $hafalanModel;
     protected $santriModel;
+    protected $guruModel;
 
     public function __construct()
     {
         $this->hafalanModel = new HafalanModel();
         $this->santriModel  = new SantriModel();
+        $this->guruModel = new GuruModel();
     }
 
     public function index()
@@ -28,7 +31,8 @@ class Hafalan extends BaseController
         $data = [
             'title'   => 'Input & Rekap Hafalan Santri',
             'hafalan' => $hafalan,
-            'santri'  => $santri
+            'santri'  => $santri,
+            'guru'    => $this->guruModel->findAll()
         ];
 
         return view('guru/data_hafalan', $data);

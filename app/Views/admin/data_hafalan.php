@@ -151,6 +151,7 @@ $hafalan  = $hafalan ?? [];
                                                 data-bs-target="#modalEdit"
                                                 data-id="<?= $h['id']; ?>"
                                                 data-idsantri="<?= $h['id_santri']; ?>"
+                                                data-idguru="<?= $h['id_guru']; ?>"
                                                 data-jenis="<?= esc($h['jenis']); ?>"
                                                 data-juz="<?= esc($h['juz']); ?>"
                                                 data-surah="<?= esc($h['surah']); ?>"
@@ -539,6 +540,7 @@ $hafalan  = $hafalan ?? [];
     });
 
     // Modal edit setoran
+    document.getElementById('edit-id-guru').value = button.getAttribute('data-idguru');
     document.addEventListener("DOMContentLoaded", function() {
         const modalEdit = document.getElementById('modalEdit');
         modalEdit.addEventListener('show.bs.modal', function(event) {
