@@ -18,9 +18,10 @@ $hafalan  = $hafalan ?? [];
             <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
                 <i class="fa-solid fa-file-excel text-success me-1"></i> Rekap Laporan
             </button>
-            <a href="<?= base_url('admin/hafalan/tambah') ?>" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" style="text-transform: none !important;">
+
+            <button type="button" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#modalInputHafalan" style="text-transform: none !important;">
                 <i class="fa-solid fa-plus me-1"></i> Input Setoran Baru
-            </a>
+            </button>
         </div>
     </div>
 
@@ -157,11 +158,153 @@ $hafalan  = $hafalan ?? [];
             <span class="text-muted small" id="totalDataTextHafalan">Menampilkan total <?= count($hafalan); ?> data setoran hafalan</span>
         </div>
     </div>
-
 </div>
 
-<!-- Skrip JavaScript Filter & Search Realtime -->
+<!-- Modal Input Setoran Baru -->
+<div class="modal fade" id="modalInputHafalan" tabindex="-1" aria-labelledby="modalInputHafalanLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fs-6 fw-semibold" id="modalInputHafalanLabel">
+                    <i class="fa-solid fa-plus-circle me-1"></i> Input Setoran Baru
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Route action disesuaikan ke fungsi store hafalan -->
+            <form action="<?= base_url('guru/hafalan/store') ?>" method="POST">
+                <?= csrf_field(); ?>
+                <div class="modal-body p-4">
+
+                    <!-- Pilihan Santri Binaan -->
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Pilih Santri</label>
+                        <select name="id_santri" class="form-select select2-santri" data-dropdown-parent="#modalInputHafalan" required>
+                            <option value="" disabled selected>-- Pilih Santri --</option>
+                            <?php if (!empty($santri)): ?>
+                                <?php foreach ($santri as $s): ?>
+                                    <option value="<?= $s['id']; ?>"><?= esc($s['nama_santri']); ?> (NIS: <?= esc($s['nis']); ?>)</option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <!-- Jenis Setoran (Ziyadah / Murojaah) -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium small text-muted">Jenis Setoran</label>
+                            <select name="jenis" class="form-select" required>
+                                <option value="ziyadah">Ziyadah (Hafalan Baru)</option>
+                                <option value="murojaah">Murojaah (Ulang Hafalan)</option>
+                            </select>
+                        </div>
+
+                        <!-- Juz -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium small text-muted">Juz</label>
+                            <select name="juz" class="form-select" required>
+                                <option value="" disabled selected>-- Pilih Juz --</option>
+                                <?php for ($i = 1; $i <= 30; $i++): ?>
+                                    <option value="<?= $i; ?>">Juz <?= $i; ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Surah -->
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Nama Surah</label>
+                        <input type="text" name="surah" class="form-control" placeholder="Contoh: Al-Baqarah" required>
+                    </div>
+
+                    <div class="row">
+                        <!-- Ayat Mulai -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium small text-muted">Dari Ayat</label>
+                            <input type="number" name="ayat_mulai" class="form-control" placeholder="Contoh: 1" min="1" required>
+                        </div>
+
+                        <!-- Ayat Selesai -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-medium small text-muted">Sampai Ayat</label>
+                            <input type="number" name="ayat_selesai" class="form-control" placeholder="Contoh: 10" min="1" required>
+                        </div>
+                    </div>
+
+                    <!-- Predikat / Nilai -->
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Predikat Penilaian</label>
+                        <select name="predikat" class="form-select" required>
+                            <option value="Mumtaz">Mumtaz (Sangat Baik)</option>
+                            <option value="Jayyid Jiddan">Jayyid Jiddan (Baik Sekali)</option>
+                            <option value="Jayyid">Jayyid (Baik)</option>
+                            <option value="Maqbul">Maqbul (Cukup)</option>
+                        </select>
+                    </div>
+
+                    <!-- Keterangan Tambahan (Opsional) -->
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Keterangan (Opsional)</label>
+                        <textarea name="keterangan" class="form-control" rows="2" placeholder="Catatan tambahan untuk santri..."></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer bg-light px-4 py-3">
+                    <button type="button" class="btn btn-secondary btn-sm px-3 rounded-pill" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success btn-sm px-3 rounded-pill">Simpan Setoran</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field {
+        padding-left: 2.35rem !important;
+    }
+
+    .select2-search-icon-wrapper {
+        position: relative;
+    }
+
+    .select2-search-icon-wrapper::before {
+        font-family: "Font Awesome 6 Free";
+        content: "\f002";
+        font-weight: 900;
+        position: absolute;
+        left: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #adb5bd;
+        z-index: 10;
+        font-size: 0.85rem;
+    }
+</style>
+
 <script>
+    // Inisialisasi Select2
+    $(document).ready(function() {
+        $('.select2-santri').select2({
+            theme: 'bootstrap-5',
+            dropdownParent: $('#modalInputHafalan'),
+            width: '100%',
+            placeholder: '-- Pilih Santri --',
+            allowClear: true
+        });
+
+        $('.select2-santri').on('select2:open', function() {
+            let searchField = document.querySelector('.select2-container--bootstrap-5 .select2-search__field');
+            if (searchField) {
+                searchField.placeholder = "Cari nama santri atau NIS...";
+
+                let parent = searchField.parentNode;
+                if (!parent.classList.contains('select2-search-icon-wrapper')) {
+                    parent.classList.add('select2-search-icon-wrapper');
+                }
+            }
+        });
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
         const juzFilter = document.getElementById('juzFilter');

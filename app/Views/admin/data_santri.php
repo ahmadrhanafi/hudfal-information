@@ -208,7 +208,7 @@ $wali   = $wali ?? [];
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-medium small text-muted">Wali Santri (Orang Tua)</label>
+                        <label class="form-label fw-medium small text-muted">Wali Santri</label>
                         <select name="id_wali" id="selectWaliTambah" class="form-select" required>
                             <option value="" disabled selected>-- Pilih Wali Santri --</option>
                             <?php foreach ($wali as $w): ?>
@@ -264,9 +264,11 @@ $wali   = $wali ?? [];
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Wali Santri</label>
                         <select name="id_wali" id="selectWaliEdit" class="form-select" required>
-                            <option value="" disabled selected>-- Pilih Wali Santri --</option>
+                            <option value="" disabled>-- Pilih Wali Santri --</option>
                             <?php foreach ($wali as $w): ?>
-                                <option value="<?= $w['id']; ?>"><?= esc($w['nama_wali']); ?> (<?= esc($w['no_hp']); ?>)</option>
+                                <option value="<?= $w['id']; ?>" <?= (isset($santri['id_wali']) && $santri['id_wali'] == $w['id']) ? 'selected' : ''; ?>>
+                                    <?= esc($w['nama_wali']); ?> (<?= esc($w['no_hp']); ?>)
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -288,50 +290,89 @@ $wali   = $wali ?? [];
     </div>
 </div>
 
+<style>
+    .select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field {
+        padding-left: 2.35rem !important;
+    }
+
+    .select2-search-icon-wrapper {
+        position: relative;
+    }
+
+    .select2-search-icon-wrapper::before {
+        font-family: "Font Awesome 6 Free";
+        content: "\f002";
+        font-weight: 900;
+        position: absolute;
+        left: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #adb5bd;
+        z-index: 10;
+        font-size: 0.85rem;
+    }
+</style>
+
+<!-- Script Inisialisasi Select2 -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Inisialisasi Select2
         $(document).ready(function() {
             $('#selectWaliTambah').select2({
                 theme: 'bootstrap-5',
-                dropdownParent: $('#modalTambah')
+                dropdownParent: $('#modalTambah'),
+                placeholder: '-- Pilih Wali Santri --',
+                allowClear: true
             });
 
             $('#selectWaliEdit').select2({
                 theme: 'bootstrap-5',
-                dropdownParent: $('#modalEdit')
+                dropdownParent: $('#modalEdit'),
+                placeholder: '-- Pilih Wali Santri --',
+                allowClear: true
+            });
+
+            $(document).on('select2:open', function() {
+                let searchField = document.querySelector('.select2-container--bootstrap-5.select2-container--open .select2-search__field');
+                if (searchField) {
+                    searchField.placeholder = "Cari nama wali atau no HP...";
+
+                    let parent = searchField.parentNode;
+                    if (!parent.classList.contains('select2-search-icon-wrapper')) {
+                        parent.classList.add('select2-search-icon-wrapper');
+                    }
+                }
             });
         });
-
-        // Handle Modal Edit
-        const modalEdit = document.getElementById('modalEdit');
-        if (modalEdit) {
-            modalEdit.addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget;
-
-                const id = button.getAttribute('data-id');
-                const nis = button.getAttribute('data-nis');
-                const namaSantri = button.getAttribute('data-namasantri');
-                const jenisKelamin = button.getAttribute('data-jeniskelamin');
-                const idKelas = button.getAttribute('data-idkelas');
-                const idWali = button.getAttribute('data-idwali');
-                const status = button.getAttribute('data-status');
-
-                modalEdit.querySelector('#editNis').value = nis;
-                modalEdit.querySelector('#editNamaSantri').value = namaSantri;
-                modalEdit.querySelector('#editJenisKelamin').value = jenisKelamin;
-                modalEdit.querySelector('#editIdKelas').value = idKelas;
-                modalEdit.querySelector('#editStatus').value = status;
-
-                // Beri jeda sedikit agar Select2 siap menerima value saat modal selesai dirender
-                setTimeout(function() {
-                    $('#selectWaliEdit').val(idWali).trigger('change');
-                }, 100);
-
-                modalEdit.querySelector('#formEdit').action = '<?= base_url('admin/santri/update'); ?>/' + id;
-            });
-        }
     });
+
+    // Handle Modal Edit
+    const modalEdit = document.getElementById('modalEdit');
+    if (modalEdit) {
+        modalEdit.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+
+            const id = button.getAttribute('data-id');
+            const nis = button.getAttribute('data-nis');
+            const namaSantri = button.getAttribute('data-namasantri');
+            const jenisKelamin = button.getAttribute('data-jeniskelamin');
+            const idKelas = button.getAttribute('data-idkelas');
+            const idWali = button.getAttribute('data-idwali');
+            const status = button.getAttribute('data-status');
+
+            modalEdit.querySelector('#editNis').value = nis;
+            modalEdit.querySelector('#editNamaSantri').value = namaSantri;
+            modalEdit.querySelector('#editJenisKelamin').value = jenisKelamin;
+            modalEdit.querySelector('#editIdKelas').value = idKelas;
+            modalEdit.querySelector('#editStatus').value = status;
+
+            // Beri jeda sedikit agar Select2 siap menerima value saat modal selesai dirender
+            setTimeout(function() {
+                $('#selectWaliEdit').val(idWali).trigger('change');
+            }, 100);
+
+            modalEdit.querySelector('#formEdit').action = '<?= base_url('admin/santri/update'); ?>/' + id;
+        });
+    }
 
     // Pencarian data
     document.addEventListener('DOMContentLoaded', function() {

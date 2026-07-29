@@ -24,8 +24,9 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('kelas/update/(:num)', 'Admin\Kelas::update/$1');
     $routes->get('kelas/delete/(:num)', 'Admin\Kelas::delete/$1');
 
+    //  Manajemen Santri
     $routes->get('santri', 'Admin\Santri::index');
-    $routes->get('santri/tambah', 'Admin\Santri::tambah');
+    // $routes->get('santri/tambah', 'Admin\Santri::tambah');
     $routes->post('santri/store', 'Admin\Santri::store');
     $routes->get('santri-detail/(:num)', 'Admin\Santri::detail/$1');
     $routes->get('santri/edit/(:num)', 'Admin\Santri::edit/$1');
@@ -44,7 +45,13 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('wali-santri/update/(:num)', 'Admin\Wali::update/$1');
     $routes->get('wali-santri/delete/(:num)', 'Admin\Wali::delete/$1');
 
+    // Manajemen Hafalan
     $routes->get('hafalan', 'Admin\Hafalan::index');
+    $routes->post('hafalan/store', 'Admin\Hafalan::store');
+    $routes->post('hafalan/update/(:num)', 'Admin\Hafalan::update/$1');
+    $routes->get('hafalan/delete/(:num)', 'Admin\Hafalan::delete/$1');
+
+
     $routes->get('statistik-hafalan', 'Admin\Statistik::index');
     $routes->get('administrasi', 'Admin\Administrasi::index');
     $routes->get('esertifikat', 'Admin\Esertifikat::index');
