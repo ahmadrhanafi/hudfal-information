@@ -34,7 +34,7 @@ class Hafalan extends BaseController
 
             return view('admin/data_hafalan', $data);
         } elseif ($role == 'guru') {
-            return redirect()->to('/guru/data_hafalan');
+            return redirect()->to('/guru/hafalan');
         } else {
             return redirect()->to('/login');
         }
