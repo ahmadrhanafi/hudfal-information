@@ -40,6 +40,21 @@ class Hafalan extends BaseController
         }
     }
 
+    public function getSantriByGuru($idGuru)
+    {
+        $guru = $this->guruModel->find($idGuru);
+
+        if (!$guru || empty($guru['id_kelas_diampu'])) {
+            return $this->response->setJSON([]);
+        }
+
+        $idKelas = $guru['id_kelas_diampu'];
+
+        $santri = $this->santriModel->where('id_kelas', $idKelas)->findAll();
+
+        return $this->response->setJSON($santri);
+    }
+
     public function store()
     {
         // Validasi input form

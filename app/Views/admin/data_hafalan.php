@@ -471,6 +471,40 @@ $hafalan  = $hafalan ?? [];
         });
     });
 
+    // AJAX (Dependent Dropdown)
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectGuru = document.querySelector('select[name="id_guru"]');
+        const selectSantri = document.querySelector('select[name="id_santri"]');
+
+        if (selectGuru && selectSantri) {
+            selectGuru.addEventListener('change', function() {
+                const idGuru = this.value;
+
+                // Kosongkan dropdown santri dan tampilkan teks loading
+                selectSantri.innerHTML = '<option value="" disabled selected>Memuat santri...</option>';
+
+                // Panggil API endpoint yang ada di controller admin
+                fetch("<?= base_url('admin/hafalan/getSantriByGuru/'); ?>" + idGuru)
+                    .then(response => response.json())
+                    .then(data => {
+                        selectSantri.innerHTML = '<option value="" disabled selected>-- Pilih Santri --</option>';
+
+                        if (data.length > 0) {
+                            data.forEach(s => {
+                                selectSantri.innerHTML += `<option value="${s.id}">${s.nama_santri} (NIS: ${s.nis})</option>`;
+                            });
+                        } else {
+                            selectSantri.innerHTML += '<option value="" disabled>Tidak ada santri di kelas guru ini</option>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        selectSantri.innerHTML = '<option value="" disabled selected>Gagal memuat santri</option>';
+                    });
+            });
+        }
+    });
+
     // Modal tambah setoran
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
