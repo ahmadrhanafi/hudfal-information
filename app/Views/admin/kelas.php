@@ -50,6 +50,7 @@
                         <tr>
                             <th class="py-3 ps-4">ID Kelas</th>
                             <th class="py-3">Nama Kelas</th>
+                            <th class="py-3 text-center" style="width: 20%;">Jumlah Santri</th>
                             <th class="py-3">Dibuat Pada</th>
                             <th class="py-3 text-center pe-4">Aksi</th>
                         </tr>
@@ -61,6 +62,11 @@
                                 <tr class="kelas-row">
                                     <td class="ps-4"><?= $no++; ?></td>
                                     <td class="fw-semibold text-dark"><?= esc($k['nama_kelas']); ?></td>
+                                    <td class="text-center">
+                                        <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-semibold">
+                                            <i class="fa-solid fa-users me-1"></i> <?= $k['total_santri']; ?> Santri
+                                        </span>
+                                    </td>
                                     <td class="text-muted small"><?= esc($k['created_at']); ?></td>
                                     <td class="text-center pe-4">
                                         <!-- Tombol Trigger Modal Edit -->

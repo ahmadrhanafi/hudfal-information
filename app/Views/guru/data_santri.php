@@ -34,11 +34,10 @@ $santri = $santri ?? [];
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <select id="kelasFilter" class="form-select form-select-sm bg-light border-0 py-2">
-                        <option value="semua" selected>Filter: Semua Kelas</option>
-                        <option value="kelas8a">Kelas 8A</option>
-                        <option value="kelas8b">Kelas 8B</option>
-                        <option value="kelas9a">Kelas 9A</option>
+                    <select id="genderFilter" class="form-select form-select-sm bg-light border-0 py-2">
+                        <option value="semua" selected>Filter: Semua Gender</option>
+                        <option value="l">Laki-laki</option>
+                        <option value="p">Perempuan</option>
                     </select>
                 </div>
             </div>
@@ -81,7 +80,8 @@ $santri = $santri ?? [];
                                 <!-- Baris data dengan atribut data-* untuk filter JS -->
                                 <tr class="santri-row"
                                     data-kelas="<?= strtolower(str_replace(' ', '', $s['nama_kelas'] ?? '')); ?>"
-                                    data-status="<?= $statusLower; ?>">
+                                    data-status="<?= $statusLower; ?>"
+                                    data-gender="<?= strtolower($s['jenis_kelamin'] ?? ''); ?>">
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
@@ -137,25 +137,25 @@ $santri = $santri ?? [];
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
-        const kelasFilter = document.getElementById('kelasFilter');
+        const genderFilter = document.getElementById('genderFilter'); // Diubah dari kelasFilter
         const rows = document.querySelectorAll('#tableBodySantri .santri-row');
         const totalDataText = document.getElementById('totalDataTextSantri');
         const emptyRow = document.getElementById('emptyRowSantri');
 
         function filterSantri() {
             const keyword = searchInput ? searchInput.value.toLowerCase() : '';
-            const kelasVal = kelasFilter ? kelasFilter.value.toLowerCase().replace(/\s+/g, '') : 'semua';
+            const genderVal = genderFilter ? genderFilter.value.toLowerCase() : 'semua';
 
             let visibleCount = 0;
 
             rows.forEach(row => {
                 const rowText = row.textContent.toLowerCase();
-                const rowKelas = row.getAttribute('data-kelas');
+                const rowGender = row.getAttribute('data-gender'); // Mengambil data-gender dari tr
 
                 const matchesKeyword = rowText.includes(keyword);
-                const matchesKelas = (kelasVal === 'semua' || rowKelas.includes(kelasVal));
+                const matchesGender = (genderVal === 'semua' || rowGender === genderVal);
 
-                if (matchesKeyword && matchesKelas) {
+                if (matchesKeyword && matchesGender) {
                     row.style.display = '';
                     visibleCount++;
                 } else {
@@ -177,7 +177,7 @@ $santri = $santri ?? [];
         }
 
         if (searchInput) searchInput.addEventListener('keyup', filterSantri);
-        if (kelasFilter) kelasFilter.addEventListener('change', filterSantri);
+        if (genderFilter) genderFilter.addEventListener('change', filterSantri);
     });
 </script>
 

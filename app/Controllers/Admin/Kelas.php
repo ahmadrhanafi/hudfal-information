@@ -16,9 +16,16 @@ class Kelas extends BaseController
 
     public function index()
     {
+        $db = \Config\Database::connect();
+        $builder = $db->table('kelas');
+        $builder->select('kelas.*, COUNT(santri.id) as total_santri');
+        $builder->join('santri', 'santri.id_kelas = kelas.id', 'left');
+        $builder->groupBy('kelas.id');
+        $kelasWithTotal = $builder->get()->getResultArray();
+
         $data = [
             'title' => 'Data Kelas',
-            'kelas' => $this->kelasModel->findAll(),
+            'kelas' => $kelasWithTotal,
             'role'  => session()->get('role') ?? 'admin'
         ];
 
