@@ -41,7 +41,7 @@ class HafalanModel extends Model
             return $builder->where('hafalan.id', $id)->first();
         }
 
-        return $builder->orderBy('hafalan.created_at', 'DESC')->findAll();
+        return $builder->orderBy('hafalan.created_at', 'DESC');
     }
 
     // Fungsi khusus untuk statistik

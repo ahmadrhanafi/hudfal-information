@@ -27,6 +27,7 @@ class Hafalan extends BaseController
             $data = [
                 'title'   => 'Monitoring Data Hafalan',
                 'hafalan' => $this->hafalanModel->getHafalanWithRelations()->paginate(10, 'hafalan'),
+                'pager'   => $this->hafalanModel->pager,
                 'santri'  => $this->santriModel->findAll(),
                 'guru'    => $this->guruModel->findAll(),
                 'role'    => $role
