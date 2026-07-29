@@ -104,7 +104,7 @@
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
 
-                                            <a href="<?= base_url('guru/hafalan/hapus/' . $row['id']) ?>" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus Setoran" onclick="return confirm('Yakin ingin menghapus catatan setoran hafalan ini?')">
+                                            <a href="<?= base_url('guru/hafalan/delete/' . $row['id']) ?>" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus Setoran" onclick="return confirm('Yakin ingin menghapus catatan setoran hafalan ini?')">
                                                 <i class="fa-solid fa-trash"></i>
                                             </a>
                                         </div>
