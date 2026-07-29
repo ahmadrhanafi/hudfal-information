@@ -62,7 +62,13 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
 $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'Guru\Dashboard::index');
     $routes->get('santri', 'Guru\Santri::index');
+
+    // Manajemen Hafalan
     $routes->get('hafalan', 'Guru\Hafalan::index');
+    $routes->post('hafalan/store', 'Guru\Hafalan::store');
+    $routes->post('hafalan/update/(:num)', 'Guru\Hafalan::update/$1');
+    $routes->get('hafalan/delete/(:num)', 'Guru\Hafalan::delete/$1');
+
     $routes->get('riwayat-hafalan', 'Guru\RiwayatHafalan::index');
     $routes->get('statistik-hafalan', 'Guru\Statistik::index');
     $routes->get('pengaturan', 'Guru\Pengaturan::index');

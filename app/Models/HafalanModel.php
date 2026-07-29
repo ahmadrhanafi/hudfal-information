@@ -55,4 +55,14 @@ class HafalanModel extends Model
         $builder->groupBy('surah');
         return $builder->get()->getResultArray();
     }
+
+    public function getHafalanByGuru($idGuru)
+    {
+        return $this->select('hafalan.*, santri.nama_santri, guru.nama_guru')
+            ->join('santri', 'santri.id = hafalan.id_santri')
+            ->join('guru', 'guru.id = hafalan.id_guru')
+            ->where('hafalan.id_guru', $idGuru)
+            ->orderBy('hafalan.created_at', 'DESC')
+            ->findAll();
+    }
 }

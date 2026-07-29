@@ -128,12 +128,39 @@ $hafalan  = $hafalan ?? [];
                                     </td>
                                     <td class="text-end pe-4">
                                         <div class="d-flex justify-content-end gap-1">
-                                            <a href="#" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Detail">
+                                            <!-- Tombol Detail (Memicu Modal Detail) -->
+                                            <button type="button" class="btn btn-sm btn-light text-primary border-0 rounded-2 btn-detail"
+                                                title="Detail"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalDetail"
+                                                data-nama="<?= esc($h['nama_santri']); ?>"
+                                                data-jenis="<?= esc($h['jenis']); ?>"
+                                                data-juz="<?= esc($h['juz']); ?>"
+                                                data-surah="<?= esc($h['surah']); ?>"
+                                                data-ayatmulai="<?= esc($h['ayat_mulai']); ?>"
+                                                data-ayatselesai="<?= esc($h['ayat_selesai']); ?>"
+                                                data-predikat="<?= esc($h['predikat']); ?>"
+                                                data-keterangan="<?= esc($h['keterangan'] ?? '-'); ?>"
+                                                data-tanggal="<?= date('d M Y, H:i', strtotime($h['created_at'] ?? 'now')); ?>">
                                                 <i class="fa-solid fa-eye"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-sm btn-light text-warning border-0 rounded-2" title="Edit">
+                                            </button>
+
+                                            <button type="button" class="btn btn-sm btn-light text-warning border-0 rounded-2 btn-edit"
+                                                title="Edit"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEdit"
+                                                data-id="<?= $h['id']; ?>"
+                                                data-idsantri="<?= $h['id_santri']; ?>"
+                                                data-jenis="<?= esc($h['jenis']); ?>"
+                                                data-juz="<?= esc($h['juz']); ?>"
+                                                data-surah="<?= esc($h['surah']); ?>"
+                                                data-ayatmulai="<?= esc($h['ayat_mulai']); ?>"
+                                                data-ayatselesai="<?= esc($h['ayat_selesai']); ?>"
+                                                data-predikat="<?= esc($h['predikat']); ?>"
+                                                data-keterangan="<?= esc($h['keterangan']); ?>">
                                                 <i class="fa-solid fa-pen-to-square"></i>
-                                            </a>
+                                            </button>
+
                                             <a href="<?= base_url('admin/hafalan/delete/' . $h['id']); ?>" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus" onclick="return confirm('Yakin ingin menghapus data hafalan ini?')">
                                                 <i class="fa-solid fa-trash"></i>
                                             </a>
@@ -172,7 +199,7 @@ $hafalan  = $hafalan ?? [];
             </div>
 
             <!-- Route action disesuaikan ke fungsi store hafalan -->
-            <form action="<?= base_url('guru/hafalan/store') ?>" method="POST">
+            <form action="<?= base_url('admin/hafalan/store') ?>" method="POST">
                 <?= csrf_field(); ?>
                 <div class="modal-body p-4">
 
@@ -184,6 +211,18 @@ $hafalan  = $hafalan ?? [];
                             <?php if (!empty($santri)): ?>
                                 <?php foreach ($santri as $s): ?>
                                     <option value="<?= $s['id']; ?>"><?= esc($s['nama_santri']); ?> (NIS: <?= esc($s['nis']); ?>)</option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Guru Pengampu / Penilai</label>
+                        <select name="id_guru" class="form-select" required>
+                            <option value="" disabled selected>-- Pilih Guru --</option>
+                            <?php if (!empty($guru)): ?>
+                                <?php foreach ($guru as $g): ?>
+                                    <option value="<?= $g['id']; ?>"><?= esc($g['nama_guru']); ?></option>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>
@@ -258,6 +297,132 @@ $hafalan  = $hafalan ?? [];
     </div>
 </div>
 
+<!-- MODAL DETAIL HAFALAN -->
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-dark" id="modalDetailLabel">Detail Setoran Hafalan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4">
+                <table class="table table-borderless align-middle mb-0 small">
+                    <tr>
+                        <td class="text-muted" style="width: 35%;">Nama Santri</td>
+                        <td class="fw-semibold text-dark" id="det-nama">: -</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Waktu Setor</td>
+                        <td class="text-dark" id="det-tanggal">: -</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Jenis Setoran</td>
+                        <td class="text-dark" id="det-jenis">: -</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Capaian</td>
+                        <td class="fw-semibold text-dark" id="det-capaian">: -</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Predikat</td>
+                        <td>: <span id="det-predikat" class="badge bg-success bg-opacity-10 text-success px-2 py-1">-</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Keterangan</td>
+                        <td class="text-dark" id="det-keterangan">: -</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDIT HAFALAN -->
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-4">
+            <!-- Form mengarah ke method update di controller -->
+            <form action="" id="formEditHafalan" method="POST">
+                <?= csrf_field(); ?>
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark" id="modalEditLabel">Edit Setoran Hafalan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <!-- Pilih Santri -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium text-muted">Santri</label>
+                        <select name="id_santri" id="edit-id-santri" class="form-select form-select-sm" required>
+                            <option value="" disabled>-- Pilih Santri --</option>
+                            <?php if (!empty($santri)): ?>
+                                <?php foreach ($santri as $s): ?>
+                                    <option value="<?= $s['id']; ?>"><?= esc($s['nama_santri']); ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+
+                    <!-- Jenis Setoran -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium text-muted">Jenis Setoran</label>
+                        <select name="jenis" id="edit-jenis" class="form-select form-select-sm" required>
+                            <option value="ZIYADAH">ZIYADAH (Hafalan Baru)</option>
+                            <option value="MURABAHAH">MURABAHAH / Murojaah</option>
+                        </select>
+                    </div>
+
+                    <!-- Juz & Surah -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label small fw-medium text-muted">Juz</label>
+                            <input type="number" name="juz" id="edit-juz" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label small fw-medium text-muted">Surah</label>
+                            <input type="text" name="surah" id="edit-surah" class="form-control form-control-sm" required>
+                        </div>
+                    </div>
+
+                    <!-- Ayat Mulai & Selesai -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-medium text-muted">Ayat Mulai</label>
+                            <input type="number" name="ayat_mulai" id="edit-ayat-mulai" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-medium text-muted">Ayat Selesai</label>
+                            <input type="number" name="ayat_selesai" id="edit-ayat-selesai" class="form-control form-control-sm" required>
+                        </div>
+                    </div>
+
+                    <!-- Predikat -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium text-muted">Predikat</label>
+                        <select name="predikat" id="edit-predikat" class="form-select form-select-sm" required>
+                            <option value="Mumtaz">Mumtaz (Sangat Baik)</option>
+                            <option value="Jayyid">Jayyid (Baik)</option>
+                            <option value="Maqbul">Maqbul (Cukup)</option>
+                        </select>
+                    </div>
+
+                    <!-- Keterangan -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium text-muted">Keterangan (Opsional)</label>
+                        <textarea name="keterangan" id="edit-keterangan" class="form-control form-control-sm" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light btn-sm rounded-pill px-3 text-muted" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success btn-sm rounded-pill px-4 shadow-sm">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <style>
     .select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field {
         padding-left: 2.35rem !important;
@@ -305,6 +470,7 @@ $hafalan  = $hafalan ?? [];
         });
     });
 
+    // Modal tambah setoran
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
         const juzFilter = document.getElementById('juzFilter');
@@ -353,6 +519,56 @@ $hafalan  = $hafalan ?? [];
         if (searchInput) searchInput.addEventListener('keyup', filterHafalan);
         if (juzFilter) juzFilter.addEventListener('change', filterHafalan);
         if (predikatFilter) predikatFilter.addEventListener('change', filterHafalan);
+    });
+
+    // Modal detail setoran
+    document.addEventListener("DOMContentLoaded", function() {
+        const modalDetail = document.getElementById('modalDetail');
+        modalDetail.addEventListener('show.bs.modal', function(event) {
+            // Ambil data dari tombol yang diklik
+            const button = event.relatedTarget;
+
+            // Masukkan ke dalam elemen modal
+            document.getElementById('det-nama').innerText = ': ' + button.getAttribute('data-nama');
+            document.getElementById('det-tanggal').innerText = ': ' + button.getAttribute('data-tanggal');
+            document.getElementById('det-jenis').innerText = ': ' + button.getAttribute('data-jenis');
+            document.getElementById('det-capaian').innerText = ': Juz ' + button.getAttribute('data-juz') + ' (' + button.getAttribute('data-surah') + ' ayat ' + button.getAttribute('data-ayatmulai') + '-' + button.getAttribute('data-ayatselesai') + ')';
+            document.getElementById('det-predikat').innerText = button.getAttribute('data-predikat');
+            document.getElementById('det-keterangan').innerText = ': ' + button.getAttribute('data-keterangan');
+        });
+    });
+
+    // Modal edit setoran
+    document.addEventListener("DOMContentLoaded", function() {
+        const modalEdit = document.getElementById('modalEdit');
+        modalEdit.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+
+            // Ambil data dari tombol
+            const id = button.getAttribute('data-id');
+            const idSantri = button.getAttribute('data-idsantri');
+            const jenis = button.getAttribute('data-jenis');
+            const juz = button.getAttribute('data-juz');
+            const surah = button.getAttribute('data-surah');
+            const ayatMulai = button.getAttribute('data-ayatmulai');
+            const ayatSelesai = button.getAttribute('data-ayatselesai');
+            const predikat = button.getAttribute('data-predikat');
+            const keterangan = button.getAttribute('data-keterangan');
+
+            // Set URL action pada form ke route update yang sesuai
+            const form = document.getElementById('formEditHafalan');
+            form.action = "<?= base_url('guru/hafalan/update/'); ?>" + id;
+
+            // Masukkan data ke dalam input form modal
+            document.getElementById('edit-id-santri').value = idSantri;
+            document.getElementById('edit-jenis').value = jenis;
+            document.getElementById('edit-juz').value = juz;
+            document.getElementById('edit-surah').value = surah;
+            document.getElementById('edit-ayat-mulai').value = ayatMulai;
+            document.getElementById('edit-ayat-selesai').value = ayatSelesai;
+            document.getElementById('edit-predikat').value = predikat;
+            document.getElementById('edit-keterangan').value = (keterangan === 'null' || keterangan === '') ? '' : keterangan;
+        });
     });
 </script>
 

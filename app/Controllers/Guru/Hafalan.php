@@ -3,11 +3,110 @@
 namespace App\Controllers\Guru;
 
 use App\Controllers\BaseController;
+use App\Models\HafalanModel;
+use App\Models\SantriModel;
 
 class Hafalan extends BaseController
 {
+    protected $hafalanModel;
+    protected $santriModel;
+
+    public function __construct()
+    {
+        $this->hafalanModel = new HafalanModel();
+        $this->santriModel  = new SantriModel();
+    }
+
     public function index()
     {
-        return view('guru/data_hafalan');
+        $idGuru = session()->get('ref_id');
+
+        $hafalan = $this->hafalanModel->getHafalanByGuru($idGuru);
+
+        $santri = $this->santriModel->findAll();
+
+        $data = [
+            'title'   => 'Input & Rekap Hafalan Santri',
+            'hafalan' => $hafalan,
+            'santri'  => $santri
+        ];
+
+        return view('guru/data_hafalan', $data);
+    }
+
+    public function store()
+    {
+        // Validasi input form
+        if (!$this->validate([
+            'id_santri'  => 'required|numeric',
+            'id_guru'      => 'required|numeric',
+            'jenis'      => 'required',
+            'juz'        => 'required|numeric',
+            'surah'      => 'required',
+            'ayat_mulai' => 'required|numeric',
+            'ayat_selesai' => 'required|numeric',
+            'predikat'   => 'required'
+        ])) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan! Mohon lengkapi data dengan benar.');
+        }
+
+        $this->hafalanModel->save([
+            'id_santri'    => $this->request->getVar('id_santri'),
+            'id_guru'      => $this->request->getVar('id_guru'),
+            'jenis'        => $this->request->getVar('jenis'),
+            'juz'          => $this->request->getVar('juz'),
+            'surah'        => $this->request->getVar('surah'),
+            'ayat_mulai'   => $this->request->getVar('ayat_mulai'),
+            'ayat_selesai' => $this->request->getVar('ayat_selesai'),
+            'predikat'     => $this->request->getVar('predikat'),
+            'keterangan'   => $this->request->getVar('keterangan')
+        ]);
+
+        return redirect()->to(base_url('admin/hafalan'))->with('success', 'Data setoran hafalan berhasil ditambahkan!');
+    }
+
+    // Method untuk Memperbarui Data Hafalan
+    public function update($id)
+    {
+        // Validasi input form edit (id_guru dihapus dari validasi form karena tidak ada di input modal)
+        if (!$this->validate([
+            'id_santri'    => 'required|numeric',
+            'jenis'        => 'required',
+            'juz'          => 'required|numeric',
+            'surah'        => 'required',
+            'ayat_mulai'   => 'required|numeric',
+            'ayat_selesai' => 'required|numeric',
+            'predikat'     => 'required'
+        ])) {
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui! Mohon cek kembali inputan anda.');
+        }
+
+        $this->hafalanModel->update($id, [
+            'id_santri'    => $this->request->getVar('id_santri'),
+            'jenis'        => $this->request->getVar('jenis'),
+            'juz'          => $this->request->getVar('juz'),
+            'surah'        => $this->request->getVar('surah'),
+            'ayat_mulai'   => $this->request->getVar('ayat_mulai'),
+            'ayat_selesai' => $this->request->getVar('ayat_selesai'),
+            'predikat'     => $this->request->getVar('predikat'),
+            'keterangan'   => $this->request->getVar('keterangan')
+        ]);
+
+        // Arahkan kembali ke halaman hafalan guru (sesuaikan dengan role kamu saat ini)
+        return redirect()->to(base_url('guru/hafalan'))->with('success', 'Data setoran hafalan berhasil diperbarui!');
+    }
+
+    // Method untuk Menghapus Data Hafalan
+    public function delete($id)
+    {
+        $hafalan = $this->hafalanModel->find($id);
+
+        if (!$hafalan) {
+            return redirect()->to(base_url('admin/hafalan'))->with('error', 'Data hafalan tidak ditemukan.');
+        }
+
+        $this->hafalanModel->delete($id);
+
+        return redirect()->to(base_url('admin/hafalan'))->with('success', 'Data hafalan berhasil dihapus!');
     }
 }
