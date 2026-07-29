@@ -5,10 +5,12 @@
         </h6>
 
         <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false"
-                style="color: #a0de8a;">
+            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                 <div class="me-3 text-end d-none d-sm-block">
-                    <div class="small fw-bold" style="color: #091413;"><?= session()->get('name') ?></div>
+                    <div class="small fw-bold text-dark"><?= session()->get('name') ?></div>
+                    <?php if (session()->get('role') == 'guru'): ?>
+                        <h6 class="text-muted small mb-0" style="font-size: 8.5px;">Pengampu Kelas: <?= session()->get('nama_kelas') ?></h6>
+                    <?php endif; ?>
                 </div>
                 <img src="<?= session()->get('foto') ?>" alt="User" width="40" height="40" class="rounded-circle border border-2 border-white shadow-sm">
             </a>
