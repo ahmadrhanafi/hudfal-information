@@ -31,6 +31,7 @@ class Auth extends BaseController
 
             $namaKelas = null;
             $idKelas = null;
+            $namaWali = null;
 
             if ($data['role'] == 'guru' && !empty($data['ref_id'])) {
                 $db = \Config\Database::connect();
@@ -45,17 +46,29 @@ class Auth extends BaseController
                     $idKelas = $guru['id_kelas_diampu'];
                     $namaKelas = $guru['nama_kelas'];
                 }
+            } elseif ($data['role'] == 'wali' && !empty($data['ref_id'])) {
+                $db = \Config\Database::connect();
+                $wali = $db->table('wali')
+                    ->select('nama_wali')
+                    ->where('id', $data['ref_id'])
+                    ->get()
+                    ->getRowArray();
+
+                if ($wali) {
+                    $namaWali = $wali['nama_wali'];
+                }
             }
 
             $session->set([
-                'id'             => $data['id'],
-                'role'           => $data['role'],
-                'name'           => $data['name'],
-                'foto'           => !empty($data['foto']) ? base_url('upload/profile/' . $data['foto']) : base_url('upload/profile/default.png'),
-                'ref_id'         => $data['ref_id'],
-                'id_kelas'       => $idKelas,
-                'nama_kelas'     => $namaKelas ? $namaKelas : 'Belum Ada Kelas',
-                'logged_in'      => TRUE
+                'id'           => $data['id'],
+                'role'         => $data['role'],
+                'name'         => $data['name'],
+                'nama_wali'    => $namaWali ? $namaWali : $data['name'], // Simpan nama wali
+                'foto'         => !empty($data['foto']) ? base_url('upload/profile/' . $data['foto']) : base_url('upload/profile/default.png'),
+                'ref_id'       => $data['ref_id'],
+                'id_kelas'     => $idKelas,
+                'nama_kelas'   => $namaKelas ? $namaKelas : 'Belum Ada Kelas',
+                'logged_in'    => TRUE
             ]);
 
             return redirect()->to('/loading');

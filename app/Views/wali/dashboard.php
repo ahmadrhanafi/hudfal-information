@@ -14,7 +14,17 @@
                     </span>
                     <h2 class="fw-bold text-dark mb-2" style="text-transform: none !important;">Ahlan wa Sahlan, Ayah / Bunda</h2>
                     <p class="text-muted mb-3 small" style="text-transform: none !important;">
-                        Pantau perkembangan hafalan Al-Qur'an, status kehadiran, serta informasi pembayaran sekolah ananda <strong>Ahmad Zaki Al-Faruq</strong> di sini.
+                        Pantau perkembangan hafalan Al-Qur'an, status kehadiran, serta informasi pembayaran sekolah ananda
+                        <strong>
+                            <?php if (!empty($anak)): ?>
+                                <?php
+                                $namaAnak = array_column($anak, 'nama_santri');
+                                echo implode(' dan ', $namaAnak);
+                                ?>
+                            <?php else: ?>
+                                (Belum ada data anak terhubung)
+                            <?php endif; ?>
+                        </strong> di sini.
                     </p>
                     <div class="d-flex flex-wrap gap-2">
                         <a href="<?= base_url('wali/hafalan') ?>" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" style="text-transform: none !important;">
@@ -74,6 +84,25 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-xl-12 col-md-12">
+            <?php if (!empty($anak)): ?>
+                <?php foreach ($anak as $a): ?>
+                    <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold"><?= esc($a['nama_santri']); ?></h5>
+                            <p class="card-text text-muted mb-1">NIS: <?= esc($a['nis']); ?> | Kelas: <?= esc($a['nama_kelas'] ?? 'Belum ditentukan'); ?></p>
+                            <a href="<?= base_url('wali/hafalan/detail/' . $a['id']); ?>" class="btn btn-sm btn-success mt-2">
+                                <i class="fa-solid fa-book-quran me-1"></i> Lihat Detail Hafalan
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="alert alert-warning text-center">
+                    Belum ada data santri/anak yang dihubungkan dengan akun wali ini. Silakan hubungi admin pesantren.
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 

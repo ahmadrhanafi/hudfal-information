@@ -42,7 +42,7 @@
             <a href="<?= base_url('admin/hafalan') ?>" class="nav-link <?= (url_is('admin/hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-book-quran"></i> <span>Data Hafalan</span>
             </a>
-            <a href="<?= base_url('admin/statistik') ?>" class="nav-link <?= (url_is('admin/statistik*')) ? 'active' : '' ?>">
+            <a href="<?= base_url('admin/statistik-hafalan') ?>" class="nav-link <?= (url_is('admin/statistik-hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-chart-line"></i> <span>Statistik Hafalan</span>
             </a>
             <a href="<?= base_url('admin/administrasi') ?>" class="nav-link <?= (url_is('admin/administrasi*')) ? 'active' : '' ?>">
@@ -65,10 +65,10 @@
             <a href="<?= base_url('guru/hafalan') ?>" class="nav-link <?= (url_is('guru/hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-book-open"></i> <span>Data Hafalan</span>
             </a>
-            <a href="<?= base_url('guru/statistik-hafalan') ?>" class="nav-link <?= (url_is('guru/statistik*')) ? 'active' : '' ?>">
+            <a href="<?= base_url('guru/statistik-hafalan') ?>" class="nav-link <?= (url_is('guru/statistik-hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-chart-bar"></i> <span>Statistik Hafalan</span>
             </a>
-            <a href="<?= base_url('guru/riwayat-hafalan') ?>" class="nav-link <?= (url_is('guru/riwayat_hafalan*')) ? 'active' : '' ?>">
+            <a href="<?= base_url('guru/riwayat-hafalan') ?>" class="nav-link <?= (url_is('guru/riwayat-hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-history"></i> <span>Riwayat Hafalan</span>
             </a>
         <?php endif; ?>
@@ -76,7 +76,7 @@
         <!-- MENU KHUSUS WALI SANTRI -->
         <?php if ($role === 'wali'): ?>
             <div class="text-uppercase small px-4 mt-3 mb-1" style="font-size: 0.65rem; color: #8BAE66; letter-spacing: 1px;">Menu Wali</div>
-            <a href="<?= base_url('wali/statistik-hafalan') ?>" class="nav-link <?= (url_is('wali/riwayat-hafalan*')) ? 'active' : '' ?>">
+            <a href="<?= base_url('wali/statistik-hafalan') ?>" class="nav-link <?= (url_is('wali/statistik-hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-chart-bar"></i> <span>Statistik Hafalan</span>
             </a>
             <a href="<?= base_url('wali/riwayat-hafalan') ?>" class="nav-link <?= (url_is('wali/riwayat-hafalan*')) ? 'active' : '' ?>">
