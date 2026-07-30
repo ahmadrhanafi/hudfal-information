@@ -65,6 +65,7 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
 
     // Manajemen Hafalan
     $routes->get('hafalan', 'Guru\Hafalan::index');
+    $routes->get('detail-riwayat-hafalan/(:num)', 'Guru\RiwayatHafalan::detail/$1');
     $routes->post('hafalan/store', 'Guru\Hafalan::store');
     $routes->post('hafalan/update/(:num)', 'Guru\Hafalan::update/$1');
     $routes->get('hafalan/delete/(:num)', 'Guru\Hafalan::delete/$1');
@@ -77,6 +78,7 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
 $routes->group('wali', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'Wali\Dashboard::index');
     $routes->get('riwayat-hafalan', 'Wali\RiwayatHafalan::index');
+    $routes->get('detail-riwayat-hafalan/(:num)', 'Wali\RiwayatHafalan::detail/$1');
     $routes->get('riwayat-pembayaran', 'Wali\RiwayatPembayaran::index');
     $routes->get('esertifikat', 'Wali\Esertifikat::index');
     $routes->get('statistik-hafalan', 'Wali\Statistik::index');

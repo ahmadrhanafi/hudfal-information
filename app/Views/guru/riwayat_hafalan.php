@@ -2,6 +2,10 @@
 
 <?= $this->section('content') ?>
 
+<?php
+$santri = $santri ?? [];
+?>
+
 <div class="container-fluid px-0">
 
     <!-- Page Header & Action Buttons -->
@@ -102,81 +106,38 @@
                     <thead class="bg-light text-muted small text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
                         <tr>
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
-                            <th class="py-3" style="width: 25%;">Nama Santri & Tanggal</th>
-                            <th class="py-3" style="width: 20%;">Jenis & Target</th>
-                            <th class="py-3" style="width: 20%;">Capaian (Juz / Surah)</th>
-                            <th class="py-3 text-center" style="width: 15%;">Predikat</th>
-                            <th class="py-3 text-end pe-4" style="width: 15%;">Aksi</th>
+                            <th class="py-3" style="width: 30%;">Nama Santri</th>
+                            <th class="py-3" style="width: 25%;">NIS</th>
+                            <th class="py-3" style="width: 20%;">Kelas</th>
+                            <th class="py-3 text-end pe-4" style="width: 20%;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($riwayat) && is_array($riwayat)): ?>
+                        <?php if (!empty($santri) && is_array($santri)): ?>
                             <?php $no = 1;
-                            foreach ($riwayat as $row): ?>
+                            foreach ($santri as $s): ?>
                                 <tr>
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
-                                        <!-- Nama Santri dari database -->
-                                        <div class="fw-semibold text-dark small"><?= esc($row['nama_lengkap']); ?></div>
-                                        <!-- Format Tanggal -->
-                                        <small class="text-muted" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y, H:i', strtotime($row['tanggal'])); ?> WIB</small>
+                                        <div class="fw-semibold text-dark"><?= esc($s['nama_santri']); ?></div>
                                     </td>
-                                    <td>
-                                        <!-- Badge Jenis Ziyadah / Murojaah -->
-                                        <?php if (strtolower($row['jenis']) == 'ziyadah'): ?>
-                                            <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-pill small fw-semibold">Ziyadah</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill small fw-semibold">Murojaah</span>
-                                        <?php endif; ?>
-                                        <small class="text-muted d-block mt-1">Juz <?= esc($row['juz']); ?></small>
-                                    </td>
-                                    <td>
-                                        <span class="fw-semibold text-dark d-block">Surah <?= esc($row['surah']); ?></span>
-                                        <small class="text-muted">Ayat <?= esc($row['ayat_mulai']); ?> - <?= esc($row['ayat_selesai']); ?></small>
-                                    </td>
-                                    <td class="text-center">
-                                        <!-- Dinamis Badge Predikat -->
-                                        <?php
-                                        $predikat = strtolower($row['predikat']);
-                                        $badgeClass = 'bg-success text-white';
-                                        if ($predikat == 'jayyid jiddan') $badgeClass = 'bg-primary text-white';
-                                        elseif ($predikat == 'jayyid') $badgeClass = 'bg-warning text-dark';
-                                        ?>
-                                        <span class="badge <?= $badgeClass; ?> px-3 py-1 rounded-pill small fw-semibold"><?= esc($row['predikat']); ?></span>
-                                    </td>
+                                    <td><span class="text-muted"><?= esc($s['nis']); ?></span></td>
+                                    <td><span class="badge bg-secondary bg-opacity-10 text-secondary px-2 py-1"><?= esc($s['nama_kelas'] ?? 'Belum Ada Kelas'); ?></span></td>
                                     <td class="text-end pe-4">
-                                        <div class="d-flex justify-content-end gap-1">
-                                            <a href="<?= base_url('ustadz/hafalan/edit/' . $row['id']) ?>" class="btn btn-sm btn-light text-success border-0 rounded-2" title="Edit Detail">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </a>
-                                            <a href="<?= base_url('ustadz/hafalan/hapus/' . $row['id']) ?>" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus Log" onclick="return confirm('Hapus riwayat setoran ini?')">
-                                                <i class="fa-solid fa-trash-can"></i>
-                                            </a>
-                                        </div>
+                                        <a href="<?= base_url('guru/detail-riwayat-hafalan/' . $s['id']); ?>" class="btn btn-sm btn-success rounded-3 px-3">
+                                            <i class="fa-solid fa-eye me-1"></i> Lihat Riwayat
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted small">Belum ada data riwayat setoran hafalan.</td>
+                                <td colspan="5" class="text-center py-4 text-muted small">Belum ada data santri.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
-        </div>
-        <!-- Card Footer / Pagination -->
-        <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small">Menampilkan 1 hingga 3 dari total 142 riwayat setoran</span>
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled"><span class="page-link rounded-start-3">Sebelumnya</span></li>
-                    <li class="page-item active"><span class="page-link bg-success border-success">1</span></li>
-                    <li class="page-item"><a class="page-link text-success" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link text-success" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link text-success rounded-end-3" href="#">Berikutnya</a></li>
-                </ul>
-            </nav>
         </div>
     </div>
 

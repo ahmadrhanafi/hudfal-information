@@ -67,9 +67,9 @@ class HafalanModel extends Model
 
     public function getRiwayatHafalan()
     {
-        return $this->select('tabel_setoran_hafalan.*, santri.nama_lengkap')
-            ->join('santri', 'santri.id = tabel_setoran_hafalan.santri_id', 'left')
-            ->orderBy('tabel_setoran_hafalan.tanggal', 'DESC')
+        return $this->select('hafalan.*, santri.nama_santri')
+            ->join('santri', 'santri.id = hafalan.id_santri', 'left')
+            ->orderBy('hafalan.created_at', 'DESC')
             ->findAll();
     }
 }
