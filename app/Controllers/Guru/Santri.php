@@ -20,10 +20,16 @@ class Santri extends BaseController
     {
         $role = session()->get('role');
 
+        // Asumsikan saat login Anda juga menyimpan NIP atau ID Guru di session, 
+        // atau kita cari berdasarkan nama yang sedang aktif.
         $namaGuru = session()->get('name');
 
         if ($role == 'guru') {
             $guru = $this->guruModel->where('nama_guru', $namaGuru)->first();
+
+            if (!$guru) {
+                $guru = $this->guruModel->like('nama_guru', str_replace(['Ust.', 'Ustz.'], '', $namaGuru))->first();
+            }
 
             $idKelasDiampu = $guru ? $guru['id_kelas_diampu'] : null;
 

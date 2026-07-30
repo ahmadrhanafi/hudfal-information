@@ -31,16 +31,16 @@ class UserSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            [
-                'username' => 'ustz2',
-                'password' => password_hash('123', PASSWORD_DEFAULT),
-                'name' => 'Ustadzah Syifa',
-                'foto' => null,
-                'role' => 'guru',
-                'ref_id' => 2,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
+            // [
+            //     'username' => 'ustz2',
+            //     'password' => password_hash('123', PASSWORD_DEFAULT),
+            //     'name' => 'Ustadzah Syifa',
+            //     'foto' => null,
+            //     'role' => 'guru',
+            //     'ref_id' => 2,
+            //     'created_at' => $now,
+            //     'updated_at' => $now,
+            // ],
             [
                 'username' => 'wali1',
                 'password' => password_hash('123', PASSWORD_DEFAULT),
@@ -51,16 +51,16 @@ class UserSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            [
-                'username' => 'wali2',
-                'password' => password_hash('123', PASSWORD_DEFAULT),
-                'name' => 'Siti Aisyah',
-                'foto' => null,
-                'role' => 'wali',
-                'ref_id' => 2,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
+            // [
+            //     'username' => 'wali2',
+            //     'password' => password_hash('123', PASSWORD_DEFAULT),
+            //     'name' => 'Siti Aisyah',
+            //     'foto' => null,
+            //     'role' => 'wali',
+            //     'ref_id' => 2,
+            //     'created_at' => $now,
+            //     'updated_at' => $now,
+            // ],
         ];
         $this->db->table('users')->insertBatch($data);
     }

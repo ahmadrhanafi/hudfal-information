@@ -51,6 +51,15 @@ class SantriModel extends Model
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
             ->join('wali', 'wali.id = santri.id_wali', 'left');
 
+        if (!empty($idKelas)) {
+            $builder->where('santri.id_kelas', $idKelas);
+        } else {
+            // Jika yang login adalah guru dan tidak membawa idKelas, kunci ke 0 agar aman
+            if (session()->get('role') == 'guru') {
+                $builder->where('santri.id_kelas', 0);
+            }
+        }
+
         if (!empty($keyword)) {
             $builder->groupStart()
                 ->like('santri.nama_santri', $keyword)
@@ -59,11 +68,6 @@ class SantriModel extends Model
                 ->groupEnd();
         }
 
-        if (!empty($idKelas)) {
-            $builder->where('santri.id_kelas', $idKelas);
-        }
-
-        // Tambahan filter berdasarkan status_aktif
         if (!empty($status)) {
             $builder->where('santri.status_aktif', $status);
         }
