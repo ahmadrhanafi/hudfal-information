@@ -8,7 +8,7 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
             <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Riwayat Hafalan Ananda</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Catatan lengkap rekam jejak setoran hafalan Al-Qur'an ananda Ahmad Zaki Al-Faruq di pesantren.</p>
+            <p class="text-muted mb-0 small" style="text-transform: none !important;">Catatan lengkap rekam jejak setoran hafalan Al-Qur'an ananda <strong><?= esc($santri_aktif['nama_santri'] ?? '-'); ?></strong> di pesantren.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
@@ -84,8 +84,27 @@
         </div>
     </div>
 
+    <!-- Header Info Anak & Dropdown Pilihan Anak -->
+    <?php if (!empty($santri_list) && count($santri_list) > 1): ?>
+        <div class="mb-3 d-flex align-items-center gap-2">
+            <label class="fw-semibold small text-muted">Pilih Anak:</label>
+            <select class="form-select form-select-sm w-auto" onchange="location = this.value;">
+                <?php foreach ($santri_list as $s): ?>
+                    <option value="<?= base_url('wali/riwayat-hafalan?id_santri=' . $s['id']); ?>" <?= (isset($santri_aktif) && $santri_aktif['id'] == $s['id']) ? 'selected' : ''; ?>>
+                        <?= esc($s['nama_santri']); ?> (Kelas <?= esc($s['nama_kelas']); ?>)
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    <?php endif; ?>
+
     <!-- Main Table Card -->
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+        <div class="card-header bg-white border-0 py-3 px-4">
+            <h5 class="fw-bold text-dark mb-1">Riwayat Setoran: <?= esc($santri_aktif['nama_santri'] ?? 'Tidak Ada Data Santri'); ?></h5>
+            <p class="text-muted small mb-0">NIS: <?= esc($santri_aktif['nis'] ?? '-'); ?> &bull; Kelas: <?= esc($santri_aktif['nama_kelas'] ?? '-'); ?></p>
+        </div>
+
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -99,81 +118,48 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Contoh Baris Data 1 -->
-                        <tr>
-                            <td class="ps-4 fw-medium text-muted">1</td>
-                            <td>
-                                <div class="fw-semibold text-dark small">23 Juli 2026</div>
-                                <small class="text-muted" style="font-size: 0.75rem;"><i class="fa-regular fa-clock me-1"></i> Sesi Pagi (08:15 WIB)</small>
-                            </td>
-                            <td>
-                                <span class="fw-semibold text-dark d-block">Surah An-Nazi'at</span>
-                                <small class="text-muted">Ayat 1 - 20</small>
-                            </td>
-                            <td>
-                                <span class="small text-dark d-block">Ustadz Ahmad Hidayat, Lc.</span>
-                                <small class="text-muted" style="font-size: 0.75rem;">Pengampu Tahfidz</small>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-semibold mb-1">Mumtaz</span>
-                                <small class="d-block text-muted" style="font-size: 0.7rem;">Lancar & Makhraj Sempurna</small>
-                            </td>
-                        </tr>
-                        <!-- Contoh Baris Data 2 -->
-                        <tr>
-                            <td class="ps-4 fw-medium text-muted">2</td>
-                            <td>
-                                <div class="fw-semibold text-dark small">21 Juli 2026</div>
-                                <small class="text-muted" style="font-size: 0.75rem;"><i class="fa-regular fa-clock me-1"></i> Sesi Pagi (08:30 WIB)</small>
-                            </td>
-                            <td>
-                                <span class="fw-semibold text-dark d-block">Surah An-Nazi'at</span>
-                                <small class="text-muted">Ayat 21 - 46 (Selesai)</small>
-                            </td>
-                            <td>
-                                <span class="small text-dark d-block">Ustadz Ahmad Hidayat, Lc.</span>
-                                <small class="text-muted" style="font-size: 0.75rem;">Pengampu Tahfidz</small>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill small fw-semibold mb-1">Jayyid</span>
-                                <small class="d-block text-muted" style="font-size: 0.7rem;">Perlu murojaah ulang di beberapa ayat</small>
-                            </td>
-                        </tr>
-                        <!-- Contoh Baris Data 3 -->
-                        <tr>
-                            <td class="ps-4 fw-medium text-muted">3</td>
-                            <td>
-                                <div class="fw-semibold text-dark small">18 Juli 2026</div>
-                                <small class="text-muted" style="font-size: 0.75rem;"><i class="fa-regular fa-clock me-1"></i> Sesi Pagi (09:00 WIB)</small>
-                            </td>
-                            <td>
-                                <span class="fw-semibold text-dark d-block">Surah An-Naba'</span>
-                                <small class="text-muted">Ayat 1 - 40 (Selesai)</small>
-                            </td>
-                            <td>
-                                <span class="small text-dark d-block">Ustadz Muhammad Farhan</span>
-                                <small class="text-muted" style="font-size: 0.75rem;">Asisten Pembimbing</small>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-semibold mb-1">Mumtaz</span>
-                                <small class="d-block text-muted" style="font-size: 0.7rem;">Sangat baik & sangat lancar</small>
-                            </td>
-                        </tr>
+                        <?php if (!empty($riwayat) && is_array($riwayat)): ?>
+                            <?php $no = 1;
+                            foreach ($riwayat as $row): ?>
+                                <tr>
+                                    <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
+                                    <td>
+                                        <div class="fw-semibold text-dark small"><?= date('d M Y', strtotime($row['created_at'])); ?></div>
+                                        <small class="text-muted" style="font-size: 0.75rem;"><i class="fa-regular fa-clock me-1"></i> <?= date('H:i', strtotime($row['created_at'])); ?> WIB</small>
+                                    </td>
+                                    <td>
+                                        <span class="fw-semibold text-dark d-block">Surah <?= esc($row['surah']); ?></span>
+                                        <small class="text-muted">Juz <?= esc($row['juz']); ?> (Ayat <?= esc($row['ayat_mulai']); ?> - <?= esc($row['ayat_selesai']); ?>)</small>
+                                    </td>
+                                    <td>
+                                        <span class="small text-dark d-block"><?= esc($row['nama_penguji'] ?? 'Ustadz Pembimbing'); ?></span>
+                                        <small class="text-muted" style="font-size: 0.75rem;">Pengampu Tahfidz</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php
+                                        $predikat = strtolower($row['predikat']);
+                                        $badgeClass = 'bg-success bg-opacity-10 text-success';
+                                        if ($predikat == 'jayyid jiddan') $badgeClass = 'bg-primary bg-opacity-10 text-primary';
+                                        elseif ($predikat == 'jayyid') $badgeClass = 'bg-warning bg-opacity-10 text-warning text-dark';
+                                        ?>
+                                        <span class="badge <?= $badgeClass; ?> px-3 py-1 rounded-pill small fw-semibold mb-1"><?= esc($row['predikat']); ?></span>
+                                        <small class="d-block text-muted" style="font-size: 0.7rem;"><?= esc($row['catatan'] ?? 'Lancar'); ?></small>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted small">Belum ada riwayat setoran hafalan untuk anak Anda.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
-        <!-- Card Footer / Pagination -->
-        <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small">Menampilkan 1 hingga 3 dari total 12 riwayat setoran bulan ini</span>
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled"><span class="page-link rounded-start-3">Sebelumnya</span></li>
-                    <li class="page-item active"><span class="page-link bg-success border-success">1</span></li>
-                    <li class="page-item"><a class="page-link text-success" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link text-success rounded-end-3" href="#">Berikutnya</a></li>
-                </ul>
-            </nav>
+
+        <!-- Card Footer / Pagination info -->
+        <div class="card-footer bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+            <span class="text-muted small">Menampilkan total <?= !empty($riwayat) ? count($riwayat) : 0; ?> riwayat setoran</span>
         </div>
     </div>
 
