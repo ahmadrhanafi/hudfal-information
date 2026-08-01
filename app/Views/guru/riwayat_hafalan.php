@@ -18,14 +18,12 @@ $santri = $santri ?? [];
             <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
                 <i class="fa-solid fa-file-excel text-success me-1"></i> Ekspor Rekap
             </button>
-            <a href="<?= base_url('ustadz/hafalan/tambah') ?>" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" style="text-transform: none !important;">
-                <i class="fa-solid fa-plus me-1"></i> Input Setoran Baru
-            </a>
         </div>
     </div>
 
     <!-- Ringkasan Statistik Hafalan -->
     <div class="row g-4 mb-4">
+        <!-- Total Setoran Bulan Ini -->
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
@@ -34,11 +32,15 @@ $santri = $santri ?? [];
                     </div>
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">TOTAL SETORAN BULAN INI</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">142 <span class="fs-6 fw-normal text-muted">Sesi</span></h3>
+                        <h3 class="fw-bold text-dark mb-0 mt-1">
+                            <?= $total_setoran_bulan_ini ?? 0; ?> <span class="fs-6 fw-normal text-muted">Sesi</span>
+                        </h3>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Rata-rata Predikat -->
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
@@ -46,12 +48,16 @@ $santri = $santri ?? [];
                         <i class="fa-solid fa-award fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">RATA-RATA PREDIKAT</span>
-                        <h3 class="fw-bold text-primary mb-0 mt-1">Mumtaz <span class="fs-6 fw-normal text-success">(Sangat Baik)</span></h3>
+                        <span class="text-muted small fw-medium" style="text-transform: none !important;">PREDIKAT DOMINAN</span>
+                        <h3 class="fw-bold text-primary mb-0 mt-1">
+                            <?= esc($predikat_umum ?? 'Mumtaz'); ?> <span class="fs-6 fw-normal text-success">(Bulan Ini)</span>
+                        </h3>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Santri Aktif Setoran -->
         <div class="col-xl-4 col-md-12">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
@@ -60,7 +66,9 @@ $santri = $santri ?? [];
                     </div>
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">SANTRI AKTIF SETORAN</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">28 / 30 <span class="fs-6 fw-normal text-muted">Santri</span></h3>
+                        <h3 class="fw-bold text-dark mb-0 mt-1">
+                            <?= $santri_aktif ?? 0; ?> / <?= $total_santri ?? 0; ?> <span class="fs-6 fw-normal text-muted">Santri</span>
+                        </h3>
                     </div>
                 </div>
             </div>
@@ -71,28 +79,13 @@ $santri = $santri ?? [];
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
         <div class="card-body p-3">
             <div class="row g-3 align-items-center">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light border-0 ps-3 text-muted">
                             <i class="fa-solid fa-search"></i>
                         </span>
-                        <input type="text" class="form-control bg-light border-0 py-2" placeholder="Cari nama santri atau surah...">
+                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2" placeholder="Cari nama atau nomor induk santri...">
                     </div>
-                </div>
-                <div class="col-lg-3">
-                    <select class="form-select form-select-sm bg-light border-0 py-2">
-                        <option selected>Jenis: Semua Jenis</option>
-                        <option value="ziyadah">Ziyadah (Baru)</option>
-                        <option value="murojaah">Murojaah (Ulang)</option>
-                    </select>
-                </div>
-                <div class="col-lg-3">
-                    <select class="form-select form-select-sm bg-light border-0 py-2">
-                        <option selected>Predikat: Semua</option>
-                        <option value="mumtaz">Mumtaz</option>
-                        <option value="jayyid">Jayyid</option>
-                        <option value="maqbul">Maqbul</option>
-                    </select>
                 </div>
             </div>
         </div>
@@ -116,16 +109,42 @@ $santri = $santri ?? [];
                         <?php if (!empty($santri) && is_array($santri)): ?>
                             <?php $no = 1;
                             foreach ($santri as $s): ?>
-                                <tr>
-                                    <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
+                                <?php
+                                // Generate Inisial Avatar Dinamis
+                                $words = explode(' ', $s['nama_santri']);
+                                $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+
+                                // Format warna status aktif santri
+                                $statusColor = 'success';
+                                $statusText = ucfirst($s['status_aktif'] ?? 'Aktif');
+                                $statusLower = strtolower($s['status_aktif'] ?? 'aktif');
+
+                                if ($statusLower == 'izin') $statusColor = 'warning';
+                                if ($statusLower == 'sakit') $statusColor = 'info';
+                                if ($statusLower == 'keluar' || $statusLower == 'tidak aktif') $statusColor = 'danger';
+                                ?>
+                                <tr class="item-row" data-search="<?= strtolower(esc($s['nama_santri'] . ' ' . $s['nis'] . ' ' . ($s['nama_kelas'] ?? ''))); ?>">
+                                    <td class="ps-4 fw-medium text-muted nomor-urut"><?= $no++; ?></td>
                                     <td>
-                                        <div class="fw-semibold text-dark"><?= esc($s['nama_santri']); ?></div>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                <?= $initials; ?>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($s['nama_santri']); ?></h6>
+                                                <small class="text-muted">Wali: <?= esc($s['nama_wali'] ?? 'N/A'); ?></small>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td><span class="text-muted"><?= esc($s['nis']); ?></span></td>
-                                    <td><span class="badge bg-secondary bg-opacity-10 text-secondary px-2 py-1"><?= esc($s['nama_kelas'] ?? 'Belum Ada Kelas'); ?></span></td>
+                                    <td>
+                                        <span class="text-muted"><?= esc($s['nis']); ?></span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border px-2 py-1"><?= esc($s['nama_kelas'] ?? '-'); ?></span>
+                                    </td>
                                     <td class="text-end pe-4">
-                                        <a href="<?= base_url('guru/detail-riwayat-hafalan/' . $s['id']); ?>" class="btn btn-sm btn-success rounded-3 px-3">
-                                            <i class="fa-solid fa-eye me-1"></i> Lihat Riwayat
+                                        <a href="<?= base_url('guru/detail-riwayat-hafalan/' . $s['id']); ?>" class="btn btn-sm btn-light border rounded-pill px-3">
+                                            <i class="fa-solid fa-eye text-primary me-1"></i> Detail Hafalan
                                         </a>
                                     </td>
                                 </tr>
@@ -142,5 +161,51 @@ $santri = $santri ?? [];
     </div>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("searchInput");
+        const rows = document.querySelectorAll(".item-row");
+        const noResultDiv = document.getElementById("noResult");
+        const infoJumlah = document.getElementById("infoJumlah");
+
+        function filterTable() {
+            const keyword = searchInput.value.toLowerCase().trim();
+
+            let visibleCount = 0;
+            let visibleNo = 1;
+
+            rows.forEach(row => {
+                const dataSearch = row.getAttribute("data-search") || "";
+                const matchesSearch = dataSearch.includes(keyword);
+
+                if (matchesSearch) {
+                    row.style.display = "";
+                    const nomorTd = row.querySelector(".nomor-urut");
+                    if (nomorTd) {
+                        nomorTd.textContent = visibleNo++;
+                    }
+                    visibleCount++;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            if (visibleCount === 0 && rows.length > 0) {
+                if (noResultDiv) noResultDiv.classList.remove("d-none");
+            } else {
+                if (noResultDiv) noResultDiv.classList.add("d-none");
+            }
+
+            if (infoJumlah) {
+                infoJumlah.textContent = `Menampilkan ${visibleCount} dari total ${rows.length} data riwayat`;
+            }
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener("keyup", filterTable);
+        }
+    });
+</script>
 
 <?= $this->endSection() ?>

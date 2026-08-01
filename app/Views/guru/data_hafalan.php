@@ -15,9 +15,6 @@
             <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola catatan setoran hafalan Al-Qur'an harian untuk santri kelas binaan Anda.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
-                <i class="fa-solid fa-file-excel text-success me-1"></i> Rekap Hari Ini
-            </button>
             <button type="button" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#modalInputHafalan" style="text-transform: none !important;">
                 <i class="fa-solid fa-plus me-1"></i> Input Setoran Baru
             </button>

@@ -21,8 +21,10 @@ class RiwayatHafalan extends BaseController
     {
         $keyword = $this->request->getGet('keyword');
         $idKelasGuru = session()->get('id_kelas');
-        $builder = $this->santriModel->select('santri.*, kelas.nama_kelas')
-            ->join('kelas', 'kelas.id = santri.id_kelas', 'left');
+
+        $builder = $this->santriModel->select('santri.*, kelas.nama_kelas, users.name as nama_wali')
+            ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+            ->join('users', 'users.ref_id = santri.id_wali AND users.role = "wali"', 'left');
 
         if (!empty($idKelasGuru)) {
             $builder->where('santri.id_kelas', $idKelasGuru);
@@ -37,10 +39,52 @@ class RiwayatHafalan extends BaseController
                 ->groupEnd();
         }
 
+        $santri = $builder->orderBy('santri.nama_santri', 'ASC')->findAll();
+
+        $idSantriKelas = array_column($santri, 'id');
+
+        $totalSetoranBulanIni = 0;
+        $santriAktifBulanIni = 0;
+        $predikatUmum = 'Belum Ada';
+
+        if (!empty($idSantriKelas)) {
+            $hafalanModel = new \App\Models\HafalanModel();
+            $bulanIni = date('m');
+            $tahunIni = date('Y');
+
+            $totalSetoranBulanIni = $hafalanModel->whereIn('id_santri', $idSantriKelas)
+                ->where('MONTH(created_at)', $bulanIni)
+                ->where('YEAR(created_at)', $tahunIni)
+                ->countAllResults();
+
+            $santriAktifBulanIni = $hafalanModel->select('id_santri')
+                ->whereIn('id_santri', $idSantriKelas)
+                ->where('MONTH(created_at)', $bulanIni)
+                ->where('YEAR(created_at)', $tahunIni)
+                ->groupBy('id_santri')
+                ->countAllResults();
+
+            $dominantPredikat = $hafalanModel->select('predikat, COUNT(predikat) as jumlah')
+                ->whereIn('id_santri', $idSantriKelas)
+                ->where('MONTH(created_at)', $bulanIni)
+                ->where('YEAR(created_at)', $tahunIni)
+                ->groupBy('predikat')
+                ->orderBy('jumlah', 'DESC')
+                ->first();
+
+            if (!empty($dominantPredikat)) {
+                $predikatUmum = ucwords($dominantPredikat['predikat']);
+            }
+        }
+
         $data = [
-            'title'   => 'Riwayat Hafalan Santri',
-            'santri'  => $builder->findAll(),
-            'keyword' => $keyword
+            'title'                   => 'Riwayat Hafalan Santri',
+            'santri'                  => $santri,
+            'keyword'                 => $keyword,
+            'total_setoran_bulan_ini' => $totalSetoranBulanIni,
+            'santri_aktif'            => $santriAktifBulanIni,
+            'total_santri'            => count($santri),
+            'predikat_umum'           => $predikatUmum
         ];
 
         return view('guru/riwayat_hafalan', $data);
