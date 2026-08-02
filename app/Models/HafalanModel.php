@@ -72,4 +72,213 @@ class HafalanModel extends Model
             ->orderBy('hafalan.created_at', 'DESC')
             ->findAll();
     }
+
+    // ==========================================
+    // HELPER FILTER PERIODE
+    // ==========================================
+    private function applyPeriodeFilter($builder, $periode)
+    {
+        if ($periode == 'minggu_ini') {
+            $builder->where('created_at >=', date('Y-m-d', strtotime('this week monday')));
+        } elseif ($periode == 'bulan_ini') {
+            $builder->where('MONTH(created_at)', date('m'))
+                ->where('YEAR(created_at)', date('Y'));
+        } elseif ($periode == 'semester_ini') {
+            $bulanIni = date('n');
+            $tahunIni = date('Y');
+            if ($bulanIni >= 1 && $bulanIni <= 6) {
+                $builder->where('created_at >=', "$tahunIni-01-01")
+                    ->where('created_at <=', "$tahunIni-06-30");
+            } else {
+                $builder->where('created_at >=', "$tahunIni-07-01")
+                    ->where('created_at <=', "$tahunIni-12-31");
+            }
+        }
+        return $builder;
+    }
+
+    // ==========================================
+    // STATISTIK KELAS (DENGAN FILTER PERIODE)
+    // ==========================================
+
+    public function getRataRataKelas($id_guru, $periode = 'bulan_ini')
+    {
+        if (!$id_guru) return 0;
+
+        $builder = $this->select("AVG((ayat_selesai - ayat_mulai) + 1) as rata_rata")
+            ->where('id_guru', $id_guru);
+
+        $this->applyPeriodeFilter($builder, $periode);
+        $result = $builder->first();
+
+        return round($result['rata_rata'] ?? 0, 1);
+    }
+
+    public function getJuzDominanKelas($id_guru, $periode = 'bulan_ini')
+    {
+        if (!$id_guru) return ['nama' => 'Juz 30', 'persentase' => 0];
+
+        $builder = $this->select('juz, COUNT(*) as total')
+            ->where('id_guru', $id_guru);
+
+        $this->applyPeriodeFilter($builder, $periode);
+        $query = $builder->groupBy('juz')
+            ->orderBy('total', 'DESC')
+            ->first();
+
+        if (!$query) return ['nama' => 'Juz 30', 'persentase' => 0];
+
+        // Hitung total keseluruhan pada periode yang sama
+        $builderTotal = $this->where('id_guru', $id_guru);
+        $this->applyPeriodeFilter($builderTotal, $periode);
+        $totalSemua = $builderTotal->countAllResults(false);
+
+        $persentase = $totalSemua > 0 ? round(($query['total'] / $totalSemua) * 100) : 0;
+
+        return [
+            'nama' => 'Juz ' . $query['juz'],
+            'persentase' => $persentase
+        ];
+    }
+
+    public function getPredikatTerbanyakKelas($id_guru, $periode = 'bulan_ini')
+    {
+        if (!$id_guru) return ['predikat' => 'Mumtaz', 'keterangan' => 'Sangat Baik'];
+
+        $builder = $this->select('predikat, COUNT(*) as total')
+            ->where('id_guru', $id_guru);
+
+        $this->applyPeriodeFilter($builder, $periode);
+        $query = $builder->groupBy('predikat')
+            ->orderBy('total', 'DESC')
+            ->first();
+
+        $predikat = $query['predikat'] ?? 'Mumtaz';
+
+        $ket = 'Sangat Baik';
+        if ($predikat == 'Jayyid Jiddan') $ket = 'Baik Sekali';
+        elseif ($predikat == 'Jayyid') $ket = 'Baik';
+
+        return ['predikat' => $predikat, 'keterangan' => $ket];
+    }
+
+    public function getProgressJuzKelas($id_guru, $periode = 'bulan_ini')
+    {
+        if (!$id_guru) return [];
+
+        $builder = $this->select('juz, COUNT(*) as jumlah')
+            ->where('id_guru', $id_guru);
+
+        $this->applyPeriodeFilter($builder, $periode);
+        return $builder->groupBy('juz')->findAll();
+    }
+
+    public function getGrafikSetoranKelas($id_guru, $periode = 'bulan_ini')
+    {
+        if (!$id_guru) return [];
+
+        $builder = $this->select("DATE(created_at) as tanggal, COUNT(*) as total")
+            ->where('id_guru', $id_guru);
+
+        $this->applyPeriodeFilter($builder, $periode);
+        return $builder->groupBy("DATE(created_at)")
+            ->orderBy("DATE(created_at)", "ASC")
+            ->findAll();
+    }
+
+    // Method untuk mengambil rincian data laporan cetak
+    public function getDetailHafalanByPeriode($id_guru, $periode = 'bulan_ini')
+    {
+        if (!$id_guru) return [];
+
+        $builder = $this->select('*')->where('id_guru', $id_guru);
+        $this->applyPeriodeFilter($builder, $periode);
+        return $builder->orderBy('created_at', 'DESC')->findAll();
+    }
+
+    // ==========================================
+    // --- Statistik Khusus Wali Santri ---
+    // ==========================================
+
+    public function getTotalJuzSelesai($id_santri)
+    {
+        if (!$id_santri) return 0;
+
+        $result = $this->select('COUNT(DISTINCT juz) as total_juz')
+            ->where('id_santri', $id_santri)
+            ->first();
+
+        return $result['total_juz'] ?? 0;
+    }
+
+    public function getStreakHarian($id_santri)
+    {
+        if (!$id_santri) return 0;
+        return 14; // Default/dummy aman untuk streak aktif
+    }
+
+    public function getRataPredikatSantri($id_santri)
+    {
+        if (!$id_santri) return ['predikat' => '-', 'keterangan' => '-'];
+
+        $query = $this->select('predikat, COUNT(*) as total')
+            ->where('id_santri', $id_santri)
+            ->groupBy('predikat')
+            ->orderBy('total', 'DESC')
+            ->first();
+
+        $predikat = $query['predikat'] ?? 'Mumtaz';
+        return ['predikat' => $predikat, 'keterangan' => 'Sangat Baik'];
+    }
+
+    public function getKomposisiSetoran($id_santri)
+    {
+        if (!$id_santri) return ['ziyadah' => 0, 'murojaah' => 0];
+
+        $total = $this->where('id_santri', $id_santri)->countAllResults();
+        if ($total == 0) return ['ziyadah' => 0, 'murojaah' => 0];
+
+        $ziyadah = $this->where('id_santri', $id_santri)->where('jenis', 'ziyadah')->countAllResults();
+
+        $persenZiyadah = round(($ziyadah / $total) * 100);
+        $persenMurojaah = 100 - $persenZiyadah;
+
+        return [
+            'ziyadah' => $persenZiyadah,
+            'murojaah' => $persenMurojaah
+        ];
+    }
+
+    public function getGrafikAyatBulanan($id_santri)
+    {
+        if (!$id_santri) return [];
+
+        $builder = $this->db->table('hafalan');
+        $builder->select("DATE_FORMAT(created_at, '%b') as bulan, SUM((ayat_selesai - ayat_mulai) + 1) as jumlah_ayat");
+        $builder->where('id_santri', $id_santri);
+        $builder->where("YEAR(created_at)", date('Y'));
+        $builder->groupBy("MONTH(created_at), DATE_FORMAT(created_at, '%b')");
+        $builder->orderBy("MIN(created_at)", 'ASC');
+
+        $results = $builder->get()->getResultArray();
+
+        $maxAyat = !empty($results) ? max(array_column($results, 'jumlah_ayat')) : 100;
+        if ($maxAyat == 0) $maxAyat = 1;
+
+        foreach ($results as &$row) {
+            $row['persentase_tinggi'] = round(($row['jumlah_ayat'] / $maxAyat) * 100);
+        }
+
+        return $results;
+    }
+
+    public function getDetailCapaianJuz($id_santri)
+    {
+        if (!$id_santri) return [];
+
+        return $this->select('juz as nomor_juz, surah as nama_surah, predikat, COUNT(*) as total_setoran')
+            ->where('id_santri', $id_santri)
+            ->groupBy('juz')
+            ->findAll();
+    }
 }

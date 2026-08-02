@@ -1,5 +1,16 @@
 <?= $this->extend('layout/main') ?>
 
+<?php
+/**
+ * @var string $nama_kelas
+ * @var float|int $rata_setoran
+ * @var array $juz_dominan
+ * @var array $predikat_umum
+ * @var array $capaian_juz
+ * @var array $grafik_setoran
+ */
+?>
+
 <?= $this->section('content') ?>
 
 <div class="container-fluid px-0">
@@ -11,17 +22,20 @@
             <p class="text-muted mb-0 small" style="text-transform: none !important;">Analisis grafik perkembangan setoran, rata-rata hafalan, dan evaluasi kelas bimbingan Anda.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
+            <?php $currentPeriode = $_GET['periode'] ?? 'bulan_ini'; ?>
+            <a href="<?= base_url('guru/statistik-hafalan/export?periode=' . $currentPeriode); ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;" target="_blank">
                 <i class="fa-solid fa-download text-success me-1"></i> Unduh Laporan Kelas
-            </button>
+            </a>
+
             <div class="dropdown">
                 <button class="btn btn-success btn-sm px-3 rounded-pill shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" style="text-transform: none !important;">
-                    <i class="fa-solid fa-filter me-1"></i> Periode: Bulan Ini
+                    <i class="fa-solid fa-filter me-1"></i> Periode:
+                    <?= ($currentPeriode == 'minggu_ini') ? 'Minggu Ini' : (($currentPeriode == 'semester_ini') ? 'Semester Ini' : 'Bulan Ini'); ?>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-                    <li><a class="dropdown-item small" href="#">Minggu Ini</a></li>
-                    <li><a class="dropdown-item small" href="#">Bulan Ini</a></li>
-                    <li><a class="dropdown-item small" href="#">Semester Ini</a></li>
+                    <li><a class="dropdown-item small <?= ($currentPeriode == 'minggu_ini') ? 'active' : ''; ?>" href="<?= base_url('guru/statistik-hafalan?periode=minggu_ini'); ?>">Minggu Ini</a></li>
+                    <li><a class="dropdown-item small <?= ($currentPeriode == 'bulan_ini') ? 'active' : ''; ?>" href="<?= base_url('guru/statistik-hafalan?periode=bulan_ini'); ?>">Bulan Ini</a></li>
+                    <li><a class="dropdown-item small <?= ($currentPeriode == 'semester_ini') ? 'active' : ''; ?>" href="<?= base_url('guru/statistik-hafalan?periode=semester_ini'); ?>">Semester Ini</a></li>
                 </ul>
             </div>
         </div>
@@ -37,7 +51,9 @@
                     </div>
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">RATA-RATA SETORAN KELAS</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">28.2 <span class="fs-6 fw-normal text-muted">Ayat / Hari</span></h3>
+                        <h3 class="fw-bold text-dark mb-0 mt-1">
+                            <?= esc((string) ($rata_setoran ?? 0)); ?> <span class="fs-6 fw-normal text-muted">Ayat / Hari</span>
+                        </h3>
                     </div>
                 </div>
             </div>
@@ -50,7 +66,10 @@
                     </div>
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">JUZ DOMINAN KELAS</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">Juz 30 <span class="fs-6 fw-normal text-success">(65%)</span></h3>
+                        <h3 class="fw-bold text-dark mb-0 mt-1">
+                            <?= esc($juz_dominan['nama'] ?? 'Juz 30'); ?>
+                            <span class="fs-6 fw-normal text-success">(<?= esc($juz_dominan['persentase'] ?? 0); ?>%)</span>
+                        </h3>
                     </div>
                 </div>
             </div>
@@ -63,7 +82,10 @@
                     </div>
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">PREDIKAT TERBANYAK</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">Mumtaz <span class="fs-6 fw-normal text-muted">(Sangat Baik)</span></h3>
+                        <h3 class="fw-bold text-dark mb-0 mt-1">
+                            <?= esc($predikat_umum['predikat'] ?? 'Mumtaz'); ?>
+                            <span class="fs-6 fw-normal text-muted">(<?= esc($predikat_umum['keterangan'] ?? 'Sangat Baik'); ?>)</span>
+                        </h3>
                     </div>
                 </div>
             </div>
@@ -72,7 +94,7 @@
 
     <!-- Grafik & Breakdown Bagian Bawah -->
     <div class="row g-4">
-        <!-- Grafik Utama (Placeholder Chart.js / Visualisasi Kelas) -->
+        <!-- Grafik Utama dengan Chart.js -->
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4">
@@ -80,14 +102,12 @@
                         <h5 class="fw-bold text-dark m-0" style="text-transform: none !important;">
                             <i class="fa-solid fa-chart-area text-success me-2"></i> Grafik Progres Hafalan Kelas Binaan
                         </h5>
-                        <span class="badge bg-light text-secondary border">Kelas 8 Tsanawiyah</span>
+                        <span class="badge bg-light text-secondary border"><?= esc($nama_kelas); ?></span>
                     </div>
 
-                    <!-- Box simulasi area grafik -->
-                    <div class="alert alert-light border border-2 border-dashed rounded-4 text-center py-5 text-muted my-3">
-                        <i class="fa-solid fa-chart-line fa-3x mb-3 text-success opacity-50"></i>
-                        <h6 class="fw-bold text-dark">Visualisasi Statistik Hafalan Santri</h6>
-                        <p class="mb-0 small" style="text-transform: none !important;">Grafik tren setoran harian dan mingguan santri binaan termuat otomatis via pustaka Chart.js.</p>
+                    <!-- Elemen Canvas untuk Chart.js -->
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="grafikKelasChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -101,49 +121,35 @@
                         <i class="fa-solid fa-layer-group text-success me-2"></i> Capaian Juz Kelas
                     </h5>
 
-                    <!-- Progress Bar 1 -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-semibold mb-1">
-                            <span class="text-dark">Juz 30 (Amma)</span>
-                            <span class="text-success">65%</span>
+                    <?php if (!empty($capaian_juz)): ?>
+                        <?php
+                        $colors = ['bg-success', 'bg-primary', 'bg-warning', 'bg-info', 'bg-secondary'];
+                        $i = 0;
+                        foreach ($capaian_juz as $row):
+                            $bgClass = $colors[$i % count($colors)];
+                            $persen = ($row['jumlah'] * 15 > 100) ? 100 : $row['jumlah'] * 15;
+                            $i++;
+                        ?>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between small fw-semibold mb-1">
+                                    <span class="text-dark">Juz <?= esc($row['juz']); ?></span>
+                                    <!-- TAMBAHKAN KODE INI SUPAYA ANGKA PERSENTASE MUNCUL -->
+                                    <span class="text-muted">
+                                        <?= esc($row['jumlah']); ?> Setoran
+                                        <span class="fw-bold text-success">(<?= $persen; ?>%)</span>
+                                    </span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar <?= $bgClass; ?> rounded-pill" role="progressbar" style="width: <?= $persen; ?>%;"></div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center text-muted py-4 small">
+                            <i class="fa-solid fa-info-circle mb-2 fa-lg"></i>
+                            <p class="mb-0">Belum ada data capaian juz untuk kelas ini.</p>
                         </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: 65%;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar 2 -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-semibold mb-1">
-                            <span class="text-dark">Juz 29</span>
-                            <span class="text-primary">20%</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-primary rounded-pill" role="progressbar" style="width: 20%;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar 3 -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-semibold mb-1">
-                            <span class="text-dark">Juz 1 (Al-Baqarah)</span>
-                            <span class="text-warning">10%</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-warning rounded-pill" role="progressbar" style="width: 10%;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar 4 -->
-                    <div class="mb-2">
-                        <div class="d-flex justify-content-between small fw-semibold mb-1">
-                            <span class="text-dark">Lainnya</span>
-                            <span class="text-secondary">5%</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-secondary rounded-pill" role="progressbar" style="width: 5%;"></div>
-                        </div>
-                    </div>
+                    <?php endif; ?>
 
                     <div class="mt-4 pt-2 text-center">
                         <small class="text-muted">Persentase dihitung dari total target hafalan kelas binaan aktif.</small>
@@ -154,5 +160,52 @@
     </div>
 
 </div>
+
+<!-- Pastikan Chart.js sudah ter-load di layout utama (main.php). Jika belum, include CDN-nya -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const rawData = <?= json_encode($grafik_setoran ?? []); ?>;
+
+        // Mapping data dari PHP ke format Chart.js
+        const labels = rawData.map(item => item.tanggal);
+        const dataValues = rawData.map(item => item.total);
+
+        const ctx = document.getElementById('grafikKelasChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels.length > 0 ? labels : ['Belum ada data'],
+                datasets: [{
+                    label: 'Jumlah Setoran Hafalan',
+                    data: dataValues.length > 0 ? dataValues : [0],
+                    borderColor: '#198754',
+                    backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
 
 <?= $this->endSection() ?>

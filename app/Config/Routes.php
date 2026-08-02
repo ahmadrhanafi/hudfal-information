@@ -72,6 +72,7 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
 
     $routes->get('riwayat-hafalan', 'Guru\RiwayatHafalan::index');
     $routes->get('statistik-hafalan', 'Guru\Statistik::index');
+    $routes->get('statistik-hafalan/export', 'Guru\Statistik::export');
     $routes->get('pengaturan', 'Guru\Pengaturan::index');
 });
 
