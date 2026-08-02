@@ -73,6 +73,14 @@ class Statistik extends BaseController
             'detail_hafalan' => $this->hafalanModel->getDetailHafalanByPeriode($id_guru, $periode),
         ];
 
+        // FITUR OPSIONAL: Jika diakses dengan /export?print=1 di URL, tampilkan print_r
+        if ($this->request->getGet('print') == 1) {
+            echo "<pre>";
+            print_r($data);
+            echo "</pre>";
+            exit;
+        }
+
         $html = view('guru/cetak_laporan_statistik', $data);
 
         $options = new \Dompdf\Options();

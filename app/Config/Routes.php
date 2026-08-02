@@ -62,6 +62,8 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
 $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'Guru\Dashboard::index');
     $routes->get('santri', 'Guru\Santri::index');
+    $routes->get('santri-detail/(:num)', 'Guru\Santri::detail/$1');
+    $routes->get('santri/cetak', 'Guru\Santri::cetak');
 
     // Manajemen Hafalan
     $routes->get('hafalan', 'Guru\Hafalan::index');

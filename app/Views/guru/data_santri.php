@@ -15,9 +15,9 @@ $santri = $santri ?? [];
             <p class="text-muted mb-0 small text-dark-mode" style="text-transform: none !important;">Daftar santri yang berada di bawah perwalian atau kelas yang Anda ajar.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
-                <i class="fa-solid fa-print text-success me-1"></i> Cetak Daftar Kelas
-            </button>
+            <a href="<?= base_url('guru/santri/cetak'); ?>" target="_blank" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none" style="text-transform: none !important;">
+                <i class="fa-solid fa-print text-success me-1"></i> Cetak Data Santri
+            </a>
         </div>
     </div>
 
@@ -109,10 +109,10 @@ $santri = $santri ?? [];
                                     </td>
                                     <td class="text-end pe-4">
                                         <div class="d-flex justify-content-end gap-1">
-                                            <a href="<?= base_url('ustadz/santri/detail/' . $s['id']) ?>" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Lihat Detail Akademik">
+                                            <a href="<?= base_url('guru/santri-detail/' . $s['id']) ?>" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Lihat Detail Akademik">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
-                                            <a href="<?= base_url('ustadz/hafalan/santri/' . $s['id']) ?>" class="btn btn-sm btn-light text-success border-0 rounded-2" title="Lihat Hafalan">
+                                            <a href="<?= base_url('guru/detail-riwayat-hafalan/' . $s['id']) ?>" class="btn btn-sm btn-light text-success border-0 rounded-2" title="Lihat Hafalan">
                                                 <i class="fa-solid fa-book-quran"></i>
                                             </a>
                                         </div>
