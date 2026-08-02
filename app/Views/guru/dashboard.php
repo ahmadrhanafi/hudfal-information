@@ -16,14 +16,11 @@
                     <p class="text-muted mb-3 small" style="text-transform: none !important;">
                         Berikut adalah ringkasan jadwal mengajar hari ini, rekap setoran hafalan santri binaan, dan tugas pengarsipan nilai.
                     </p>
-                    <div class="d-flex flex-wrap gap-2">
+                    <!-- <div class="d-flex flex-wrap gap-2">
                         <a href="<?= base_url('ustadz/hafalan/tambah') ?>" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" style="text-transform: none !important;">
                             <i class="fa-solid fa-plus me-1"></i> Input Setoran Baru
                         </a>
-                        <a href="<?= base_url('ustadz/absensi') ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
-                            <i class="fa-solid fa-clipboard-user text-success me-1"></i> Absensi Kelas
-                        </a>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col-lg-4 text-center d-none d-lg-block">
                     <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto text-success" style="width: 120px; height: 120px;">
