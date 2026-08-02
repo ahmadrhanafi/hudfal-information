@@ -20,12 +20,12 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
             <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Statistik Hafalan Santri Binaan</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Analisis grafik perkembangan setoran, rata-rata hafalan, dan evaluasi kelas bimbingan Anda.</p>
+            <p class="text-muted mb-0 small" style="text-transform: none !important;">Analisis grafik perkembangan setoran dan rata-rata hafalan santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <?php $currentPeriode = $_GET['periode'] ?? 'bulan_ini'; ?>
-            <a href="<?= base_url('guru/statistik-hafalan/export?periode=' . $currentPeriode); ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;" target="_blank">
-                <i class="fa-solid fa-download text-success me-1"></i> Unduh Laporan Kelas
+            <a href="<?= base_url('guru/statistik-hafalan/export?periode=' . $currentPeriode); ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
+                <i class="fa-solid fa-download text-success me-1"></i> Unduh Laporan
             </a>
 
             <div class="dropdown">

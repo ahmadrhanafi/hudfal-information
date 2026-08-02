@@ -83,6 +83,6 @@ class Statistik extends BaseController
         $dompdf->render();
 
         $nama_file = 'Laporan_Statistik_' . str_replace(' ', '_', $kelas['nama_kelas'] ?? 'Kelas') . '.pdf';
-        $dompdf->stream($nama_file, ['Attachment' => false]);
+        $dompdf->stream($nama_file, ['Attachment' => true]);
     }
 }
