@@ -22,7 +22,6 @@ class GuruModel extends Model
     public function getGuruWithKelas()
     {
         return $this->select('guru.*, kelas.nama_kelas')
-            ->from('guru')
             ->join('kelas', 'kelas.id = guru.id_kelas_diampu', 'left')
             ->findAll();
     }
