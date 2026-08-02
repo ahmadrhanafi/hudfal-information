@@ -25,6 +25,7 @@ class Kelas extends BaseController
 
         $data = [
             'title' => 'Data Kelas',
+            'icon' => 'fa-solid fa-school',
             'kelas' => $kelasWithTotal,
             'role'  => session()->get('role') ?? 'admin'
         ];

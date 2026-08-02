@@ -21,6 +21,7 @@ class Wali extends BaseController
     {
         $data = [
             'title' => 'Data Wali Santri',
+            'icon' => 'fa-solid fa-users',
             'wali'  => $this->waliModel->getWaliWithSantri(),
             'role'  => session()->get('role') ?? 'admin'
         ];

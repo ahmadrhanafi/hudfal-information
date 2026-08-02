@@ -36,7 +36,8 @@ class Statistik extends BaseController
         $periode = $this->request->getGet('periode') ?? 'bulan_ini';
 
         $data = [
-            'title'          => 'Statistik Hafalan Kelas',
+            'title'          => 'Statistik Hafalan',
+            'icon'           => 'fa-solid fa-chart-line',
             'nama_kelas'     => $nama_kelas,
             'rata_setoran'   => $this->hafalanModel->getRataRataKelas($id_guru, $periode),
             'juz_dominan'    => $this->hafalanModel->getJuzDominanKelas($id_guru, $periode),

@@ -39,7 +39,8 @@ class Santri extends BaseController
             $santri = $this->santriModel->searchSantri($keyword, $idKelasDiampu, $status);
 
             $data = [
-                'title'  => 'Data Santri Binaan',
+                'title'  => 'Data Santri',
+                'icon'   => 'fa-solid fa-user-graduate',
                 'santri' => $santri,
                 'role'   => $role
             ];

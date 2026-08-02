@@ -33,14 +33,77 @@
             font-family: 'Poppins', sans-serif;
             background-color: var(--main-bg);
             color: #334155;
-            overflow-x: hidden;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+        }
+
+        /* Navbar */
+        /* Styling tambahan untuk memperhalus interaksi */
+        .dropdown-toggle-no-caret::after {
+            display: none !important;
+        }
+
+        .hover-bg-light:hover {
+            background-color: #f8f9fa !important;
+        }
+
+        .hover-bg-danger-subtle:hover {
+            background-color: #f8d7da !important;
+            color: #842029 !important;
+        }
+
+        /* Dark Mode Global Support (Bisa disesuaikan dengan root body class) */
+        /* Warna default (Light Mode) */
+        .text-user-name {
+            color: #212529 !important;
+        }
+
+        /* Warna saat Dark Mode aktif */
+        body.dark-mode {
+            background-color: #121212 !important;
+            color: #e0e0e0 !important;
+        }
+
+        body.dark-mode .text-user-name {
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .navbar {
+            background-color: #1e1e1e !important;
+            border-color: #2c2c2c !important;
+        }
+
+        body.dark-mode .navbar h5 {
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .dropdown-menu {
+            background-color: #1e1e1e !important;
+            border: 1px solid #2c2c2c !important;
+        }
+
+        body.dark-mode .dropdown-item {
+            color: #e0e0e0 !important;
+        }
+
+        body.dark-mode .hover-bg-light:hover {
+            background-color: #2c2c2c !important;
+        }
+
+        body.dark-mode .btn-light {
+            background-color: #2c2c2c !important;
+            border-color: #3d3d3d !important;
+            color: #e0e0e0 !important;
         }
 
         /* --- Sidebar Styling Profesional --- */
         .sidebar {
             background: var(--sidebar-bg);
             min-height: 100vh;
-            width: 270px;
+            width: 270px !important;
+            min-width: 270px !important;
+            max-width: 270px !important;
+            box-sizing: border-box !important;
             transition: all 0.3s ease-in-out;
             z-index: 1050;
             box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
@@ -48,6 +111,43 @@
 
         .sidebar .logo-box {
             padding: 24px 20px 16px 20px;
+        }
+
+        /* Styling Dasar Nav Link di Sidebar */
+        #mainSidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+            transition: all 0.2s ease-in-out;
+            font-size: 0.9rem;
+        }
+
+        #mainSidebar .nav-link:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.08);
+            transform: translateX(3px);
+        }
+
+        #mainSidebar .nav-link.active {
+            color: #ffffff !important;
+            background-color: #198754 !important;
+            /* Warna aksen hijau utama */
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
+        }
+
+        .hover-danger-bg:hover {
+            background-color: rgba(220, 53, 69, 0.15) !important;
+            color: #ff6b6b !important;
+        }
+
+        .custom-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Sinkronisasi saat Dark Mode Global Aktif */
+        body.dark-mode #mainSidebar {
+            background-color: #1a1a1a !important;
+            border-right: 1px solid #2c2c2c;
         }
 
         .nav-link {
@@ -111,6 +211,10 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
             height: 70px;
             padding: 0 24px;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
         }
 
         /* --- Main Content Area --- */
@@ -128,6 +232,53 @@
 
             .sidebar.active {
                 left: 0;
+            }
+        }
+
+        /* --- Pengaturan Responsive Mobile Sidebar --- */
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed !important;
+                top: 0;
+                left: -270px !important;
+                height: 100vh;
+                transition: left 0.3s ease-in-out;
+                z-index: 1060 !important;
+                /* Di atas elemen lain */
+            }
+
+            .sidebar.active {
+                left: 0 !important;
+            }
+
+            /* Backdrop / Lapisan hitam transparan di belakang sidebar saat aktif di mobile */
+            .sidebar-backdrop {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1055;
+                backdrop-filter: blur(2px);
+            }
+
+            .sidebar-backdrop.active {
+                display: block;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-main {
+                height: 60px !important;
+                padding: 0 10px !important;
+            }
+
+            /* Pastikan area kanan (dark mode & profil) punya ruang tetap dan tidak mengecil */
+            .navbar-main .d-flex.align-items-center:last-child {
+                flex-shrink: 0;
+                gap: 6px !important;
             }
         }
     </style>

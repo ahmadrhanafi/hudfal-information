@@ -51,7 +51,8 @@ class RiwayatHafalan extends BaseController
         }
 
         $data = [
-            'title'        => 'Riwayat Hafalan Anak',
+            'title'        => 'Riwayat Hafalan',
+            'icon'         => 'fa-solid fa-history',
             'santri_list'  => $santriList,
             'santri_aktif' => $santriAktif,
             'riwayat'      => $riwayat

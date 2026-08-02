@@ -26,7 +26,8 @@ class Hafalan extends BaseController
         $idKelas = session()->get('id_kelas');
 
         $data = [
-            'title'   => 'Input & Rekap Hafalan Santri',
+            'title'   => 'Data Hafalan',
+            'icon'    => 'fa-solid fa-book-quran',
             'hafalan' => $this->hafalanModel->getHafalanByGuru($idGuru)->paginate(10, 'hafalan'),
             'pager'   => $this->hafalanModel->pager, // Wajib ada agar link pagination bisa dirender di view
             'santri'  => $this->santriModel->getSantriByKelas($idKelas),

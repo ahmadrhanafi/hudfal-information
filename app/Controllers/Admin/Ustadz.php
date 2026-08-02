@@ -25,7 +25,8 @@ class Ustadz extends BaseController
         $role = session()->get('role');
 
         $data = [
-            'title' => 'Data Ustadz / Guru',
+            'title' => 'Data Ustadz',
+            'icon' => 'fa-solid fa-chalkboard-user',
             'guru'  => $this->guruModel->getGuruWithKelas(),
             'kelas' => $this->kelasModel->findAll(),
             'role'  => session()->get('role') ?? 'admin'

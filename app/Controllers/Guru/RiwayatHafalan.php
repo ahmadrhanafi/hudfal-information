@@ -78,7 +78,7 @@ class RiwayatHafalan extends BaseController
         }
 
         $data = [
-            'title'                   => 'Riwayat Hafalan Santri',
+            'title'                   => 'Riwayat Hafalan',
             'santri'                  => $santri,
             'keyword'                 => $keyword,
             'total_setoran_bulan_ini' => $totalSetoranBulanIni,

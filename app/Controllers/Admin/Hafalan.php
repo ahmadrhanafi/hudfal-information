@@ -25,7 +25,8 @@ class Hafalan extends BaseController
 
         if ($role == 'admin') {
             $data = [
-                'title'   => 'Monitoring Data Hafalan',
+                'title'   => 'Data Hafalan',
+                'icon'   => 'fa-solid fa-book-quran',
                 'hafalan' => $this->hafalanModel->getHafalanWithRelations()->paginate(10, 'hafalan'),
                 'pager'   => $this->hafalanModel->pager,
                 'santri'  => $this->santriModel->findAll(),

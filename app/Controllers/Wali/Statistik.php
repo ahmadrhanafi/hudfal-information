@@ -55,7 +55,8 @@ class Statistik extends BaseController
         }
 
         $data = [
-            'title'         => 'Statistik Hafalan Ananda',
+            'title'         => 'Statistik Hafalan',
+            'icon'          => 'fa-solid fa-chart-line',
             'santri'        => $santri,
             'nama_santri'   => $nama_santri,
             'periode'       => $periode,
