@@ -88,10 +88,8 @@ class Santri extends BaseController
 
         $idKelasDiampu = $guru ? $guru['id_kelas_diampu'] : null;
 
-        // Ambil data santri khusus kelas yang diajar guru tersebut (tanpa keyword/status agar tercetak semua)
         $santri = $this->santriModel->searchSantri(null, $idKelasDiampu, null);
 
-        // Ambil nama kelas untuk judul laporan/nama file
         $kelasModel = new \App\Models\KelasModel();
         $kelas = $kelasModel->find($idKelasDiampu);
 
@@ -100,6 +98,14 @@ class Santri extends BaseController
             'nama_kelas' => $kelas['nama_kelas'] ?? 'Semua Kelas',
             'santri'     => $santri
         ];
+
+        // FITUR OPSIONAL: Jika diakses dengan /cetak?print=1 di URL, tampilkan debug isinya
+        if ($this->request->getGet('print') == 1) {
+            echo "<pre>";
+            print_r($data);
+            echo "</pre>";
+            exit;
+        }
 
         $html = view('guru/cetak_data_santri', $data);
 
@@ -112,7 +118,8 @@ class Santri extends BaseController
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        $nama_file = 'Laporan_Santri_' . str_replace(' ', '_', $kelas['nama_kelas'] ?? 'Binaan') . '.pdf';
+        $nama_kelas_bersih = preg_replace('/[^A-Za-z0-9\-_]/', '_', $kelas['nama_kelas'] ?? 'Binaan');
+        $nama_file = 'Laporan_Santri_' . $nama_kelas_bersih . '.pdf';
 
         $dompdf->stream($nama_file, ['Attachment' => true]);
         exit;

@@ -53,6 +53,8 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('hafalan/delete/(:num)', 'Admin\Hafalan::delete/$1');
 
     $routes->get('statistik-hafalan', 'Admin\Statistik::index');
+    $routes->get('statistik-hafalan/export', 'Admin\Statistik::export');
+
     $routes->get('administrasi', 'Admin\Administrasi::index');
     $routes->get('esertifikat', 'Admin\Esertifikat::index');
     $routes->get('ekartu', 'Admin\Ekartu::index');

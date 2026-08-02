@@ -30,6 +30,51 @@ class HafalanModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
+    // ==========================================
+    // GLOBAL DI DASHBOARD ADMIN    
+    // ==========================================
+
+    // Contoh fungsi pendukung di HafalanModel.php untuk Admin
+    public function getRataRataGlobal($periode = 'tahun_ini')
+    {
+        // Sesuaikan logika filter tanggal berdasarkan $periode ('bulan_ini', 'semester_ini', 'tahun_ini')
+        // Contoh return nilai rata-rata ayat/hari:
+        return 24.5;
+    }
+
+    public function getJuzDominanGlobal($periode = 'tahun_ini')
+    {
+        // Mengembalikan array juz terbanyak, misal: ['juz' => 30, 'persen' => 42]
+        return ['juz' => '30', 'persen' => 42];
+    }
+
+    public function getPredikatTerbanyakGlobal($periode = 'tahun_ini')
+    {
+        // Mengembalikan predikat dominan, misal: 'Mumtaz'
+        return 'Mumtaz';
+    }
+
+    public function getProgressJuzGlobal($periode = 'tahun_ini')
+    {
+        // Mengembalikan data per juz untuk progress bar
+        return [
+            ['nama' => 'Juz 30 (Amma)', 'persen' => 42, 'color' => 'success'],
+            ['nama' => 'Juz 29', 'persen' => 28, 'color' => 'primary'],
+            ['nama' => 'Juz 1 - 5 (Al-Baqarah/Ali \'Imran)', 'persen' => 18, 'color' => 'warning'],
+            ['nama' => 'Lainnya (Juz 6 - 28)', 'persen' => 12, 'color' => 'secondary'],
+        ];
+    }
+
+    public function getGrafikSetoranGlobal($periode = 'tahun_ini')
+    {
+        return [
+            'labels' => ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+            'values' => [45, 80, 60, 95]
+        ];
+    }
+
+    // -------------------------------------------------------------------------
+
     // Fungsi untuk mengambil data hafalan lengkap dengan relasi santri dan guru
     public function getHafalanWithRelations($id = null)
     {

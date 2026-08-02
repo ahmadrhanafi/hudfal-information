@@ -73,7 +73,7 @@ class Statistik extends BaseController
             'detail_hafalan' => $this->hafalanModel->getDetailHafalanByPeriode($id_guru, $periode),
         ];
 
-        // FITUR OPSIONAL: Jika diakses dengan /export?print=1 di URL, tampilkan print_r
+        // FITUR DEBUG: Jika diakses dengan /export?print=1 di URL, tampilkan isi datanya
         if ($this->request->getGet('print') == 1) {
             echo "<pre>";
             print_r($data);
@@ -92,7 +92,8 @@ class Statistik extends BaseController
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        $nama_file = 'Laporan_Statistik_' . str_replace(' ', '_', $kelas['nama_kelas'] ?? 'Kelas') . '.pdf';
+        $nama_kelas_bersih = preg_replace('/[^A-Za-z0-9\-_]/', '_', $kelas['nama_kelas'] ?? 'Kelas');
+        $nama_file = 'Laporan_Statistik_' . $nama_kelas_bersih . '_' . strtoupper($periode) . '.pdf';
 
         $dompdf->stream($nama_file, ['Attachment' => true]);
         exit;

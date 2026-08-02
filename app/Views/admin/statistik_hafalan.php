@@ -1,5 +1,18 @@
 <?= $this->extend('layout/main') ?>
 
+<?php
+/**
+ * @var string $title
+ * @var string $nama_kelas
+ * @var string $periode
+ * @var array{juz: string|int, persen: int|float} $juz_dominan
+ * @var float|int $rata_setoran
+ * @var string $predikat_umum
+ * @var array<int, array{nama: string, persen: int|float, color: string}> $capaian_juz
+ * @var array $grafik_setoran
+ */
+?>
+
 <?= $this->section('content') ?>
 
 <div class="container-fluid px-0">
@@ -7,21 +20,24 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Statistik & Analitik Hafalan</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Analisis mendalam mengenai grafik perkembangan setoran, rata-rata hafalan, dan progres santri.</p>
+            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;"><?= esc($title); ?></h3>
+            <p class="text-muted mb-0 small" style="text-transform: none !important;">Analisis mendalam mengenai grafik perkembangan setoran, rata-rata hafalan, dan progres seluruh santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
+            <!-- Tombol Unduh PDF Dinamis -->
+            <a href="<?= base_url('admin/statistik-hafalan/export?periode=' . $periode); ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none" style="text-transform: none !important;">
                 <i class="fa-solid fa-download text-success me-1"></i> Unduh PDF
-            </button>
+            </a>
+
+            <!-- Dropdown Filter Periode -->
             <div class="dropdown">
                 <button class="btn btn-success btn-sm px-3 rounded-pill shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" style="text-transform: none !important;">
-                    <i class="fa-solid fa-filter me-1"></i> Periode: Tahun Ini
+                    <i class="fa-solid fa-filter me-1"></i> Periode: <?= ucwords(str_replace('_', ' ', $periode)); ?>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-                    <li><a class="dropdown-item small" href="#">Bulan Ini</a></li>
-                    <li><a class="dropdown-item small" href="#">Semester Ini</a></li>
-                    <li><a class="dropdown-item small" href="#">Tahun Ini</a></li>
+                    <li><a class="dropdown-item small <?= ($periode == 'bulan_ini') ? 'active' : ''; ?>" href="<?= base_url('admin/statistik-hafalan?periode=bulan_ini'); ?>">Bulan Ini</a></li>
+                    <li><a class="dropdown-item small <?= ($periode == 'semester_ini') ? 'active' : ''; ?>" href="<?= base_url('admin/statistik-hafalan?periode=semester_ini'); ?>">Semester Ini</a></li>
+                    <li><a class="dropdown-item small <?= ($periode == 'tahun_ini') ? 'active' : ''; ?>" href="<?= base_url('admin/statistik-hafalan?periode=tahun_ini'); ?>">Tahun Ini</a></li>
                 </ul>
             </div>
         </div>
@@ -37,7 +53,7 @@
                     </div>
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">RATA-RATA SETORAN HARIAN</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">24.5 <span class="fs-6 fw-normal text-muted">Ayat / Hari</span></h3>
+                        <h3 class="fw-bold text-dark mb-0 mt-1"><?= esc((string) $rata_setoran); ?> <span class="fs-6 fw-normal text-muted">Ayat / Hari</span></h3>
                     </div>
                 </div>
             </div>
@@ -50,7 +66,7 @@
                     </div>
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">JUZ PALING BANYAK DISETOR</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">Juz 30 <span class="fs-6 fw-normal text-success">(42%)</span></h3>
+                        <h3 class="fw-bold text-dark mb-0 mt-1">Juz <?= esc((string) ($juz_dominan['juz'] ?? '-')); ?> <span class="fs-6 fw-normal text-success">(<?= esc((string) ($juz_dominan['persen'] ?? 0)); ?>%)</span></h3>
                     </div>
                 </div>
             </div>
@@ -63,7 +79,7 @@
                     </div>
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">PREDIKAT TERDOMINASI</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">Mumtaz <span class="fs-6 fw-normal text-muted">(Sangat Baik)</span></h3>
+                        <h3 class="fw-bold text-dark mb-0 mt-1"><?= esc((string) $predikat_umum); ?></h3>
                     </div>
                 </div>
             </div>
@@ -72,22 +88,20 @@
 
     <!-- Grafik & Breakdown Bagian Bawah -->
     <div class="row g-4">
-        <!-- Grafik Utama (Placeholder Chart.js / Visualisasi) -->
+        <!-- Grafik Utama -->
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h5 class="fw-bold text-dark m-0" style="text-transform: none !important;">
-                            <i class="fa-solid fa-chart-area text-success me-2"></i> Grafik Tren Setoran Tahunan
+                            <i class="fa-solid fa-chart-area text-success me-2"></i> Grafik Tren Setoran Global (<?= ucwords(str_replace('_', ' ', $periode)); ?>)
                         </h5>
                         <span class="badge bg-light text-secondary border">Real-time Data</span>
                     </div>
 
-                    <!-- Box simulasi area grafik -->
-                    <div class="alert alert-light border border-2 border-dashed rounded-4 text-center py-5 text-muted my-3">
-                        <i class="fa-solid fa-chart-line fa-3x mb-3 text-success opacity-50"></i>
-                        <h6 class="fw-bold text-dark">Visualisasi Grafik Interaktif</h6>
-                        <p class="mb-0 small" style="text-transform: none !important;">Grafik batang/garis progress hafalan bulanan santri akan termuat otomatis via pustaka Chart.js.</p>
+                    <!-- Canvas untuk Chart.js -->
+                    <div style="position: relative; height: 320px; width: 100%;">
+                        <canvas id="grafikSetoranGlobal"></canvas>
                     </div>
                 </div>
             </div>
@@ -98,52 +112,22 @@
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4">
                     <h5 class="fw-bold text-dark mb-4" style="text-transform: none !important;">
-                        <i class="fa-solid fa-layer-group text-success me-2"></i> Capaian per Juz
+                        <i class="fa-solid fa-layer-group text-success me-2"></i> Capaian per Juz (Global)
                     </h5>
 
-                    <!-- Progress Bar 1 -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-semibold mb-1">
-                            <span class="text-dark">Juz 30 (Amma)</span>
-                            <span class="text-success">42%</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: 42%;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar 2 -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-semibold mb-1">
-                            <span class="text-dark">Juz 29</span>
-                            <span class="text-primary">28%</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-primary rounded-pill" role="progressbar" style="width: 28%;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar 3 -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-semibold mb-1">
-                            <span class="text-dark">Juz 1 - 5 (Al-Baqarah/Ali 'Imran)</span>
-                            <span class="text-warning">18%</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-warning rounded-pill" role="progressbar" style="width: 18%;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar 4 -->
-                    <div class="mb-2">
-                        <div class="d-flex justify-content-between small fw-semibold mb-1">
-                            <span class="text-dark">Lainnya (Juz 6 - 28)</span>
-                            <span class="text-secondary">12%</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-secondary rounded-pill" role="progressbar" style="width: 12%;"></div>
-                        </div>
-                    </div>
+                    <?php if (!empty($capaian_juz)): ?>
+                        <?php foreach ($capaian_juz as $juz): ?>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between small fw-semibold mb-1">
+                                    <span class="text-dark"><?= esc((string) ($juz['nama'] ?? '')); ?></span>
+                                    <span class="text-<?= esc((string) ($juz['color'] ?? 'secondary')); ?>"><?= esc((string) ($juz['persen'] ?? 0)); ?>%</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-<?= esc((string) ($juz['color'] ?? 'secondary')); ?> rounded-pill" role="progressbar" style="width: <?= esc((string) ($juz['persen'] ?? 0)); ?>%;"></div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
 
                     <div class="mt-4 pt-2 text-center">
                         <small class="text-muted">Persentase dihitung dari akumulasi total seluruh santri aktif.</small>
@@ -154,5 +138,97 @@
     </div>
 
 </div>
+
+<!-- Pastikan CDN Chart.js ada (hapus baris ini jika di layout/main.php sudah ada) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Script Inisialisasi Chart.js -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const canvasEl = document.getElementById('grafikSetoranGlobal');
+        if (!canvasEl) return;
+
+        const ctx = canvasEl.getContext('2d');
+        const rawData = <?= json_encode($grafik_setoran ?? []); ?>;
+
+        let labels = [];
+        let dataValues = [];
+
+        if (rawData && rawData.labels && rawData.values) {
+            labels = rawData.labels;
+            dataValues = rawData.values;
+        } else if (Array.isArray(rawData) && rawData.length > 0) {
+            labels = rawData.map(item => item.bulan || item.tanggal || item.label || '');
+            dataValues = rawData.map(item => item.total || item.jumlah || item.value || 0);
+        } else {
+            labels = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'];
+            dataValues = [0, 0, 0, 0];
+        }
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Ayat Disetor',
+                    data: dataValues,
+                    backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                    borderColor: '#198754',
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: '#198754',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(33, 37, 41, 0.9)',
+                        titleFont: {
+                            size: 13
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        padding: 10,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.04)'
+                        },
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
 
 <?= $this->endSection() ?>
