@@ -11,7 +11,7 @@ class GuruModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
-    protected $allowedFields    = ['nip', 'nama_guru', 'jenis_kelamin', 'id_kelas_diampu', 'status_aktif'];
+    protected $allowedFields    = ['nip', 'nama_guru', 'jenis_kelamin', 'id_kelas_diampu', 'status_aktif', 'no_hp'];
 
     // Dates
     protected $useTimestamps = true;

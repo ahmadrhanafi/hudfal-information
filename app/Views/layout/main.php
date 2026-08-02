@@ -54,7 +54,7 @@
 
         /* Dark Mode Global Support (Bisa disesuaikan dengan root body class) */
         /* Warna default (Light Mode) */
-        .text-user-name {
+        .text-dark-mode {
             color: #212529 !important;
         }
 
@@ -64,7 +64,7 @@
             color: #e0e0e0 !important;
         }
 
-        body.dark-mode .text-user-name {
+        body.dark-mode .text-dark-mode {
             color: #ffffff !important;
         }
 
@@ -221,6 +221,44 @@
         main {
             padding: 28px;
             min-height: calc(100vh - 70px);
+        }
+
+        /* --- Penyesuaian Dark Mode untuk Tabel & Card --- */
+        body.dark-mode .card,
+        body.dark-mode .table-responsive,
+        body.dark-mode table.table {
+            background-color: #1a1a1a !important;
+            color: #e0e0e0 !important;
+            border-color: #2c2c2c !important;
+        }
+
+        /* Warna latar belakang baris tabel saat dark mode */
+        body.dark-mode .table {
+            --bs-table-bg: #1a1a1a;
+            --bs-table-color: #e0e0e0;
+            --bs-table-border-color: #2c2c2c;
+            color: #e0e0e0 !important;
+        }
+
+        /* Header tabel jadi sedikit lebih gelap elegan */
+        body.dark-mode .table thead th {
+            background-color: #222222 !important;
+            color: #ffffff !important;
+            border-bottom: 2px solid #333333 !important;
+        }
+
+        /* Sel / baris tabel saat dark mode */
+        body.dark-mode .table td,
+        body.dark-mode .table th {
+            background-color: #1a1a1a !important;
+            color: #d1d5db !important;
+            border-color: #2c2c2c !important;
+        }
+
+        /* Efek hover baris tabel saat kursor diarahkan */
+        body.dark-mode .table-hover tbody tr:hover td {
+            background-color: #252525 !important;
+            color: #ffffff !important;
         }
 
         /* Responsive Mobile Handling */

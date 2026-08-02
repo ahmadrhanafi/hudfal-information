@@ -6,7 +6,6 @@ use App\Controllers\BaseController;
 use App\Models\SantriModel;
 use App\Models\HafalanModel;
 use App\Models\UserModel;
-use Dompdf\Dompdf;
 
 class Statistik extends BaseController
 {
@@ -25,15 +24,34 @@ class Statistik extends BaseController
         $user   = (new UserModel())->find($userId);
         $id_wali = $user['ref_id'] ?? $userId;
 
-        $santri = $this->santriModel->where('id_wali', $id_wali)->first();
+        $data['anak'] = $this->santriModel->where('id_wali', $id_wali)->findAll();
 
-        $id_santri   = $santri['id'] ?? null;
+        if (empty($data['anak'])) {
+            $data['title'] = 'Statistik Hafalan';
+            $data['icon']  = 'fa-solid fa-chart-line';
+            return view('wali/statistik_hafalan', $data);
+        }
+
+        $id_santri_aktif = $this->request->getGet('anak');
+
+        $santri = null;
+        if ($id_santri_aktif) {
+            foreach ($data['anak'] as $a) {
+                if ($a['id'] == $id_santri_aktif) {
+                    $santri = $a;
+                    break;
+                }
+            }
+        }
+
+        if (!$santri) {
+            $santri = $data['anak'][0];
+        }
+
+        $id_santri   = $santri['id'];
         $nama_santri = $santri['nama_santri'] ?? 'Ananda';
 
         $periode = $this->request->getGet('periode') ?? 'bulan_ini';
-
-        $rawZiyadah  = $this->hafalanModel->getGrafikAyatBulanan($id_santri, $periode, 'ziyadah');
-        $rawMurojaah = $this->hafalanModel->getGrafikAyatBulanan($id_santri, $periode, 'murojaah');
 
         $chartLabels   = [];
         $chartZiyadah  = [];
@@ -54,47 +72,21 @@ class Statistik extends BaseController
             $chartMurojaah = [0];
         }
 
-        $data = [
-            'title'         => 'Statistik Hafalan',
-            'icon'          => 'fa-solid fa-chart-line',
-            'santri'        => $santri,
-            'nama_santri'   => $nama_santri,
-            'periode'       => $periode,
-            'total_juz'     => $this->hafalanModel->getTotalJuzSelesai($id_santri, $periode),
-            'streak'        => $this->hafalanModel->getStreakHarian($id_santri),
-            'rata_predikat' => $this->hafalanModel->getRataPredikatSantri($id_santri, $periode),
-            'komposisi'     => $this->hafalanModel->getKomposisiSetoran($id_santri, $periode),
-            'chart_labels'  => $chartLabels,
-            'chart_ziyadah' => $chartZiyadah,
-            'chart_murojaah' => $chartMurojaah,
-            'detail_juz'    => $this->hafalanModel->getDetailCapaianJuz($id_santri, $periode),
-        ];
+        $data['title']          = 'Statistik Hafalan';
+        $data['icon']           = 'fa-solid fa-chart-line';
+        $data['santri']         = $data['anak'];
+        $data['selected_santri'] = $santri;
+        $data['nama_santri']    = $nama_santri;
+        $data['periode']        = $periode;
+        $data['total_juz']      = $this->hafalanModel->getTotalJuzSelesai($id_santri, $periode);
+        $data['streak']         = $this->hafalanModel->getStreakHarian($id_santri);
+        $data['rata_predikat']  = $this->hafalanModel->getRataPredikatSantri($id_santri, $periode);
+        $data['komposisi']      = $this->hafalanModel->getKomposisiSetoran($id_santri, $periode);
+        $data['chart_labels']   = $chartLabels;
+        $data['chart_ziyadah']  = $chartZiyadah;
+        $data['chart_murojaah'] = $chartMurojaah;
+        $data['detail_juz']     = $this->hafalanModel->getDetailCapaianJuz($id_santri, $periode);
 
         return view('wali/statistik_hafalan', $data);
-    }
-
-    // Method untuk Unduh Laporan Statistik Ananda oleh Wali
-    public function export()
-    {
-        $userId = session()->get('id');
-        $user   = (new UserModel())->find($userId);
-        $id_wali = $user['ref_id'] ?? $userId;
-
-        $santri = $this->santriModel->where('id_wali', $id_wali)->first();
-        $id_santri   = $santri['id'] ?? null;
-        $nama_santri = $santri['nama_santri'] ?? 'Ananda';
-
-        $periode = $this->request->getGet('periode') ?? 'bulan_ini';
-
-        $data = [
-            'nama_santri'    => $nama_santri,
-            'periode'        => $periode,
-            'total_juz'      => $this->hafalanModel->getTotalJuzSelesai($id_santri, $periode),
-            'rata_predikat'  => $this->hafalanModel->getRataPredikatSantri($id_santri, $periode),
-            'komposisi'      => $this->hafalanModel->getKomposisiSetoran($id_santri, $periode),
-            'detail_hafalan' => $this->hafalanModel->getDetailHafalanSantriByPeriode($id_santri, $periode),
-        ];
-
-        return view('wali/cetak_laporan_santri', $data);
     }
 }

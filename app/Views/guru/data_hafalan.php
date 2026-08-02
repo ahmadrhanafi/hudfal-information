@@ -11,8 +11,8 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Input & Rekap Hafalan Santri</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola catatan setoran hafalan Al-Qur'an harian untuk santri kelas binaan Anda.</p>
+            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Input & Rekap Hafalan Santri</h3>
+            <p class="text-muted mb-0 small text-dark-mode" style="text-transform: none !important;">Kelola catatan setoran hafalan Al-Qur'an harian untuk santri kelas binaan Anda.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button type="button" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#modalInputHafalan" style="text-transform: none !important;">
@@ -51,14 +51,14 @@
                                                 <?= strtoupper(substr($row['nama_santri'], 0, 2)); ?>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($row['nama_santri']); ?></h6>
-                                                <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y, H:i', strtotime($row['created_at'] ?? 'now')); ?></small>
+                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($row['nama_santri']); ?></h6>
+                                                <small class="text-muted text-dark-mode"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y, H:i', strtotime($row['created_at'] ?? 'now')); ?></small>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-dark d-block">Juz <?= $row['juz']; ?> (Surah <?= esc($row['surah']); ?>)</span>
-                                        <small class="text-muted">Ayat <?= $row['ayat_mulai']; ?> - <?= $row['ayat_selesai']; ?></small>
+                                        <span class="fw-semibold text-dark d-block text-dark-mode">Juz <?= $row['juz']; ?> (Surah <?= esc($row['surah']); ?>)</span>
+                                        <small class="text-muted text-dark-mode">Ayat <?= $row['ayat_mulai']; ?> - <?= $row['ayat_selesai']; ?></small>
                                     </td>
                                     <td class="text-center">
                                         <?php

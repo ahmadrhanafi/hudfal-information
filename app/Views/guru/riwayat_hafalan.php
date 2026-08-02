@@ -11,8 +11,8 @@ $santri = $santri ?? [];
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Riwayat Setoran Hafalan Santri</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Pantau rekam jejak hafalan Al-Qur'an (ziyadah dan murojaah) santri binaan kelas Anda.</p>
+            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Riwayat Setoran Hafalan Santri</h3>
+            <p class="text-muted mb-0 small text-dark-mode" style="text-transform: none !important;">Pantau rekam jejak hafalan Al-Qur'an (ziyadah dan murojaah) santri binaan kelas Anda.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
@@ -31,9 +31,9 @@ $santri = $santri ?? [];
                         <i class="fa-solid fa-book-quran fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">TOTAL SETORAN BULAN INI</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">
-                            <?= $total_setoran_bulan_ini ?? 0; ?> <span class="fs-6 fw-normal text-muted">Sesi</span>
+                        <span class="text-muted text-dark-mode small fw-medium" style="text-transform: none !important;">TOTAL SETORAN BULAN INI</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">
+                            <?= $total_setoran_bulan_ini ?? 0; ?> <span class="fs-6 fw-normal text-muted text-dark-mode">Sesi</span>
                         </h3>
                     </div>
                 </div>
@@ -48,7 +48,7 @@ $santri = $santri ?? [];
                         <i class="fa-solid fa-award fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">PREDIKAT DOMINAN</span>
+                        <span class="text-muted text-dark-mode small fw-medium" style="text-transform: none !important;">PREDIKAT DOMINAN</span>
                         <h3 class="fw-bold text-primary mb-0 mt-1">
                             <?= esc($predikat_umum ?? 'Mumtaz'); ?> <span class="fs-6 fw-normal text-success">(Bulan Ini)</span>
                         </h3>
@@ -65,9 +65,9 @@ $santri = $santri ?? [];
                         <i class="fa-solid fa-user-check fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">SANTRI AKTIF SETORAN</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">
-                            <?= $santri_aktif ?? 0; ?> / <?= $total_santri ?? 0; ?> <span class="fs-6 fw-normal text-muted">Santri</span>
+                        <span class="text-muted text-dark-mode small fw-medium" style="text-transform: none !important;">SANTRI AKTIF SETORAN</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">
+                            <?= $santri_aktif ?? 0; ?> / <?= $total_santri ?? 0; ?> <span class="fs-6 fw-normal text-muted text-dark-mode">Santri</span>
                         </h3>
                     </div>
                 </div>
@@ -131,13 +131,13 @@ $santri = $santri ?? [];
                                                 <?= $initials; ?>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($s['nama_santri']); ?></h6>
-                                                <small class="text-muted">Wali: <?= esc($s['nama_wali'] ?? 'N/A'); ?></small>
+                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($s['nama_santri']); ?></h6>
+                                                <small class="text-muted text-dark-mode">Wali: <?= esc($s['nama_wali'] ?? 'N/A'); ?></small>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="text-muted"><?= esc($s['nis']); ?></span>
+                                        <span class="text-muted text-dark-mode"><?= esc($s['nis']); ?></span>
                                     </td>
                                     <td>
                                         <span class="badge bg-light text-dark border px-2 py-1"><?= esc($s['nama_kelas'] ?? '-'); ?></span>

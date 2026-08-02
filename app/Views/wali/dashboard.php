@@ -87,20 +87,39 @@
         </div>
         <div class="col-xl-12 col-md-12">
             <?php if (!empty($anak)): ?>
-                <?php foreach ($anak as $a): ?>
-                    <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold"><?= esc($a['nama_santri']); ?></h5>
-                            <p class="card-text text-muted mb-1">NIS: <?= esc($a['nis']); ?> | Kelas: <?= esc($a['nama_kelas'] ?? 'Belum ditentukan'); ?></p>
-                            <a href="<?= base_url('wali/hafalan/detail/' . $a['id']); ?>" class="btn btn-sm btn-success mt-2">
-                                <i class="fa-solid fa-book-quran me-1"></i> Lihat Detail Hafalan
-                            </a>
+                <div class="row g-3">
+                    <?php foreach ($anak as $a): ?>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card border-0 shadow-sm rounded-4 h-100 transition-base">
+                                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex align-items-center gap-3 mb-3">
+                                            <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5 flex-shrink-0" style="width: 50px; height: 50px;">
+                                                <i class="fa-solid fa-child-reaching"></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="card-title fw-bold mb-1 text-user-name"><?= esc($a['nama_santri']); ?></h5>
+                                                <span class="badge bg-secondary-subtle text-secondary border rounded-pill px-2" style="font-size: 11px;">
+                                                    NIS: <?= esc($a['nis']); ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <p class="card-text text-muted small mb-3">
+                                            <i class="fa-solid fa-school me-1 text-success"></i> Kelas: <span class="fw-medium text-user-name"><?= esc($a['nama_kelas'] ?? 'Belum ditentukan'); ?></span>
+                                        </p>
+                                    </div>
+                                    <a href="<?= base_url('wali/hafalan/detail/' . $a['id']); ?>" class="btn btn-sm btn-success w-100 rounded-3 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2">
+                                        <i class="fa-solid fa-book-quran"></i> Lihat Detail Hafalan
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
             <?php else: ?>
-                <div class="alert alert-warning text-center">
-                    Belum ada data santri/anak yang dihubungkan dengan akun wali ini. Silakan hubungi admin pesantren.
+                <div class="alert alert-warning text-center rounded-4 p-4 shadow-sm border-0">
+                    <i class="fa-solid fa-triangle-exclamation fa-2x mb-2 text-warning"></i>
+                    <p class="mb-0">Belum ada data santri/anak yang dihubungkan dengan akun wali ini. Silakan hubungi admin pesantren.</p>
                 </div>
             <?php endif; ?>
         </div>

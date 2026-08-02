@@ -330,4 +330,51 @@ class HafalanModel extends Model
 
         return $builder->get()->getResultArray();
     }
+
+
+    // ==========================================
+    // TAMBAHAN UNTUK RIWAYAT & STATISTIK WALI
+    // ==========================================
+
+    public function getRiwayatBySantri($idSantri, $periode = 'bulan_ini')
+    {
+        if (!$idSantri) return [];
+
+        $builder = $this->select('hafalan.*, guru.nama_guru, guru.no_hp')
+            ->join('guru', 'guru.id = hafalan.id_guru', 'left')
+            ->where('hafalan.id_santri', $idSantri);
+
+        $this->applyPeriodeFilter($builder, $periode);
+
+        return $builder->orderBy('hafalan.created_at', 'DESC')->findAll();
+    }
+
+    public function getStatistikRingkasBySantri($idSantri, $periode = 'bulan_ini')
+    {
+        if (!$idSantri) {
+            return [
+                'juz_aktif' => '-',
+                'total_setoran' => 0,
+                'predikat_dominan' => '-'
+            ];
+        }
+
+        $riwayatFiltered = $this->getRiwayatBySantri($idSantri, $periode);
+        $totalSetoran = count($riwayatFiltered);
+
+        $juzQuery = $this->select('juz')
+            ->where('id_santri', $idSantri);
+        $this->applyPeriodeFilter($juzQuery, $periode);
+        $juzData = $juzQuery->orderBy('created_at', 'DESC')->first();
+        $juzAktif = $juzData ? 'Juz ' . $juzData['juz'] : '-';
+
+        $predikatData = $this->getRataPredikatSantri($idSantri);
+        $predikatDominan = is_array($predikatData) ? ($predikatData['predikat'] ?? '-') : '-';
+
+        return [
+            'juz_aktif'        => $juzAktif,
+            'total_setoran'    => $totalSetoran,
+            'predikat_dominan' => $predikatDominan
+        ];
+    }
 }

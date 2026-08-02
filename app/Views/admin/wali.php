@@ -146,8 +146,8 @@
                         <input type="text" name="nama_wali" id="editNama" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-medium small text-muted">No. HP / WhatsApp</label>
-                        <input type="text" name="no_hp" id="editNoHp" class="form-control" required>
+                        <label class="form-label fw-medium small text-muted">No. WhatsApp</label>
+                        <input type="number" name="no_hp" id="editNoHp" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Alamat</label>

@@ -9,6 +9,7 @@
  * @var mixed $komposisi
  * @var mixed $grafik_bulanan
  * @var mixed $detail_juz
+ * @var mixed $selected_santri
  */
 
 $santriData     = $santri ?? [];
@@ -31,27 +32,46 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
 
 <div class="container-fluid px-0">
 
-    <!-- Page Header & Filter Periode -->
+    <!-- Page Header & Filter Pilihan Anak & Periode -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Statistik Hafalan Ananda</h3>
+            <h3 class="fw-bold text-user-name mb-1" style="text-transform: none !important;">Statistik Hafalan Ananda</h3>
             <p class="text-muted mb-0 small" style="text-transform: none !important;">
-                Menampilkan rekam jejak hafalan santri: <span class="fw-semibold text-dark"><?= esc($santriVal); ?></span>
+                Menampilkan rekam jejak hafalan santri: <span class="fw-semibold text-user-name"><?= esc($selected_santri['nama_santri'] ?? $nama_santri ?? 'Ananda'); ?></span>
             </p>
         </div>
-        <div class="d-flex align-items-center gap-2">
-            <!-- Dropdown Filter Periode -->
+
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <!-- Dropdown Pilih Anak (Hanya muncul jika anak lebih dari 1) -->
+            <?php if (!empty($santri) && is_array($santri) && count($santri) > 1): ?>
+                <div class="dropdown">
+                    <button class="btn btn-outline-success btn-sm dropdown-toggle rounded-pill px-3 py-2 bg-white shadow-sm" type="button" id="dropdownPilihAnak" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-child-reaching me-1"></i> <strong><?= esc($selected_santri['nama_santri']); ?></strong>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2" aria-labelledby="dropdownPilihAnak" style="min-width: 200px;">
+                        <?php foreach ($santri as $a): ?>
+                            <li>
+                                <a class="dropdown-item rounded-3 py-2 px-3 small <?= ($a['id'] == $selected_santri['id']) ? 'active bg-success text-white' : 'text-dark'; ?>"
+                                    href="<?= base_url('wali/statistik-hafalan?anak=' . $a['id'] . '&periode=' . ($periode ?? 'bulan_ini')); ?>">
+                                    <?= esc($a['nama_santri']); ?> <small class="opacity-75">(<?= esc($a['nama_kelas'] ?? '-'); ?>)</small>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+
+            <!-- Form Filter Periode & Kirim ID Anak Sekaligus -->
             <form method="get" action="" id="formPeriode" class="d-flex align-items-center">
-                <select name="periode" class="form-select form-select-sm bg-white border shadow-sm rounded-pill px-3 py-2" onchange="document.getElementById('formPeriode').submit()">
-                    <option value="minggu_ini" <?= ($periodeVal == 'minggu_ini') ? 'selected' : ''; ?>>Minggu Ini</option>
-                    <option value="bulan_ini" <?= ($periodeVal == 'bulan_ini') ? 'selected' : ''; ?>>Bulan Ini</option>
-                    <option value="semester_ini" <?= ($periodeVal == 'semester_ini') ? 'selected' : ''; ?>>Semester Ini</option>
+                <?php if (!empty($selected_santri)): ?>
+                    <input type="hidden" name="anak" value="<?= esc($selected_santri['id']); ?>">
+                <?php endif; ?>
+                <select name="periode" class="form-select form-select-sm bg-white border shadow-sm rounded-pill px-3 py-2" style="width: 140px !important;" onchange="document.getElementById('formPeriode').submit()">
+                    <option value="minggu_ini" <?= (($periode ?? '') == 'minggu_ini') ? 'selected' : ''; ?>>Minggu Ini</option>
+                    <option value="bulan_ini" <?= (($periode ?? '') == 'bulan_ini') ? 'selected' : ''; ?>>Bulan Ini</option>
+                    <option value="semester_ini" <?= (($periode ?? '') == 'semester_ini') ? 'selected' : ''; ?>>Semester Ini</option>
                 </select>
             </form>
-
-            <a href="<?= base_url('wali/statistik/export?periode=' . esc($periodeVal)); ?>" target="_blank" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none" style="text-transform: none !important;">
-                <i class="fa-solid fa-file-pdf text-success me-1"></i> Unduh Laporan
-            </a>
         </div>
     </div>
 
@@ -59,15 +79,15 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
     <div class="row g-4 mb-4">
         <!-- Total Juz Selesai -->
         <div class="col-xl-4 col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
                     <div class="bg-success bg-opacity-15 p-3 rounded-3 text-success">
                         <i class="fa-solid fa-book-quran fa-2x"></i>
                     </div>
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">TOTAL JUZ SELESAI</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">
-                            <?= esc($totalJuzVal); ?> <span class="fs-6 fw-normal text-muted">Juz</span>
+                        <h3 class="fw-bold mb-0 mt-1 text-user-name">
+                            <?= esc($total_juz ?? 0); ?> <span class="fs-6 fw-normal text-muted">Juz</span>
                         </h3>
                     </div>
                 </div>
@@ -76,15 +96,15 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
 
         <!-- Streak Setoran Harian -->
         <div class="col-xl-4 col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
                     <div class="bg-warning bg-opacity-15 p-3 rounded-3 text-warning">
                         <i class="fa-solid fa-fire fa-2x"></i>
                     </div>
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">STREAK SETORAN</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">
-                            <?= esc($streakVal); ?> <span class="fs-6 fw-normal text-muted">Hari Aktif</span>
+                        <h3 class="fw-bold mb-0 mt-1 text-user-name">
+                            <?= esc($streak ?? 0); ?> <span class="fs-6 fw-normal text-muted">Hari Aktif</span>
                         </h3>
                     </div>
                 </div>
@@ -93,7 +113,7 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
 
         <!-- Rata-rata Predikat -->
         <div class="col-xl-4 col-md-12">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
                     <div class="bg-primary bg-opacity-15 p-3 rounded-3 text-primary">
                         <i class="fa-solid fa-award fa-2x"></i>
@@ -101,7 +121,14 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                     <div>
                         <span class="text-muted small fw-medium" style="text-transform: none !important;">PREDIKAT RATA-RATA</span>
                         <h3 class="fw-bold text-primary mb-0 mt-1">
-                            <?= esc($rataPredVal); ?>
+                            <?php
+                            if (is_array($rata_predikat)) {
+                                // Jika array, ambil teks predikatnya (sesuaikan key-nya, misal 'predikat' atau 'nama_predikat')
+                                echo esc($rata_predikat['predikat'] ?? $rata_predikat['nama_predikat'] ?? 'Jayyid Jiddan');
+                            } else {
+                                echo esc($rata_predikat ?? '-');
+                            }
+                            ?>
                         </h3>
                     </div>
                 </div>
@@ -110,31 +137,31 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
     </div>
 
     <?php
-    // Siapkan data dummy/default untuk line chart jika dari controller belum ada
     $chartLabels   = $chart_labels ?? ['2026-08-01', '2026-08-02'];
     $chartZiyadah  = $chart_ziyadah ?? [1, 3];
     $chartMurojaah = $chart_murojaah ?? [0, 1];
+    $komposisiZiy  = $komposisi['ziyadah'] ?? 0;
+    $komposisiMur  = $komposisi['murojaah'] ?? 0;
     ?>
 
     <!-- Baris Grafik & Komposisi -->
     <div class="row g-4 mb-4">
         <!-- Grafik Progres Hafalan (Line Chart) -->
         <div class="col-xl-8">
-            <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex align-items-center gap-2">
                         <div class="text-success">
                             <i class="fa-solid fa-chart-line fa-lg"></i>
                         </div>
-                        <h5 class="fw-bold text-dark mb-0" style="text-transform: none !important; font-size: 1.05rem;">Grafik Progres Hafalan Ananda</h5>
+                        <h5 class="fw-bold mb-0 text-user-name" style="text-transform: none !important; font-size: 1.05rem;">Grafik Progres Hafalan Ananda</h5>
                     </div>
-                    <span class="badge bg-light text-dark border px-3 py-2 rounded-pill small fw-semibold">
-                        <?= esc(ucwords(str_replace('_', ' ', $periodeVal))); ?>
+                    <span class="badge bg-secondary-subtle text-secondary border px-3 py-2 rounded-pill small fw-semibold">
+                        <?= esc(ucwords(str_replace('_', ' ', $periode ?? 'bulan_ini'))); ?>
                     </span>
                 </div>
                 <p class="text-muted small mb-4">Grafik tren pencapaian setoran hafalan berdasarkan rentang waktu terpilih.</p>
 
-                <!-- Canvas untuk Chart.js -->
                 <div style="position: relative; height: 300px; width: 100%;">
                     <canvas id="progresHafalanChart"></canvas>
                 </div>
@@ -143,16 +170,16 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
 
         <!-- Komposisi Ziyadah vs Murojaah -->
         <div class="col-xl-4">
-            <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
-                <h5 class="fw-bold text-dark mb-1" style="text-transform: none !important; font-size: 1.05rem;">Komposisi Setoran</h5>
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <h5 class="fw-bold mb-1 text-user-name" style="text-transform: none !important; font-size: 1.05rem;">Komposisi Setoran</h5>
                 <p class="text-muted small mb-4">Rasio perbandingan antara hafalan baru dan pengulangan.</p>
 
                 <div class="mb-4">
                     <div class="d-flex justify-content-between small fw-semibold mb-1">
                         <span class="text-success"><i class="fa-solid fa-circle-plus me-1"></i> Ziyadah (Baru)</span>
-                        <span><?= esc($komposisiZiy); ?>%</span>
+                        <span class="text-user-name"><?= esc($komposisiZiy); ?>%</span>
                     </div>
-                    <div class="progress rounded-pill" style="height: 10px;">
+                    <div class="progress rounded-pill bg-secondary-subtle" style="height: 10px;">
                         <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: <?= esc($komposisiZiy); ?>%;"></div>
                     </div>
                 </div>
@@ -160,9 +187,9 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                 <div>
                     <div class="d-flex justify-content-between small fw-semibold mb-1">
                         <span class="text-primary"><i class="fa-solid fa-rotate-right me-1"></i> Murojaah (Ulang)</span>
-                        <span><?= esc($komposisiMur); ?>%</span>
+                        <span class="text-user-name"><?= esc($komposisiMur); ?>%</span>
                     </div>
-                    <div class="progress rounded-pill" style="height: 10px;">
+                    <div class="progress rounded-pill bg-secondary-subtle" style="height: 10px;">
                         <div class="progress-bar bg-primary rounded-pill" role="progressbar" style="width: <?= esc($komposisiMur); ?>%;"></div>
                     </div>
                 </div>
@@ -317,7 +344,20 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                             size: 12
                         },
                         padding: 10,
-                        cornerRadius: 8
+                        cornerRadius: 8,
+                        // Tambahkan callbacks label di sini
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y + ' Ayat';
+                                }
+                                return label;
+                            }
+                        }
                     }
                 },
                 scales: {

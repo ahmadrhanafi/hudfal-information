@@ -28,6 +28,10 @@ class CreateGuruTable extends Migration
                 'constraint' => ['L', 'P'],
                 'default' => 'L'
             ],
+            'no_hp' => [
+                'type' => 'VARCHAR',
+                'constraint' => 20
+            ],
             'id_kelas_diampu' => [
                 'type' => 'INT',
                 'constraint' => 11,

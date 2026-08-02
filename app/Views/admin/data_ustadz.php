@@ -140,6 +140,7 @@ $kelas = $kelas ?? [];
                                                 data-id="<?= $g['id']; ?>"
                                                 data-nip="<?= esc($g['nip']); ?>"
                                                 data-namaguru="<?= esc($g['nama_guru']); ?>"
+                                                data-nohp="<?= esc($g['no_hp']); ?>"
                                                 data-jeniskelamin="<?= esc($g['jenis_kelamin']); ?>"
                                                 data-idkelas="<?= esc($g['id_kelas_diampu']); ?>">
                                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -191,6 +192,10 @@ $kelas = $kelas ?? [];
                         <input type="text" name="nama_guru" class="form-control" placeholder="Contoh: Ustadz Ahmad, S.Pd." required>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">No. HP / WhatsApp</label>
+                        <input type="text" name="no_hp" id="editNoHp" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Jenis Kelamin</label>
                         <select name="jenis_kelamin" class="form-select" required>
                             <option value="L">Laki-laki</option>
@@ -234,6 +239,10 @@ $kelas = $kelas ?? [];
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Pengajar</label>
                         <input type="text" name="nama_guru" id="editNamaGuru" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">No. WhatsApp</label>
+                        <input type="number" name="no_hp" id="editNoHp" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Jenis Kelamin</label>
@@ -329,12 +338,14 @@ $kelas = $kelas ?? [];
                 const id = button.getAttribute('data-id');
                 const nip = button.getAttribute('data-nip');
                 const namaGuru = button.getAttribute('data-namaguru');
+                const noHp = button.getAttribute('data-nohp');
                 const jenisKelamin = button.getAttribute('data-jeniskelamin');
                 const idKelas = button.getAttribute('data-idkelas');
                 const status = button.getAttribute('data-status');
 
                 modalEdit.querySelector('#editNip').value = nip;
                 modalEdit.querySelector('#editNamaGuru').value = namaGuru;
+                modalEdit.querySelector('#editNoHp').value = noHp;
                 modalEdit.querySelector('#editJenisKelamin').value = jenisKelamin;
                 modalEdit.querySelector('#editIdKelas').value = idKelas;
                 modalEdit.querySelector('#editStatus').value = status;

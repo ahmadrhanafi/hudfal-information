@@ -5,22 +5,26 @@ namespace App\Controllers\Wali;
 use App\Controllers\BaseController;
 use App\Models\HafalanModel;
 use App\Models\SantriModel;
+use App\Models\GuruModel;
 
 class RiwayatHafalan extends BaseController
 {
     protected $hafalanModel;
     protected $santriModel;
+    protected $guruModel;
 
     public function __construct()
     {
         $this->hafalanModel = new HafalanModel();
-        $this->santriModel = new SantriModel();
+        $this->santriModel  = new SantriModel();
+        $this->guruModel    = new GuruModel();
     }
 
     public function index()
     {
-        $idWali = session()->get('ref_id');
+        $idWali = session()->get('ref_id') ?? session()->get('id');
 
+        // Ambil semua anak wali beserta nama kelasnya
         $santriList = $this->santriModel->select('santri.*, kelas.nama_kelas')
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
             ->where('santri.id_wali', $idWali)
@@ -34,28 +38,39 @@ class RiwayatHafalan extends BaseController
 
         $santriAktif = null;
         $riwayat = [];
+        $periode = $this->request->getGet('periode') ?? 'bulan_ini';
+
+        $statistik = [
+            'juz_aktif'        => '-',
+            'total_setoran'    => 0,
+            'predikat_dominan' => '-'
+        ];
 
         if (!empty($idSantriDipilih)) {
-            $santriAktif = $this->santriModel->select('santri.*, kelas.nama_kelas')
+            // Ambil detail santri aktif beserta data guru pengajarnya via join tabel guru
+            $santriAktif = $this->santriModel->select('santri.*, kelas.nama_kelas, guru.nama_guru, guru.no_hp as no_hp_guru')
                 ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+                ->join('guru', 'guru.id_kelas_diampu = santri.id_kelas', 'left')
                 ->where('santri.id', $idSantriDipilih)
                 ->first();
 
             if ($santriAktif) {
-                $riwayat = $this->hafalanModel->select('hafalan.*, guru.nama_guru as nama_penguji')
-                    ->join('guru', 'guru.id = hafalan.id_guru', 'left')
-                    ->where('hafalan.id_santri', $idSantriDipilih)
-                    ->orderBy('hafalan.created_at', 'DESC')
-                    ->findAll();
+                // Ambil data riwayat dan ringkasan dengan filter periode
+                $riwayat = $this->hafalanModel->getRiwayatBySantri($idSantriDipilih, $periode);
+                $statistik = $this->hafalanModel->getStatistikRingkasBySantri($idSantriDipilih, $periode);
             }
         }
 
         $data = [
-            'title'        => 'Riwayat Hafalan',
-            'icon'         => 'fa-solid fa-history',
-            'santri_list'  => $santriList,
-            'santri_aktif' => $santriAktif,
-            'riwayat'      => $riwayat
+            'title'            => 'Riwayat Hafalan',
+            'icon'             => 'fa-solid fa-history',
+            'santri_list'      => $santriList,
+            'santri_aktif'     => $santriAktif,
+            'riwayat'          => $riwayat,
+            'periodeVal'       => $periode,
+            'juz_aktif'        => $statistik['juz_aktif'],
+            'total_setoran'    => $statistik['total_setoran'],
+            'predikat_dominan' => $statistik['predikat_dominan']
         ];
 
         return view('wali/riwayat_hafalan', $data);

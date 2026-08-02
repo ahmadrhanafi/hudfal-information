@@ -19,8 +19,8 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Statistik Hafalan Santri Binaan</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Analisis grafik perkembangan setoran dan rata-rata hafalan santri.</p>
+            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Statistik Hafalan Santri Binaan</h3>
+            <p class="text-muted mb-0 small text-dark-mode" style="text-transform: none !important;">Analisis grafik perkembangan setoran dan rata-rata hafalan santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <?php $currentPeriode = $_GET['periode'] ?? 'bulan_ini'; ?>
@@ -51,9 +51,9 @@
                         <i class="fa-solid fa-chart-line fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">RATA-RATA SETORAN KELAS</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">
-                            <?= esc((string) ($rata_setoran ?? 0)); ?> <span class="fs-6 fw-normal text-muted">Ayat / Hari</span>
+                        <span class="text-muted text-dark-mode small fw-medium" style="text-transform: none !important;">RATA-RATA SETORAN KELAS</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">
+                            <?= esc((string) ($rata_setoran ?? 0)); ?> <span class="fs-6 fw-normal text-dark-mode text-muted">Ayat / Hari</span>
                         </h3>
                     </div>
                 </div>
@@ -66,8 +66,8 @@
                         <i class="fa-solid fa-trophy fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">JUZ DOMINAN KELAS</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">
+                        <span class="text-muted text-dark-mode small fw-medium" style="text-transform: none !important;">JUZ DOMINAN KELAS</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">
                             <?= esc($juz_dominan['nama'] ?? 'Juz 30'); ?>
                             <span class="fs-6 fw-normal text-success">(<?= esc($juz_dominan['persentase'] ?? 0); ?>%)</span>
                         </h3>
@@ -82,10 +82,10 @@
                         <i class="fa-solid fa-star fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">PREDIKAT TERBANYAK</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">
+                        <span class="text-muted text-dark-mode small fw-medium" style="text-transform: none !important;">PREDIKAT TERBANYAK</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">
                             <?= esc($predikat_umum['predikat'] ?? 'Mumtaz'); ?>
-                            <span class="fs-6 fw-normal text-muted">(<?= esc($predikat_umum['keterangan'] ?? 'Sangat Baik'); ?>)</span>
+                            <span class="fs-6 fw-normal text-muted text-dark-mode">(<?= esc($predikat_umum['keterangan'] ?? 'Sangat Baik'); ?>)</span>
                         </h3>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h5 class="fw-bold text-dark m-0" style="text-transform: none !important;">
+                        <h5 class="fw-bold text-dark-mode m-0" style="text-transform: none !important;">
                             <i class="fa-solid fa-chart-area text-success me-2"></i> Grafik Progres Hafalan Kelas Binaan
                         </h5>
                         <span class="badge bg-light text-secondary border"><?= esc($nama_kelas); ?></span>
@@ -118,7 +118,7 @@
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4">
-                    <h5 class="fw-bold text-dark mb-4" style="text-transform: none !important;">
+                    <h5 class="fw-bold text-dark-mode mb-4" style="text-transform: none !important;">
                         <i class="fa-solid fa-layer-group text-success me-2"></i> Capaian Juz Kelas
                     </h5>
 
@@ -133,9 +133,9 @@
                         ?>
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between small fw-semibold mb-1">
-                                    <span class="text-dark">Juz <?= esc($row['juz']); ?></span>
+                                    <span class="text-dark-mode">Juz <?= esc($row['juz']); ?></span>
                                     <!-- TAMBAHKAN KODE INI SUPAYA ANGKA PERSENTASE MUNCUL -->
-                                    <span class="text-muted">
+                                    <span class="text-muted text-dark-mode">
                                         <?= esc($row['jumlah']); ?> Setoran
                                         <span class="fw-bold text-success">(<?= $persen; ?>%)</span>
                                     </span>
@@ -148,22 +148,22 @@
                     <?php else: ?>
                         <div class="text-center text-muted py-4 small">
                             <i class="fa-solid fa-info-circle mb-2 fa-lg"></i>
-                            <p class="mb-0">Belum ada data capaian juz untuk kelas ini.</p>
+                            <p class="mb-0 text-dark-mode">Belum ada data capaian juz untuk kelas ini.</p>
                         </div>
                     <?php endif; ?>
 
                     <div class="mt-4 pt-2 text-center">
-                        <small class="text-muted">Persentase dihitung dari total target hafalan kelas binaan aktif.</small>
+                        <small class="text-muted text-dark-mode">Persentase dihitung dari total target hafalan kelas binaan aktif.</small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
-        <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
-            <h5 class="fw-bold text-dark mb-1" style="text-transform: none !important; font-size: 1.05rem;">Rekapitulasi Setoran Santri</h5>
-            <p class="text-muted small mb-3">Data rekapitulasi setoran hafalan santri.</p>
+    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mt-4">
+        <div class="card-header border-0 pt-4 px-4 pb-0">
+            <h5 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important; font-size: 1.05rem;">Rekapitulasi Setoran Santri</h5>
+            <p class="text-muted small mb-3 text-dark-mode">Data rekapitulasi setoran hafalan santri.</p>
         </div>
         <div class="card-body">
             <div class="table-responsive">

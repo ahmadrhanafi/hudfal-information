@@ -223,6 +223,18 @@ $hafalan  = $hafalan ?? [];
                 <?= csrf_field(); ?>
                 <div class="modal-body p-4">
 
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Guru Pengampu / Penilai</label>
+                        <select name="id_guru" class="form-select" required>
+                            <option value="" disabled selected>-- Pilih Guru --</option>
+                            <?php if (!empty($guru)): ?>
+                                <?php foreach ($guru as $g): ?>
+                                    <option value="<?= $g['id']; ?>"><?= esc($g['nama_guru']); ?></option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+
                     <!-- Pilihan Santri Binaan -->
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Pilih Santri</label>
@@ -231,18 +243,6 @@ $hafalan  = $hafalan ?? [];
                             <?php if (!empty($santri)): ?>
                                 <?php foreach ($santri as $s): ?>
                                     <option value="<?= $s['id']; ?>"><?= esc($s['nama_santri']); ?> (NIS: <?= esc($s['nis']); ?>)</option>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-medium small text-muted">Guru Pengampu / Penilai</label>
-                        <select name="id_guru" class="form-select" required>
-                            <option value="" disabled selected>-- Pilih Guru --</option>
-                            <?php if (!empty($guru)): ?>
-                                <?php foreach ($guru as $g): ?>
-                                    <option value="<?= $g['id']; ?>"><?= esc($g['nama_guru']); ?></option>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>

@@ -8,10 +8,10 @@
             </button>
 
             <div class="d-none d-md-flex align-items-center gap-2">
-                <div class="bg-success text-white p-2 rounded-3 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                <div class="bg-success text-white p-2 rounded-3 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 16px;">
                     <i class="<?= $icon ?? 'fa-solid fa-gauge-high' ?>"></i>
                 </div>
-                <h5 class="m-0 fw-bold text-user-name"><?= $title ?? 'Dashboard' ?></h5>
+                <h5 class="m-0 fw-bold text-dark-mode" style="font-size: 16px;"><?= $title ?? 'Dashboard' ?></h5>
             </div>
         </div>
 
@@ -21,20 +21,20 @@
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle-no-caret" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="me-3 text-end d-none d-sm-block">
-                        <div class="small fw-bold text-user-name"><?= session()->get('name') ?></div>
+                        <div class="small fw-bold text-dark-mode" style="font-size: 12px;"><?= session()->get('name') ?></div>
                         <?php if (session()->get('role') == 'guru'): ?>
                             <div class="ket-user">
-                                <span class="text-user-name" style="font-size: 10px;">Pengampu: </span>
-                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2" style="font-size: 9px;">
+                                <span class="text-dark-mode" style="font-size: 8px;">Pengampu: </span>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2" style="font-size: 8px;">
                                     Kelas <?= session()->get('nama_kelas') ?>
                                 </span>
                             </div>
                         <?php else: ?>
-                            <span class="text-user-name small" style="font-size: 10px;"><?= ucfirst(session()->get('role') ?? 'Wali Santri') ?></span>
+                            <span class="text-dark-mode small" style="font-size: 10px;"><?= ucfirst(session()->get('role') ?? 'Wali Santri') ?></span>
                         <?php endif; ?>
                     </div>
                     <div class="position-relative">
-                        <img src="<?= session()->get('foto') ?: 'https://via.placeholder.com/40' ?>" alt="User" width="50" height="50" class="rounded-circle border border-2 border-white shadow-sm object-fit-cover">
+                        <img src="<?= session()->get('foto') ?: 'https://via.placeholder.com/40' ?>" alt="User" width="42" height="42" class="rounded-circle border border-2 border-white shadow-sm object-fit-cover">
                         <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-light rounded-circle" style="width: 15px; height: 15px;"></span>
                     </div>
                 </a>
