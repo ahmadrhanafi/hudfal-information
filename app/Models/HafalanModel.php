@@ -177,7 +177,7 @@ class HafalanModel extends Model
     {
         if (!$id_guru) return [];
 
-        $builder = $this->select("DATE(created_at) as tanggal, COUNT(*) as total")
+        $builder = $this->select("DATE(created_at) as created_at, COUNT(*) as total")
             ->where('id_guru', $id_guru);
 
         $this->applyPeriodeFilter($builder, $periode);
@@ -199,6 +199,14 @@ class HafalanModel extends Model
     // ==========================================
     // --- Statistik Khusus Wali Santri ---
     // ==========================================
+
+    public function getDetailHafalanSantriByPeriode($id_santri, $periode = 'bulan_ini')
+    {
+        if (!$id_santri) return [];
+        $builder = $this->select('*')->where('id_santri', $id_santri);
+        $this->applyPeriodeFilter($builder, $periode);
+        return $builder->orderBy('created_at', 'DESC')->findAll();
+    }
 
     public function getTotalJuzSelesai($id_santri)
     {
@@ -249,36 +257,37 @@ class HafalanModel extends Model
         ];
     }
 
-    public function getGrafikAyatBulanan($id_santri)
+    public function getGrafikAyatBulanan($id_santri, $periode = 'bulan_ini')
     {
-        if (!$id_santri) return [];
-
-        $builder = $this->db->table('hafalan');
-        $builder->select("DATE_FORMAT(created_at, '%b') as bulan, SUM((ayat_selesai - ayat_mulai) + 1) as jumlah_ayat");
+        $builder = $this->db->table('hafalan'); // Sesuaikan nama tabel kamu
+        $builder->select('DATE(created_at) as created_at, COUNT(*) as total');
         $builder->where('id_santri', $id_santri);
-        $builder->where("YEAR(created_at)", date('Y'));
-        $builder->groupBy("MONTH(created_at), DATE_FORMAT(created_at, '%b')");
-        $builder->orderBy("MIN(created_at)", 'ASC');
 
-        $results = $builder->get()->getResultArray();
-
-        $maxAyat = !empty($results) ? max(array_column($results, 'jumlah_ayat')) : 100;
-        if ($maxAyat == 0) $maxAyat = 1;
-
-        foreach ($results as &$row) {
-            $row['persentase_tinggi'] = round(($row['jumlah_ayat'] / $maxAyat) * 100);
+        // Filter berdasarkan periode
+        if ($periode == 'minggu_ini') {
+            $builder->where('created_at >=', date('Y-m-d', strtotime('-7 days')));
+        } elseif ($periode == 'bulan_ini') {
+            $builder->where('MONTH(created_at)', date('m'));
+            $builder->where('YEAR(created_at)', date('Y'));
+        } elseif ($periode == 'semester_ini') {
+            $builder->where('created_at >=', date('Y-m-d', strtotime('-6 months')));
         }
 
-        return $results;
+        $builder->groupBy('DATE(created_at)');
+        $builder->orderBy('created_at', 'ASC');
+
+        return $builder->get()->getResultArray();
     }
 
-    public function getDetailCapaianJuz($id_santri)
+    public function getDetailCapaianJuz($id_santri, $periode = 'bulan_ini')
     {
         if (!$id_santri) return [];
 
-        return $this->select('juz as nomor_juz, surah as nama_surah, predikat, COUNT(*) as total_setoran')
-            ->where('id_santri', $id_santri)
-            ->groupBy('juz')
-            ->findAll();
+        $builder = $this->select('juz, MAX(surah) as surah, COUNT(id) as total_setoran, MAX(predikat) as predikat')
+            ->where('id_santri', $id_santri);
+
+        $this->applyPeriodeFilter($builder, $periode);
+
+        return $builder->groupBy('juz')->findAll();
     }
 }

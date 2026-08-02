@@ -1,24 +1,63 @@
+<?php
+
+/**
+ * @var mixed $santri
+ * @var mixed $periode
+ * @var mixed $total_juz
+ * @var mixed $streak
+ * @var mixed $rata_predikat
+ * @var mixed $komposisi
+ * @var mixed $grafik_bulanan
+ * @var mixed $detail_juz
+ */
+
+$santriData     = $santri ?? [];
+$santriVal      = is_array($santriData) ? ($santriData['nama_santri'] ?? '-') : '-';
+$periodeVal     = isset($periode) ? (string)$periode : 'bulan_ini';
+$totalJuzVal    = is_numeric($total_juz ?? null) ? (string)$total_juz : '0';
+$streakVal      = is_numeric($streak ?? null) ? (string)$streak : '0';
+$rataPredVal    = is_array($rata_predikat ?? null) ? (string)($rata_predikat['predikat'] ?? 'Mumtaz') : (string)($rata_predikat ?? 'Mumtaz');
+
+$komposisiZiy   = is_array($komposisi ?? null) ? (string)($komposisi['ziyadah'] ?? '0') : '0';
+$komposisiMur   = is_array($komposisi ?? null) ? (string)($komposisi['murojaah'] ?? '0') : '0';
+
+$grafikBulanan  = is_array($grafik_bulanan ?? null) ? $grafik_bulanan : [];
+$detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
+?>
+
 <?= $this->extend('layout/main') ?>
 
 <?= $this->section('content') ?>
 
 <div class="container-fluid px-0">
 
-    <!-- Page Header & Action Buttons -->
+    <!-- Page Header & Filter Periode -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Statistik & Grafik Hafalan Ananda</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Pantau grafik perkembangan setoran Al-Qur'an, capaian juz, dan tingkat konsistensi harian.</p>
+            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Statistik Hafalan Ananda</h3>
+            <p class="text-muted mb-0 small" style="text-transform: none !important;">
+                Menampilkan rekam jejak hafalan santri: <span class="fw-semibold text-dark"><?= esc($santriVal); ?></span>
+            </p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
-                <i class="fa-solid fa-file-pdf text-success me-1"></i> Unduh Laporan PDF
-            </button>
+            <!-- Dropdown Filter Periode -->
+            <form method="get" action="" id="formPeriode" class="d-flex align-items-center">
+                <select name="periode" class="form-select form-select-sm bg-white border shadow-sm rounded-pill px-3 py-2" onchange="document.getElementById('formPeriode').submit()">
+                    <option value="minggu_ini" <?= ($periodeVal == 'minggu_ini') ? 'selected' : ''; ?>>Minggu Ini</option>
+                    <option value="bulan_ini" <?= ($periodeVal == 'bulan_ini') ? 'selected' : ''; ?>>Bulan Ini</option>
+                    <option value="semester_ini" <?= ($periodeVal == 'semester_ini') ? 'selected' : ''; ?>>Semester Ini</option>
+                </select>
+            </form>
+
+            <a href="<?= base_url('wali/statistik/export?periode=' . esc($periodeVal)); ?>" target="_blank" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none" style="text-transform: none !important;">
+                <i class="fa-solid fa-file-pdf text-success me-1"></i> Unduh Laporan
+            </a>
         </div>
     </div>
 
     <!-- Ringkasan Statistik Utama -->
     <div class="row g-4 mb-4">
+        <!-- Total Juz Selesai -->
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
@@ -26,127 +65,104 @@
                         <i class="fa-solid fa-book-quran fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">TOTAL JUZ TERSERAH</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">4.5 <span class="fs-6 fw-normal text-muted">Juz</span></h3>
+                        <span class="text-muted small fw-medium" style="text-transform: none !important;">TOTAL JUZ SELESAI</span>
+                        <h3 class="fw-bold text-dark mb-0 mt-1">
+                            <?= esc($totalJuzVal); ?> <span class="fs-6 fw-normal text-muted">Juz</span>
+                        </h3>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Streak Setoran Harian -->
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-primary bg-opacity-15 p-3 rounded-3 text-primary">
+                    <div class="bg-warning bg-opacity-15 p-3 rounded-3 text-warning">
                         <i class="fa-solid fa-fire fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">KONSISTENSI (STREAK)</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">18 <span class="fs-6 fw-normal text-success">Hari Beruntun</span></h3>
+                        <span class="text-muted small fw-medium" style="text-transform: none !important;">STREAK SETORAN</span>
+                        <h3 class="fw-bold text-dark mb-0 mt-1">
+                            <?= esc($streakVal); ?> <span class="fs-6 fw-normal text-muted">Hari Aktif</span>
+                        </h3>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Rata-rata Predikat -->
         <div class="col-xl-4 col-md-12">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-warning bg-opacity-15 p-3 rounded-3 text-warning">
+                    <div class="bg-primary bg-opacity-15 p-3 rounded-3 text-primary">
                         <i class="fa-solid fa-award fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">RATA-RATA PREDIKAT</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">Mumtaz <span class="fs-6 fw-normal text-success">(Sangat Baik)</span></h3>
+                        <span class="text-muted small fw-medium" style="text-transform: none !important;">PREDIKAT RATA-RATA</span>
+                        <h3 class="fw-bold text-primary mb-0 mt-1">
+                            <?= esc($rataPredVal); ?>
+                        </h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Baris Grafik (Visualisasi Statistik) -->
-    <div class="row g-4 mb-4">
-        <!-- Grafik Perkembangan Bulanan (Simulasi Chart) -->
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                            <h5 class="fw-bold text-dark mb-1" style="text-transform: none !important; font-size: 1.05rem;">Grafik Capaian Ayat per Bulan</h5>
-                            <p class="text-muted small mb-0">Akumulasi jumlah ayat yang berhasil dihafal dalam 6 bulan terakhir.</p>
-                        </div>
-                        <select class="form-select form-select-sm bg-light border-0 py-1 px-3 w-auto">
-                            <option selected>Tahun 2026</option>
-                            <option value="2025">Tahun 2025</option>
-                        </select>
-                    </div>
+    <?php
+    // Siapkan data dummy/default untuk line chart jika dari controller belum ada
+    $chartLabels = $chart_labels ?? ['2026-08-01', '2026-08-02'];
+    $chartData   = $chart_data ?? [2, 3];
+    ?>
 
-                    <!-- Visualisasi Batang Sederhana (Responsive Simulated Chart) -->
-                    <div class="d-flex align-items-end justify-content-between gap-2 px-2 pt-4 pb-2" style="height: 220px; border-bottom: 2px solid #f8f9fa;">
-                        <div class="text-center w-100 d-flex flex-column align-items-center h-100 justify-content-end">
-                            <span class="small text-muted mb-1" style="font-size: 0.7rem;">120 ayat</span>
-                            <div class="w-75 bg-success bg-opacity-25 rounded-top" style="height: 40%;"></div>
-                            <span class="small text-muted mt-2 fw-semibold" style="font-size: 0.75rem;">Feb</span>
+    <!-- Baris Grafik & Komposisi -->
+    <div class="row g-4 mb-4">
+        <!-- Grafik Progres Hafalan (Line Chart) -->
+        <div class="col-xl-8">
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="text-success">
+                            <i class="fa-solid fa-chart-line fa-lg"></i>
                         </div>
-                        <div class="text-center w-100 d-flex flex-column align-items-center h-100 justify-content-end">
-                            <span class="small text-muted mb-1" style="font-size: 0.7rem;">150 ayat</span>
-                            <div class="w-75 bg-success bg-opacity-50 rounded-top" style="height: 55%;"></div>
-                            <span class="small text-muted mt-2 fw-semibold" style="font-size: 0.75rem;">Mar</span>
-                        </div>
-                        <div class="text-center w-100 d-flex flex-column align-items-center h-100 justify-content-end">
-                            <span class="small text-muted mb-1" style="font-size: 0.7rem;">190 ayat</span>
-                            <div class="w-75 bg-success bg-opacity-75 rounded-top" style="height: 70%;"></div>
-                            <span class="small text-muted mt-2 fw-semibold" style="font-size: 0.75rem;">Apr</span>
-                        </div>
-                        <div class="text-center w-100 d-flex flex-column align-items-center h-100 justify-content-end">
-                            <span class="small text-muted mb-1" style="font-size: 0.7rem;">160 ayat</span>
-                            <div class="w-75 bg-success rounded-top opacity-75" style="height: 60%;"></div>
-                            <span class="small text-muted mt-2 fw-semibold" style="font-size: 0.75rem;">Mei</span>
-                        </div>
-                        <div class="text-center w-100 d-flex flex-column align-items-center h-100 justify-content-end">
-                            <span class="small text-muted mb-1" style="font-size: 0.7rem;">210 ayat</span>
-                            <div class="w-75 bg-success rounded-top" style="height: 85%;"></div>
-                            <span class="small text-muted mt-2 fw-semibold" style="font-size: 0.75rem;">Jun</span>
-                        </div>
-                        <div class="text-center w-100 d-flex flex-column align-items-center h-100 justify-content-end">
-                            <span class="small text-success fw-bold mb-1" style="font-size: 0.7rem;">240 ayat</span>
-                            <div class="w-75 bg-success rounded-top shadow-sm" style="height: 100%;"></div>
-                            <span class="small text-success fw-bold mt-2" style="font-size: 0.75rem;">Jul</span>
-                        </div>
+                        <h5 class="fw-bold text-dark mb-0" style="text-transform: none !important; font-size: 1.05rem;">Grafik Progres Hafalan Ananda</h5>
                     </div>
+                    <span class="badge bg-light text-dark border px-3 py-2 rounded-pill small fw-semibold">
+                        <?= esc(ucwords(str_replace('_', ' ', $periodeVal))); ?>
+                    </span>
+                </div>
+                <p class="text-muted small mb-4">Grafik tren pencapaian setoran hafalan berdasarkan rentang waktu terpilih.</p>
+
+                <!-- Canvas untuk Chart.js -->
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="progresHafalanChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Distribusi Jenis Setoran (Ziyadah vs Murojaah) -->
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
-                <div class="card-body p-4 d-flex flex-column justify-content-between">
-                    <div>
-                        <h5 class="fw-bold text-dark mb-1" style="text-transform: none !important; font-size: 1.05rem;">Komposisi Setoran</h5>
-                        <p class="text-muted small mb-4">Perbandingan aktivitas ziyadah (hafalan baru) dan murojaah (pengulangan).</p>
+        <!-- Komposisi Ziyadah vs Murojaah -->
+        <div class="col-xl-4">
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
+                <h5 class="fw-bold text-dark mb-1" style="text-transform: none !important; font-size: 1.05rem;">Komposisi Setoran</h5>
+                <p class="text-muted small mb-4">Rasio perbandingan antara hafalan baru dan pengulangan.</p>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between small fw-semibold mb-1">
+                        <span class="text-success"><i class="fa-solid fa-circle-plus me-1"></i> Ziyadah (Baru)</span>
+                        <span><?= esc($komposisiZiy); ?>%</span>
                     </div>
-
-                    <div class="d-flex flex-column gap-3 mb-4">
-                        <div>
-                            <div class="d-flex justify-content-between align-items-center small mb-1">
-                                <span class="fw-semibold text-dark"><i class="fa-solid fa-circle text-success me-1" style="font-size: 0.5rem;"></i> Ziyadah (Hafalan Baru)</span>
-                                <span class="text-muted fw-semibold">65%</span>
-                            </div>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: 65%;"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="d-flex justify-content-between align-items-center small mb-1">
-                                <span class="fw-semibold text-dark"><i class="fa-solid fa-circle text-primary me-1" style="font-size: 0.5rem;"></i> Murojaah (Pengulangan)</span>
-                                <span class="text-muted fw-semibold">35%</span>
-                            </div>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-primary rounded-pill" role="progressbar" style="width: 35%;"></div>
-                            </div>
-                        </div>
+                    <div class="progress rounded-pill" style="height: 10px;">
+                        <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: <?= esc($komposisiZiy); ?>%;"></div>
                     </div>
+                </div>
 
-                    <div class="p-3 bg-light rounded-3 text-center">
-                        <small class="text-muted"><i class="fa-solid fa-circle-check text-success me-1"></i> Rasio hafalan dan pengulangan sangat seimbang.</small>
+                <div>
+                    <div class="d-flex justify-content-between small fw-semibold mb-1">
+                        <span class="text-primary"><i class="fa-solid fa-rotate-right me-1"></i> Murojaah (Ulang)</span>
+                        <span><?= esc($komposisiMur); ?>%</span>
+                    </div>
+                    <div class="progress rounded-pill" style="height: 10px;">
+                        <div class="progress-bar bg-primary rounded-pill" role="progressbar" style="width: <?= esc($komposisiMur); ?>%;"></div>
                     </div>
                 </div>
             </div>
@@ -157,7 +173,7 @@
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
         <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
             <h5 class="fw-bold text-dark mb-1" style="text-transform: none !important; font-size: 1.05rem;">Detail Capaian per Juz</h5>
-            <p class="text-muted small mb-3">Status penyelesaian juz Al-Qur'an ananda di pesantren.</p>
+            <p class="text-muted small mb-3">Status penyelesaian juz Al-Qur'an ananda berdasarkan filter terpilih.</p>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -165,66 +181,39 @@
                     <thead class="bg-light text-muted small text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
                         <tr>
                             <th class="py-3 ps-4" style="width: 15%;">Juz</th>
-                            <th class="py-3" style="width: 35%;">Nama Juz / Surah Utama</th>
-                            <th class="py-3" style="width: 30%;">Status Progress</th>
+                            <th class="py-3" style="width: 35%;">Nama Surah / Keterangan</th>
+                            <th class="py-3" style="width: 30%;">Total Setoran</th>
                             <th class="py-3 text-end pe-4" style="width: 20%;">Predikat Rata-rata</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="ps-4 fw-semibold text-dark">Juz 30</td>
-                            <td>
-                                <span class="fw-semibold text-dark d-block small">Juz 'Amma (An-Naba' s.d An-Nas)</span>
-                                <small class="text-muted" style="font-size: 0.75rem;">Selesai disetorkan</small>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="progress w-100" style="height: 6px;">
-                                        <div class="progress-bar bg-success rounded-pill" style="width: 100%;"></div>
-                                    </div>
-                                    <span class="small fw-semibold text-success">100%</span>
-                                </div>
-                            </td>
-                            <td class="text-end pe-4">
-                                <span class="badge bg-success text-white px-3 py-1 rounded-pill small fw-semibold">Mumtaz</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="ps-4 fw-semibold text-dark">Juz 29</td>
-                            <td>
-                                <span class="fw-semibold text-dark d-block small">Tabarakalladzii (Al-Mulk s.d Al-Mursalat)</span>
-                                <small class="text-muted" style="font-size: 0.75rem;">Dalam proses hafalan</small>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="progress w-100" style="height: 6px;">
-                                        <div class="progress-bar bg-primary rounded-pill" style="width: 50%;"></div>
-                                    </div>
-                                    <span class="small fw-semibold text-primary">50%</span>
-                                </div>
-                            </td>
-                            <td class="text-end pe-4">
-                                <span class="badge bg-primary text-white px-3 py-1 rounded-pill small fw-semibold">Jayyid Jiddan</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="ps-4 fw-semibold text-dark">Juz 1</td>
-                            <td>
-                                <span class="fw-semibold text-dark d-block small">Alif Lam Mim (Al-Baqarah ayat 1-141)</span>
-                                <small class="text-muted" style="font-size: 0.75rem;">Mulai dirintis</small>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="progress w-100" style="height: 6px;">
-                                        <div class="progress-bar bg-warning rounded-pill" style="width: 20%;"></div>
-                                    </div>
-                                    <span class="small fw-semibold text-warning">20%</span>
-                                </div>
-                            </td>
-                            <td class="text-end pe-4">
-                                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill small fw-semibold">Jayyid</span>
-                            </td>
-                        </tr>
+                        <?php if (!empty($detailJuz)): ?>
+                            <?php foreach ($detailJuz as $row): ?>
+                                <?php
+                                $rJuz   = is_array($row) ? (string)($row['juz'] ?? '-') : '-';
+                                $rSurah = is_array($row) ? (string)($row['surah'] ?? '-') : '-';
+                                $rTotal = is_array($row) ? (string)($row['total_setoran'] ?? '0') : '0';
+                                $rPred  = is_array($row) ? (string)($row['predikat'] ?? '-') : '-';
+                                ?>
+                                <tr>
+                                    <td class="ps-4 fw-semibold text-dark">Juz <?= esc($rJuz); ?></td>
+                                    <td>
+                                        <span class="fw-semibold text-dark d-block small"><?= esc($rSurah); ?></span>
+                                        <small class="text-muted" style="font-size: 0.75rem;">Terekam di sistem</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border px-2 py-1"><?= esc($rTotal); ?> Kali Setor</span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <span class="badge bg-success text-white px-3 py-1 rounded-pill small fw-semibold"><?= esc($rPred); ?></span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">Belum ada data capaian juz pada periode ini.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -235,5 +224,95 @@
     </div>
 
 </div>
+
+<!-- Sertakan Chart.js CDN jika belum ada di layout utama -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('progresHafalanChart').getContext('2d');
+
+        // Data dari PHP
+        const labels = <?= json_encode($chartLabels); ?>;
+        const dataValues = <?= json_encode($chartData); ?>;
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Juz / Total Setoran',
+                    data: dataValues,
+                    borderColor: '#198754', // Warna hijau Bootstrap
+                    backgroundColor: function(context) {
+                        const chart = context.chart;
+                        const {
+                            ctx,
+                            chartArea
+                        } = chart;
+                        if (!chartArea) return null;
+
+                        // Efek gradient transparan di bawah garis
+                        const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                        gradient.addColorStop(0, 'rgba(25, 135, 84, 0.0)');
+                        gradient.addColorStop(1, 'rgba(25, 135, 84, 0.2)');
+                        return gradient;
+                    },
+                    borderWidth: 2.5,
+                    pointBackgroundColor: '#198754',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: true,
+                    tension: 0.2 // Sedikit melengkung halus
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(33, 37, 41, 0.9)',
+                        titleFont: {
+                            size: 12
+                        },
+                        bodyFont: {
+                            size: 12
+                        },
+                        padding: 10,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            color: '#f1f5f9'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
 
 <?= $this->endSection() ?>

@@ -169,7 +169,11 @@
         const rawData = <?= json_encode($grafik_setoran ?? []); ?>;
 
         // Mapping data dari PHP ke format Chart.js
-        const labels = rawData.map(item => item.tanggal);
+        const labels = rawData.map(item => item.created_at ? new Date(item.created_at).toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        }) : '-');
         const dataValues = rawData.map(item => item.total);
 
         const ctx = document.getElementById('grafikKelasChart').getContext('2d');
