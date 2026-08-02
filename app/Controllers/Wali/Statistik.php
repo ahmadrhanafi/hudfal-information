@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\SantriModel;
 use App\Models\HafalanModel;
 use App\Models\UserModel;
+use Dompdf\Dompdf;
 
 class Statistik extends BaseController
 {

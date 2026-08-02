@@ -3,6 +3,7 @@
 <?php
 /**
  * @var string $nama_kelas
+ * @var string $periode
  * @var float|int $rata_setoran
  * @var array $juz_dominan
  * @var array $predikat_umum
@@ -155,6 +156,49 @@
                         <small class="text-muted">Persentase dihitung dari total target hafalan kelas binaan aktif.</small>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="card-title mb-0">Rekapitulasi Setoran Santri Periode Ini</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Santri</th>
+                            <th>Total Setoran</th>
+                            <th>Rata-rata Ayat</th>
+                            <th>Juz Terakhir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Lakukan looping data rekap per santri di sini -->
+                        <?php if (!empty($rekap_santri)): ?>
+                            <?php $no = 1;
+                            foreach ($rekap_santri as $santri): ?>
+                                <tr>
+                                    <td><?= $no++; ?></td>
+                                    <td><?= esc($santri['nama_santri'] ?? '-'); ?></td>
+                                    <td><?= esc($santri['total_setoran'] ?? 0); ?> Ayat</td>
+                                    <td><?= round($santri['rata_ayat'], 1); ?> Ayat</td>
+                                    <td>Juz <?= esc($santri['juz_terakhir'] ?? '-'); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr></tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="fa-solid fa-info-circle mb-2 fa-lg"></i>
+                                <p class="mb-0">Belum ada data setoran santri untuk periode ini.</p>
+                            </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

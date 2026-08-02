@@ -79,19 +79,19 @@ class HafalanModel extends Model
     private function applyPeriodeFilter($builder, $periode)
     {
         if ($periode == 'minggu_ini') {
-            $builder->where('created_at >=', date('Y-m-d', strtotime('this week monday')));
+            $builder->where('hafalan.created_at >=', date('Y-m-d', strtotime('-7 days')));
         } elseif ($periode == 'bulan_ini') {
-            $builder->where('MONTH(created_at)', date('m'))
-                ->where('YEAR(created_at)', date('Y'));
+            $builder->where('MONTH(hafalan.created_at)', date('m'))
+                ->where('YEAR(hafalan.created_at)', date('Y'));
         } elseif ($periode == 'semester_ini') {
             $bulanIni = date('n');
             $tahunIni = date('Y');
             if ($bulanIni >= 1 && $bulanIni <= 6) {
-                $builder->where('created_at >=', "$tahunIni-01-01")
-                    ->where('created_at <=', "$tahunIni-06-30");
+                $builder->where('hafalan.created_at >=', "$tahunIni-01-01")
+                    ->where('hafalan.created_at <=', "$tahunIni-06-30");
             } else {
-                $builder->where('created_at >=', "$tahunIni-07-01")
-                    ->where('created_at <=', "$tahunIni-12-31");
+                $builder->where('hafalan.created_at >=', "$tahunIni-07-01")
+                    ->where('hafalan.created_at <=', "$tahunIni-12-31");
             }
         }
         return $builder;
@@ -191,9 +191,28 @@ class HafalanModel extends Model
     {
         if (!$id_guru) return [];
 
-        $builder = $this->select('*')->where('id_guru', $id_guru);
+        $this->select('hafalan.*, santri.nama_santri');
+        $this->join('santri', 'santri.id = hafalan.id_santri');
+        $this->where('hafalan.id_guru', $id_guru);
+
+        $this->applyPeriodeFilter($this, $periode);
+
+        return $this->orderBy('hafalan.created_at', 'DESC')->findAll();
+    }
+
+    public function getRekapSantriKelas($id_guru, $periode = 'bulan_ini')
+    {
+        if (!$id_guru) return [];
+
+        $builder = $this->db->table('hafalan');
+        $builder->select('santri.nama_santri, COUNT(hafalan.id) as total_setoran, AVG((hafalan.ayat_selesai - hafalan.ayat_mulai) + 1) as rata_ayat, MAX(hafalan.juz) as juz_terakhir');
+        $builder->join('santri', 'santri.id = hafalan.id_santri');
+        $builder->where('hafalan.id_guru', $id_guru);
+
         $this->applyPeriodeFilter($builder, $periode);
-        return $builder->orderBy('created_at', 'DESC')->findAll();
+
+        $builder->groupBy('hafalan.id_santri');
+        return $builder->get()->getResultArray();
     }
 
     // ==========================================

@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\GuruModel;
 use App\Models\KelasModel;
 use App\Models\HafalanModel;
+use Dompdf\Dompdf;
 
 class Statistik extends BaseController
 {
@@ -42,6 +43,7 @@ class Statistik extends BaseController
             'predikat_umum'  => $this->hafalanModel->getPredikatTerbanyakKelas($id_guru, $periode),
             'capaian_juz'    => $this->hafalanModel->getProgressJuzKelas($id_guru, $periode),
             'grafik_setoran' => $this->hafalanModel->getGrafikSetoranKelas($id_guru, $periode),
+            'rekap_santri'    => $this->hafalanModel->getRekapSantriKelas($id_guru, $periode),
         ];
 
         return view('guru/statistik_hafalan', $data);
@@ -70,6 +72,16 @@ class Statistik extends BaseController
             'detail_hafalan' => $this->hafalanModel->getDetailHafalanByPeriode($id_guru, $periode),
         ];
 
-        return view('guru/cetak_laporan_statistik', $data);
+        $html = view('guru/cetak_laporan_statistik', $data);
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+
+        $nama_file = 'Laporan_Statistik_' . str_replace(' ', '_', $kelas['nama_kelas'] ?? 'Kelas') . '.pdf';
+        $dompdf->stream($nama_file, ['Attachment' => false]);
     }
 }
