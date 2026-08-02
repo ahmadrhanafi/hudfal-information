@@ -159,7 +159,7 @@
                                         <small class="text-muted" style="font-size: 0.75rem;"><i class="fa-regular fa-clock me-1"></i> <?= date('H:i', strtotime($row['created_at'])); ?> WIB</small>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-dark d-block">Surah <?= esc($row['surah']); ?></span>
+                                        <span class="fw-semibold text-dark d-block">Surah <?= esc($row['surah']); ?> <span class="badge bg-secondary rounded-lg text-white small"><?= esc($row['jenis']); ?></span></span>
                                         <small class="text-muted">Juz <?= esc($row['juz']); ?> (Ayat <?= esc($row['ayat_mulai']); ?> - <?= esc($row['ayat_selesai']); ?>)</small>
                                     </td>
                                     <td>
