@@ -75,14 +75,22 @@ class Statistik extends BaseController
 
         $html = view('guru/cetak_laporan_statistik', $data);
 
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml($html);
+        try {
+            $dompdf = new Dompdf();
 
-        $dompdf->setPaper('A4', 'portrait');
+            // Mengaktifkan opsi agar dompdf lebih toleran terhadap gambar eksternal/lokal
+            $options = $dompdf->getOptions();
+            $options->setIsRemoteEnabled(true);
+            $dompdf->setOptions($options);
 
-        $dompdf->render();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
 
-        $nama_file = 'Laporan_Statistik_' . str_replace(' ', '_', $kelas['nama_kelas'] ?? 'Kelas') . '.pdf';
-        $dompdf->stream($nama_file, ['Attachment' => true]);
+            $nama_file = 'Laporan_Statistik_' . str_replace(' ', '_', $kelas['nama_kelas'] ?? 'Kelas') . '.pdf';
+            $dompdf->stream($nama_file, ['Attachment' => true]);
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', 'Gagal menghasilkan PDF: ' . $e->getMessage());
+        }
     }
 }
