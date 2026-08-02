@@ -160,9 +160,10 @@
         </div>
     </div>
 
-    <div class="card mt-4">
-        <div class="card-header bg-success text-white">
-            <h5 class="card-title mb-0">Rekapitulasi Setoran Santri Periode Ini</h5>
+    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+        <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+            <h5 class="fw-bold text-dark mb-1" style="text-transform: none !important; font-size: 1.05rem;">Rekapitulasi Setoran Santri</h5>
+            <p class="text-muted small mb-3">Data rekapitulasi setoran hafalan santri.</p>
         </div>
         <div class="card-body">
             <div class="table-responsive">

@@ -309,4 +309,25 @@ class HafalanModel extends Model
 
         return $builder->groupBy('juz')->findAll();
     }
+
+    public function getGrafikAyatDuaGaris($id_santri, $periode)
+    {
+        $builder = $this->db->table('hafalan');
+        $builder->select("DATE(created_at) as tanggal, 
+                      SUM(CASE WHEN jenis = 'ziyadah' THEN (ayat_selesai - ayat_mulai + 1) ELSE 0 END) as ziyadah,
+                      SUM(CASE WHEN jenis = 'murojaah' THEN (ayat_selesai - ayat_mulai + 1) ELSE 0 END) as murojaah");
+        $builder->where('id_santri', $id_santri);
+
+        if ($periode == 'bulan_ini') {
+            $builder->where('MONTH(created_at)', date('m'));
+            $builder->where('YEAR(created_at)', date('Y'));
+        } elseif ($periode == 'minggu_ini') {
+            $builder->where('created_at >=', date('Y-m-d', strtotime('-7 days')));
+        }
+
+        $builder->groupBy('DATE(created_at)');
+        $builder->orderBy('tanggal', 'ASC');
+
+        return $builder->get()->getResultArray();
+    }
 }

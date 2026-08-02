@@ -111,8 +111,9 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
 
     <?php
     // Siapkan data dummy/default untuk line chart jika dari controller belum ada
-    $chartLabels = $chart_labels ?? ['2026-08-01', '2026-08-02'];
-    $chartData   = $chart_data ?? [2, 3];
+    $chartLabels   = $chart_labels ?? ['2026-08-01', '2026-08-02'];
+    $chartZiyadah  = $chart_ziyadah ?? [1, 3];
+    $chartMurojaah = $chart_murojaah ?? [0, 1];
     ?>
 
     <!-- Baris Grafik & Komposisi -->
@@ -233,46 +234,79 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
 
         // Data dari PHP
         const labels = <?= json_encode($chartLabels); ?>;
-        const dataValues = <?= json_encode($chartData); ?>;
+        const dataZiyadah = <?= json_encode($chartZiyadah); ?>;
+        const dataMurojaah = <?= json_encode($chartMurojaah); ?>;
 
         new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Juz / Total Setoran',
-                    data: dataValues,
-                    borderColor: '#198754', // Warna hijau Bootstrap
-                    backgroundColor: function(context) {
-                        const chart = context.chart;
-                        const {
-                            ctx,
-                            chartArea
-                        } = chart;
-                        if (!chartArea) return null;
-
-                        // Efek gradient transparan di bawah garis
-                        const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                        gradient.addColorStop(0, 'rgba(25, 135, 84, 0.0)');
-                        gradient.addColorStop(1, 'rgba(25, 135, 84, 0.2)');
-                        return gradient;
+                        label: 'Ziyadah (Baru)',
+                        data: dataZiyadah,
+                        borderColor: '#198754', // Hijau Bootstrap
+                        backgroundColor: function(context) {
+                            const chart = context.chart;
+                            const {
+                                ctx,
+                                chartArea
+                            } = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                            gradient.addColorStop(0, 'rgba(25, 135, 84, 0.0)');
+                            gradient.addColorStop(1, 'rgba(25, 135, 84, 0.2)');
+                            return gradient;
+                        },
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#198754',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.2
                     },
-                    borderWidth: 2.5,
-                    pointBackgroundColor: '#198754',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    fill: true,
-                    tension: 0.2 // Sedikit melengkung halus
-                }]
+                    {
+                        label: 'Murojaah (Ulang)',
+                        data: dataMurojaah,
+                        borderColor: '#0d6efd',
+                        backgroundColor: function(context) {
+                            const chart = context.chart;
+                            const {
+                                ctx,
+                                chartArea
+                            } = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                            gradient.addColorStop(0, 'rgba(13, 110, 253, 0.0)');
+                            gradient.addColorStop(1, 'rgba(13, 110, 253, 0.2)');
+                            return gradient;
+                        },
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#0d6efd',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.2
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            boxWidth: 12,
+                            font: {
+                                size: 12,
+                                family: 'inherit'
+                            }
+                        }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(33, 37, 41, 0.9)',

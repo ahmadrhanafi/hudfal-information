@@ -32,20 +32,26 @@ class Statistik extends BaseController
 
         $periode = $this->request->getGet('periode') ?? 'bulan_ini';
 
-        $rawGrafik = $this->hafalanModel->getGrafikAyatBulanan($id_santri, $periode);
+        $rawZiyadah  = $this->hafalanModel->getGrafikAyatBulanan($id_santri, $periode, 'ziyadah');
+        $rawMurojaah = $this->hafalanModel->getGrafikAyatBulanan($id_santri, $periode, 'murojaah');
 
-        $chartLabels = [];
-        $chartData   = [];
+        $chartLabels   = [];
+        $chartZiyadah  = [];
+        $chartMurojaah = [];
+
+        $rawGrafik = $this->hafalanModel->getGrafikAyatDuaGaris($id_santri, $periode);
 
         if (!empty($rawGrafik)) {
             foreach ($rawGrafik as $row) {
                 $tgl = $row['tanggal'] ?? $row['created_at'] ?? date('Y-m-d');
-                $chartLabels[] = date('d M Y', strtotime($tgl));
-                $chartData[]   = $row['total'] ?? 0;
+                $chartLabels[]   = date('d M Y', strtotime($tgl));
+                $chartZiyadah[]  = $row['ziyadah'] ?? 0;
+                $chartMurojaah[] = $row['murojaah'] ?? 0;
             }
         } else {
-            $chartLabels = ['-'];
-            $chartData   = [0];
+            $chartLabels   = [date('d M Y')];
+            $chartZiyadah  = [0];
+            $chartMurojaah = [0];
         }
 
         $data = [
@@ -58,7 +64,8 @@ class Statistik extends BaseController
             'rata_predikat' => $this->hafalanModel->getRataPredikatSantri($id_santri, $periode),
             'komposisi'     => $this->hafalanModel->getKomposisiSetoran($id_santri, $periode),
             'chart_labels'  => $chartLabels,
-            'chart_data'    => $chartData,
+            'chart_ziyadah' => $chartZiyadah,
+            'chart_murojaah' => $chartMurojaah,
             'detail_juz'    => $this->hafalanModel->getDetailCapaianJuz($id_santri, $periode),
         ];
 
