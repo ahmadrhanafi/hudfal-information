@@ -49,15 +49,15 @@
 
         let targetUrl = "<?= base_url('admin/dashboard') ?>";
 
-        if (userRole === 'ustadz') {
-            targetUrl = "<?= base_url('ustadz/dashboard') ?>";
+        if (userRole === 'guru') {
+            targetUrl = "<?= base_url('guru/dashboard') ?>";
         } else if (userRole === 'wali') {
             targetUrl = "<?= base_url('wali/dashboard') ?>";
         }
 
-        // Redirect otomatis ke dashboard setelah 2.5 detik
+        // Redirect otomatis ke dashboard setelah 2.5 detik sesuai role
         setTimeout(function() {
-            window.location.href = "<?= base_url('dashboard') ?>";
+            window.location.href = targetUrl;
         }, 2500);
     </script>
 </body>
