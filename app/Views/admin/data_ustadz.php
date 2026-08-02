@@ -84,6 +84,7 @@ $kelas = $kelas ?? [];
                         <tr>
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
                             <th class="py-3" style="width: 30%;">NIP & Nama Pengajar</th>
+                            <th class="py-3" style="width: 25%;">No Whatsapp</th>
                             <th class="py-3" style="width: 15%;">Jenis Kelamin</th>
                             <th class="py-3" style="width: 25%;">Kelas Diampu</th>
                             <th class="py-3" style="width: 25%;">Status</th>
@@ -116,6 +117,11 @@ $kelas = $kelas ?? [];
                                     </td>
                                     <td>
                                         <span class="text-secondary small fw-medium">
+                                            <?= esc($g['no_hp'] ?? '-'); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-secondary small fw-medium">
                                             <?= ($g['jenis_kelamin'] == 'L') ? 'Laki-laki' : 'Perempuan'; ?>
                                         </span>
                                     </td>
@@ -140,7 +146,7 @@ $kelas = $kelas ?? [];
                                                 data-id="<?= $g['id']; ?>"
                                                 data-nip="<?= esc($g['nip']); ?>"
                                                 data-namaguru="<?= esc($g['nama_guru']); ?>"
-                                                data-nohp="<?= esc($g['no_hp']); ?>"
+                                                data-nohp="<?= esc($g['no_hp'] ?? ''); ?>"
                                                 data-jeniskelamin="<?= esc($g['jenis_kelamin']); ?>"
                                                 data-idkelas="<?= esc($g['id_kelas_diampu']); ?>">
                                                 <i class="fa-solid fa-pen-to-square"></i>

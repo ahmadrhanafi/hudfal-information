@@ -64,7 +64,7 @@
                         <tr class="wali-row">
                             <td><?= $no++; ?></td>
                             <td class="fw-semibold text-dark"><?= esc($w['nama_wali']); ?></td>
-                            <td><span class="badge bg-light text-dark border"><?= esc($w['no_hp']); ?></span></td>
+                            <td><span class="badge bg-light text-dark border"><?= esc($w['no_hp'] ?? '-'); ?></span></td>
                             <td class="text-muted small"><?= esc($w['alamat']); ?></td>
                             <td class="text-center">
                                 <!-- Tombol Detail Baru -->
@@ -72,7 +72,7 @@
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalDetail"
                                     data-nama="<?= esc($w['nama_wali']); ?>"
-                                    data-nohp="<?= esc($w['no_hp']); ?>"
+                                    data-nohp="<?= esc($w['no_hp'] ?? ''); ?>"
                                     data-alamat="<?= esc($w['alamat']); ?>"
                                     data-santri='<?= json_encode($w['santri'] ?? []); ?>'>
                                     <i class="fa-solid fa-eye"></i> Detail
@@ -83,7 +83,7 @@
                                     data-bs-target="#modalEdit"
                                     data-id="<?= $w['id']; ?>"
                                     data-nama="<?= esc($w['nama_wali']); ?>"
-                                    data-nohp="<?= esc($w['no_hp']); ?>"
+                                    data-nohp="<?= esc($w['no_hp'] ?? ''); ?>"
                                     data-alamat="<?= esc($w['alamat']); ?>">
                                     <i class="fa-solid fa-pen-to-square"></i> Edit
                                 </button>
