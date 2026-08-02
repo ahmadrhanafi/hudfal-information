@@ -178,24 +178,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Lakukan looping data rekap per santri di sini -->
-                        <?php if (!empty($rekap_santri)): ?>
-                            <?php $no = 1;
-                            foreach ($rekap_santri as $santri): ?>
+                        <?php if (!empty($rekap_santri) && is_array($rekap_santri)): ?>
+                            <?php
+                            // Hitung nomor urut kontinu jika menggunakan pager
+                            $currentPage = isset($pager) ? ($pager->getCurrentPage('rekap') ?? 1) : 1;
+                            $perPage = isset($pager) ? ($pager->getPerPage('rekap') ?? 10) : 10;
+                            $no = ($currentPage - 1) * $perPage + 1;
+
+                            foreach ($rekap_santri as $santri):
+                            ?>
                                 <tr>
                                     <td><?= $no++; ?></td>
                                     <td><?= esc($santri['nama_santri'] ?? '-'); ?></td>
                                     <td><?= esc($santri['total_setoran'] ?? 0); ?> Ayat</td>
-                                    <td><?= round($santri['rata_ayat'], 1); ?> Ayat</td>
+                                    <td><?= round($santri['rata_ayat'] ?? 0, 1); ?> Ayat</td>
                                     <td>Juz <?= esc($santri['juz_terakhir'] ?? '-'); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr></tr>
-                            <td colspan="5" class="text-center text-muted py-4">
-                                <i class="fa-solid fa-info-circle mb-2 fa-lg"></i>
-                                <p class="mb-0">Belum ada data setoran santri untuk periode ini.</p>
-                            </td>
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    <i class="fa-solid fa-info-circle mb-2 fa-lg"></i>
+                                    <p class="mb-0">Belum ada data setoran santri untuk periode ini.</p>
+                                </td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

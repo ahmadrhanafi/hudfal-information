@@ -60,9 +60,15 @@ $santri = $santri ?? [];
                         </tr>
                     </thead>
                     <tbody id="tableBodySantri">
-                        <?php if (!empty($santri)): ?>
-                            <?php $no = 1;
-                            foreach ($santri as $s): ?>
+                        <?php if (!empty($santri) && is_array($santri)): ?>
+                            <?php
+                            // Hitung penomoran kontinu jika menggunakan pager, default ke 1 jika tidak ada pager
+                            $currentPage = isset($pager) ? ($pager->getCurrentPage('santri') ?? 1) : 1;
+                            $perPage = isset($pager) ? ($pager->getPerPage('santri') ?? 10) : 10;
+                            $no = ($currentPage - 1) * $perPage + 1;
+
+                            foreach ($santri as $s):
+                            ?>
                                 <?php
                                 // Generate Inisial Avatar Dinamis
                                 $words = explode(' ', $s['nama_santri']);

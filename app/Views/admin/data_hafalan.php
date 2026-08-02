@@ -86,9 +86,15 @@ $hafalan  = $hafalan ?? [];
                         </tr>
                     </thead>
                     <tbody id="tableBodyHafalan">
-                        <?php if (!empty($hafalan)): ?>
-                            <?php $no = 1;
-                            foreach ($hafalan as $h): ?>
+                        <?php if (!empty($hafalan) && is_array($hafalan)): ?>
+                            <?php
+                            // Hitung nomor urut kontinu jika menggunakan pager, default ke 1 jika tidak ada
+                            $currentPage = isset($pager) ? ($pager->getCurrentPage('hafalan') ?? 1) : 1;
+                            $perPage = isset($pager) ? ($pager->getPerPage('hafalan') ?? 10) : 10;
+                            $no = ($currentPage - 1) * $perPage + 1;
+
+                            foreach ($hafalan as $h):
+                            ?>
                                 <?php
                                 // Generate Inisial Avatar
                                 $words = explode(' ', $h['nama_santri']);

@@ -52,9 +52,15 @@
                 </tr>
             </thead>
             <tbody id="tableBodyWali">
-                <?php if (!empty($wali)): ?>
-                    <?php $no = 1;
-                    foreach ($wali as $w): ?>
+                <?php if (!empty($wali) && is_array($wali)): ?>
+                    <?php
+                    // Hitung nomor urut kontinu jika menggunakan pager, default ke 1 jika tidak ada
+                    $currentPage = isset($pager) ? ($pager->getCurrentPage('wali') ?? 1) : 1;
+                    $perPage = isset($pager) ? ($pager->getPerPage('wali') ?? 10) : 10;
+                    $no = ($currentPage - 1) * $perPage + 1;
+
+                    foreach ($wali as $w):
+                    ?>
                         <tr class="wali-row">
                             <td><?= $no++; ?></td>
                             <td class="fw-semibold text-dark"><?= esc($w['nama_wali']); ?></td>
@@ -87,11 +93,14 @@
                             </td>
                         </tr>
                     <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5" class="text-center py-4 text-muted">Belum ada data wali santri.</td>
-                    </tr>
                 <?php endif; ?>
+
+                <!-- Baris Kosong Jika Data Tidak Ditemukan -->
+                <tr id="emptyRowWali" class="<?= !empty($wali) ? 'd-none' : ''; ?>">
+                    <td colspan="5" class="text-center py-4 text-muted">
+                        <i class="fa-solid fa-folder-open me-1"></i> Belum ada data wali santri.
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

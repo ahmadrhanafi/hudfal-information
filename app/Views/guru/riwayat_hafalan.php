@@ -107,21 +107,21 @@ $santri = $santri ?? [];
                     </thead>
                     <tbody>
                         <?php if (!empty($santri) && is_array($santri)): ?>
-                            <?php $no = 1;
-                            foreach ($santri as $s): ?>
+                            <?php
+                            // Hitung nomor urut berkelanjutan jika menggunakan pager
+                            $currentPage = isset($pager) ? ($pager->getCurrentPage('santri') ?? 1) : 1;
+                            $perPage = isset($pager) ? ($pager->getPerPage('santri') ?? 10) : 10;
+                            $no = ($currentPage - 1) * $perPage + 1;
+
+                            foreach ($santri as $s):
+                            ?>
                                 <?php
                                 // Generate Inisial Avatar Dinamis
                                 $words = explode(' ', $s['nama_santri']);
                                 $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
 
-                                // Format warna status aktif santri
-                                $statusColor = 'success';
-                                $statusText = ucfirst($s['status_aktif'] ?? 'Aktif');
+                                // Format warna status aktif santri (jika dibutuhkan oleh atribut row)
                                 $statusLower = strtolower($s['status_aktif'] ?? 'aktif');
-
-                                if ($statusLower == 'izin') $statusColor = 'warning';
-                                if ($statusLower == 'sakit') $statusColor = 'info';
-                                if ($statusLower == 'keluar' || $statusLower == 'tidak aktif') $statusColor = 'danger';
                                 ?>
                                 <tr class="item-row" data-search="<?= strtolower(esc($s['nama_santri'] . ' ' . $s['nis'] . ' ' . ($s['nama_kelas'] ?? ''))); ?>">
                                     <td class="ps-4 fw-medium text-muted nomor-urut"><?= $no++; ?></td>

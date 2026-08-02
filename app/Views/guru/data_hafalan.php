@@ -41,8 +41,14 @@
                                 <td colspan="5" class="text-center py-4 text-muted">Belum ada data setoran hafalan tercatat.</td>
                             </tr>
                         <?php else: ?>
-                            <?php $no = 1;
-                            foreach ($hafalan as $row): ?>
+                            <?php
+                            $currentPage = $pager->getCurrentPage('hafalan') ?? 1;
+                            $perPage = $pager->getPerPage('hafalan') ?? 10;
+
+                            $no = ($currentPage - 1) * $perPage + 1;
+
+                            foreach ($hafalan as $row):
+                            ?>
                                 <tr>
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>

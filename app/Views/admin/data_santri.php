@@ -94,9 +94,15 @@ $wali   = $wali ?? [];
                         </tr>
                     </thead>
                     <tbody id="tableBodySantri">
-                        <?php if (!empty($santri)): ?>
-                            <?php $no = 1;
-                            foreach ($santri as $s): ?>
+                        <?php if (!empty($santri) && is_array($santri)): ?>
+                            <?php
+                            // Hitung nomor urut kontinu jika menggunakan pager, default ke 1 jika tidak ada
+                            $currentPage = isset($pager) ? ($pager->getCurrentPage('santri') ?? 1) : 1;
+                            $perPage = isset($pager) ? ($pager->getPerPage('santri') ?? 10) : 10;
+                            $no = ($currentPage - 1) * $perPage + 1;
+
+                            foreach ($santri as $s):
+                            ?>
                                 <?php
                                 $words = explode(' ', $s['nama_santri']);
                                 $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));

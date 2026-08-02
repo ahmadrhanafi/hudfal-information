@@ -215,13 +215,24 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($detailJuz)): ?>
+                        <?php if (!empty($detailJuz) && is_array($detailJuz)): ?>
                             <?php foreach ($detailJuz as $row): ?>
                                 <?php
                                 $rJuz   = is_array($row) ? (string)($row['juz'] ?? '-') : '-';
                                 $rSurah = is_array($row) ? (string)($row['surah'] ?? '-') : '-';
                                 $rTotal = is_array($row) ? (string)($row['total_setoran'] ?? '0') : '0';
                                 $rPred  = is_array($row) ? (string)($row['predikat'] ?? '-') : '-';
+
+                                // Logika warna badge dinamis berdasarkan predikat
+                                $predikatLower = strtolower($rPred);
+                                $badgeClass = 'bg-success bg-opacity-10 text-success';
+                                if (str_contains($predikatLower, 'mumtaz') || str_contains($predikatLower, 'jayyid jiddan')) {
+                                    $badgeClass = 'bg-primary bg-opacity-10 text-primary';
+                                } elseif (str_contains($predikatLower, 'jayyid')) {
+                                    $badgeClass = 'bg-warning bg-opacity-10 text-warning text-dark';
+                                } elseif (str_contains($predikatLower, 'maqbul')) {
+                                    $badgeClass = 'bg-secondary bg-opacity-10 text-secondary';
+                                }
                                 ?>
                                 <tr>
                                     <td class="ps-4 fw-semibold text-dark">Juz <?= esc($rJuz); ?></td>
@@ -233,7 +244,7 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                                         <span class="badge bg-light text-dark border px-2 py-1"><?= esc($rTotal); ?> Kali Setor</span>
                                     </td>
                                     <td class="text-end pe-4">
-                                        <span class="badge bg-success text-white px-3 py-1 rounded-pill small fw-semibold"><?= esc($rPred); ?></span>
+                                        <span class="badge <?= $badgeClass; ?> px-3 py-1 rounded-pill small fw-semibold"><?= esc($rPred); ?></span>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

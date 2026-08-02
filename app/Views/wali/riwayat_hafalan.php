@@ -145,8 +145,13 @@
                     </thead>
                     <tbody>
                         <?php if (!empty($riwayat) && is_array($riwayat)): ?>
-                            <?php $no = 1;
-                            foreach ($riwayat as $row): ?>
+                            <?php
+                            $currentPage = isset($pager) ? ($pager->getCurrentPage('hafalan') ?? 1) : 1;
+                            $perPage = isset($pager) ? ($pager->getPerPage('hafalan') ?? 10) : 10;
+                            $no = ($currentPage - 1) * $perPage + 1;
+
+                            foreach ($riwayat as $row):
+                            ?>
                                 <tr>
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
