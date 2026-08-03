@@ -52,10 +52,20 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('hafalan/update/(:num)', 'Admin\Hafalan::update/$1');
     $routes->get('hafalan/delete/(:num)', 'Admin\Hafalan::delete/$1');
 
+    // Statistik Hafalan
     $routes->get('statistik-hafalan', 'Admin\Statistik::index');
     $routes->get('statistik-hafalan/export', 'Admin\Statistik::export');
 
+    // Manajemen Administrasi
     $routes->get('administrasi', 'Admin\Administrasi::index');
+    $routes->post('administrasi/store', 'Admin\Administrasi::store');
+    $routes->post('administrasi/update/(:num)', 'Admin\Administrasi::update/$1');
+    $routes->get('administrasi/verifikasi/(:num)', 'Admin\Administrasi::verifikasi/$1');
+    $routes->get('administrasi/detail/(:num)', 'Admin\Administrasi::detail/$1');
+    $routes->get('administrasi/export', 'Admin\Administrasi::export');
+    $routes->get('administrasi/export/(:num)', 'Admin\Administrasi::export/$1');
+    $routes->get('administrasi/delete/(:num)', 'Admin\Administrasi::delete/$1');
+
     $routes->get('esertifikat', 'Admin\Esertifikat::index');
     $routes->get('ekartu', 'Admin\Ekartu::index');
     $routes->get('pengaturan', 'Admin\Pengaturan::index');
@@ -84,7 +94,15 @@ $routes->group('wali', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'Wali\Dashboard::index');
     $routes->get('riwayat-hafalan', 'Wali\RiwayatHafalan::index');
     $routes->get('detail-riwayat-hafalan/(:num)', 'Wali\RiwayatHafalan::detail/$1');
-    $routes->get('riwayat-pembayaran', 'Wali\RiwayatPembayaran::index');
+
+    // Riwayat Tagihan
+    $routes->get('riwayat-tagihan', 'Wali\RiwayatTagihan::index');
+    $routes->get('riwayat-tagihan/detail/(:num)', 'Wali\RiwayatTagihan::detail/$1');
+    $routes->get('riwayat-tagihan/export', 'Wali\RiwayatTagihan::export');
+    $routes->get('riwayat-tagihan/export/(:num)', 'Wali\RiwayatTagihan::export/$1');
+    $routes->get('riwayat-tagihan/unduh-kuitansi/(:num)', 'Wali\RiwayatTagihan::unduhKuitansi/$1');
+    $routes->post('riwayat-tagihan/konfirmasi/(:num)', 'Wali\RiwayatTagihan::konfirmasi/$1');
+
     $routes->get('esertifikat', 'Wali\Esertifikat::index');
     $routes->get('statistik-hafalan', 'Wali\Statistik::index');
     $routes->get('ekartu', 'Wali\Ekartu::index');

@@ -33,9 +33,9 @@ class CreatePembayaranTable extends Migration
                 'constraint' => '12,2'
             ],
             'status' => [
-                'type' => 'ENUM',
-                'constraint' => ['Lunas', 'Pending', 'Gagal'],
-                'default' => 'Lunas'
+                'type'       => 'ENUM',
+                'constraint' => ['Lunas', 'Pending', 'Menunggu Verifikasi', 'Gagal'],
+                'default'    => 'Pending'
             ],
             'keterangan' => [
                 'type' => 'TEXT',

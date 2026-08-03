@@ -82,8 +82,8 @@
             <a href="<?= base_url('wali/riwayat-hafalan') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('wali/riwayat-hafalan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-history fa-fw me-2"></i> <span>Riwayat Hafalan</span>
             </a>
-            <a href="<?= base_url('wali/riwayat-pembayaran') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('wali/riwayat-pembayaran*')) ? 'active' : '' ?>">
-                <i class="fa-solid fa-receipt fa-fw me-2"></i> <span>Riwayat Pembayaran</span>
+            <a href="<?= base_url('wali/riwayat-tagihan') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('wali/riwayat-tagihan*')) ? 'active' : '' ?>">
+                <i class="fa-solid fa-receipt fa-fw me-2"></i> <span>Riwayat Tagihan</span>
             </a>
             <a href="<?= base_url('wali/ekartu') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('wali/ekartu*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-id-card fa-fw me-2"></i> <span>E-Kartu Santri</span>
