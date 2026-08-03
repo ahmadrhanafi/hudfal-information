@@ -2,6 +2,10 @@
 
 <?= $this->section('content') ?>
 
+<?php
+/** @var array $kelas */
+?>
+
 <div class="container-fluid px-0">
 
     <!-- Page Header & Action Buttons -->
@@ -107,6 +111,10 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <!-- Card Footer / Total Data -->
+        <div id="totalDataText" class="card card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <span class="text-secondary small">Menampilkan total <?= count($kelas); ?> data kelas</span>
         </div>
     </div>
 </div>

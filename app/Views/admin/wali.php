@@ -2,6 +2,10 @@
 
 <?= $this->section('content') ?>
 
+<?php
+/** @var \CodeIgniter\Pager\Pager $pager */
+?>
+
 <div class="container-fluid px-0">
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
@@ -127,6 +131,24 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <!-- Card Footer / Pagination -->
+        <div class="card card-footer bg-white border-0 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <span class="text-secondary small mb-2">
+                <?php
+                $currentPage = $pager->getCurrentPage('wali');
+                $perPage = $pager->getPerPage('wali');
+                $total = $pager->getTotal('wali');
+
+                $start = $total > 0 ? (($currentPage - 1) * $perPage) + 1 : 0;
+                $end = min($currentPage * $perPage, $total);
+                ?>
+                Menampilkan <?= $start; ?> hingga <?= $end; ?> dari total <?= $total; ?> data wali
+            </span>
+
+            <?php if (!empty($pager) && $total > $perPage): ?>
+                <?= $pager->links('wali', 'hafalan_pagination'); ?>
+            <?php endif; ?>
         </div>
     </div>
 

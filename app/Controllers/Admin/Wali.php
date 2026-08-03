@@ -19,10 +19,22 @@ class Wali extends BaseController
 
     public function index()
     {
+        $perPage = 8;
+        $currentPage = $this->request->getVar('page_wali') ? (int)$this->request->getVar('page_wali') : 1;
+
+        $allWali = $this->waliModel->getWaliWithSantri();
+        $total = count($allWali);
+
+        $waliPaging = array_slice($allWali, ($currentPage - 1) * $perPage, $perPage);
+
+        $pager = service('pager');
+        $pager->store('wali', $currentPage, $perPage, $total);
+
         $data = [
             'title' => 'Data Wali Santri',
-            'icon' => 'fa-solid fa-users',
-            'wali'  => $this->waliModel->getWaliWithSantri(),
+            'icon'  => 'fa-solid fa-users',
+            'wali'  => $waliPaging,
+            'pager' => $pager,
             'role'  => session()->get('role') ?? 'admin'
         ];
 

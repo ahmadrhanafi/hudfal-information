@@ -272,16 +272,16 @@ class HafalanModel extends Model
     // Fungsi untuk mengambil data hafalan lengkap dengan relasi santri dan guru
     public function getHafalanWithRelations($id = null)
     {
-        $builder = $this->select('hafalan.*, santri.nama_santri, guru.nama_guru, kelas.nama_kelas AS nama_kelas')
+        $this->select('hafalan.*, santri.nama_santri, guru.nama_guru, kelas.nama_kelas AS nama_kelas')
             ->join('santri', 'santri.id = hafalan.id_santri', 'left')
             ->join('guru', 'guru.id = hafalan.id_guru', 'left')
-            ->join('kelas', 'kelas.id = guru.id_kelas_diampu', 'left');
+            ->join('kelas', 'kelas.id = santri.id_kelas', 'left');
 
         if ($id) {
-            return $builder->where('hafalan.id', $id)->first();
+            return $this->where('hafalan.id', $id)->first();
         }
 
-        return $builder->orderBy('hafalan.created_at', 'DESC');
+        return $this->orderBy('hafalan.created_at', 'DESC');
     }
 
     // Fungsi khusus untuk statistik
