@@ -12,7 +12,7 @@ $hafalan  = $hafalan ?? [];
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Monitoring Data Hafalan</h3>
+            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Manajemen Data Hafalan</h3>
             <p class="text-secondary mb-0 small" style="text-transform: none !important;">Pantau perkembangan setoran hafalan Al-Qur'an, juz, surah, serta predikat nilai santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
@@ -124,7 +124,7 @@ $hafalan  = $hafalan ?? [];
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-dark-mode d-block">Juz <?= esc($h['juz']); ?> <span class="badge bg-light text-dark-mode border ms-1"><?= ucfirst($h['jenis']); ?></span></span>
+                                        <span class="fw-semibold text-dark-mode d-block">Juz <?= esc($h['juz']); ?> <span class="badge bg-dark bg-opacity-50 text-dark-mode border ms-1"><?= ucfirst($h['jenis']); ?></span></span>
                                         <small class="text-secondary" style="font-size: 12px;">Surah <?= esc($h['surah']); ?> (Ayat <?= $h['ayat_mulai']; ?>-<?= $h['ayat_selesai']; ?>)</small>
                                     </td>
                                     <td>

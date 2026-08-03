@@ -49,7 +49,7 @@ class Dashboard extends BaseController
         }
 
         $data = [
-            'title'           => 'Dashboard',
+            'title'           => 'Dashboard Wali',
             'anak'            => $anak,
             'setoran_terbaru' => $setoranTerbaru,
             'stat_jumlah_anak' => count($anak)

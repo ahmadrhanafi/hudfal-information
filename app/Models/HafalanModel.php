@@ -37,19 +37,74 @@ class HafalanModel extends Model
     // Contoh fungsi pendukung di HafalanModel.php untuk Admin
     public function getRataRataGlobal($periode = 'tahun_ini')
     {
-        // Sesuaikan logika filter tanggal berdasarkan $periode ('bulan_ini', 'semester_ini', 'tahun_ini')
-        // Contoh return nilai rata-rata ayat/hari:
-        return 24.5;
+        $builder = $this->db->table('hafalan');
+        $this->applyPeriodeFilter($builder, $periode);
+
+        $rows = $builder->select('ayat_mulai, ayat_selesai')->get()->getResultArray();
+
+        $totalAyat = 0;
+        foreach ($rows as $row) {
+            $mulai = (int)($row['ayat_mulai'] ?? 0);
+            $selesai = (int)($row['ayat_selesai'] ?? 0);
+            if ($selesai >= $mulai) {
+                $totalAyat += ($selesai - $mulai + 1);
+            }
+        }
+
+        $builderCount = $this->db->table('hafalan');
+        $this->applyPeriodeFilter($builderCount, $periode);
+        $totalSetoran = $builderCount->countAllResults();
+
+        if ($totalSetoran > 0) {
+            return (int) round($totalAyat / $totalSetoran);
+        }
+
+        return 0;
     }
 
     public function getJuzDominanGlobal($periode = 'tahun_ini')
     {
-        return ['juz' => '30', 'persen' => 42];
+        $builder = $this->db->table('hafalan');
+        $this->applyPeriodeFilter($builder, $periode);
+
+        $result = $builder->select('juz, COUNT(juz) as total')
+            ->groupBy('juz')
+            ->orderBy('total', 'DESC')
+            ->get()
+            ->getRowArray();
+
+        if ($result) {
+            $builderTotal = $this->db->table('hafalan');
+            $this->applyPeriodeFilter($builderTotal, $periode);
+            $allTotal = $builderTotal->countAllResults();
+
+            $persen = $allTotal > 0 ? round(($result['total'] / $allTotal) * 100) : 0;
+
+            return [
+                'juz' => $result['juz'],
+                'persen' => $persen
+            ];
+        }
+
+        return ['juz' => '-', 'persen' => 0];
     }
 
     public function getPredikatTerbanyakGlobal($periode = 'tahun_ini')
     {
-        return 'Mumtaz';
+        $builder = $this->db->table('hafalan');
+        $this->applyPeriodeFilter($builder, $periode);
+
+        $result = $builder->select('predikat, COUNT(predikat) as jumlah')
+            ->groupBy('predikat')
+            ->orderBy('jumlah', 'DESC')
+            ->get()
+            ->getRowArray();
+
+        if ($result && !empty($result['predikat'])) {
+            return ucwords($result['predikat']);
+        }
+
+        return 'Belum Ada';
     }
 
     public function getProgressJuzGlobal($periode = 'tahun_ini')
@@ -111,31 +166,33 @@ class HafalanModel extends Model
         return $output;
     }
 
-    public function getGrafikSetoranGlobal($periode = 'bulan_ini')
+    public function getGrafikSetoranGlobal($periode = 'tahun_ini')
     {
-        $builder = $this->db->table($this->table);
         $labels = [];
         $values = [];
 
-        // 1. JIKA FILTER MINGGU INI -> Tampilkan per Hari dalam Minggu Ini (Senin - Minggu)
+        // FILTER MINGGU INI -> Tampilkan per Hari dalam Minggu Ini (Senin - Minggu)
         if ($periode == 'minggu_ini') {
-            $builder->select("DATE(created_at) as tanggal, MIN(created_at) as created_at, COUNT(DISTINCT id_santri) as total_santri");
+            $builder = $this->db->table($this->table);
+            $builder->select("DATE(created_at) as tanggal, DAYNAME(created_at) as nama_hari_en, COUNT(DISTINCT id_santri) as total_santri");
             $builder->where('YEARWEEK(created_at, 1)', 'YEARWEEK(NOW(), 1)');
             $builder->groupBy("DATE(created_at)");
             $result = $builder->get()->getResultArray();
 
             $dataPerHari = [];
+            $translation = [
+                'Monday' => 'Senin',
+                'Tuesday' => 'Selasa',
+                'Wednesday' => 'Rabu',
+                'Thursday' => 'Kamis',
+                'Friday' => 'Jumat',
+                'Saturday' => 'Sabtu',
+                'Sunday' => 'Minggu'
+            ];
+
             foreach ($result as $row) {
-                $translation = [
-                    'Monday' => 'Senin',
-                    'Tuesday' => 'Selasa',
-                    'Wednesday' => 'Rabu',
-                    'Thursday' => 'Kamis',
-                    'Friday' => 'Jumat',
-                    'Saturday' => 'Sabtu',
-                    'Sunday' => 'Minggu'
-                ];
-                $hariIndo = $translation[$row['nama_hari']] ?? $row['nama_hari'];
+                $hariInggris = $row['nama_hari_en'];
+                $hariIndo = $translation[$hariInggris] ?? $hariInggris;
                 $dataPerHari[$hariIndo] = (int)$row['total_santri'];
             }
 
@@ -145,12 +202,13 @@ class HafalanModel extends Model
                 $values[] = $dataPerHari[$hari] ?? 0;
             }
         }
-        // 2. JIKA FILTER BULAN INI -> Tampilkan per Tanggal (1 sampai 30/31)
-        elseif ($periode == 'bulan_ini') {
-            $targetBulan = date('m');
-            $targetTahun = date('Y');
-            $jumlahHari = cal_days_in_month(CAL_GREGORIAN, $targetBulan, $targetTahun);
+        // FILTER BULAN INI / BULAN LALU -> Tampilkan per Tanggal (1 sampai 30/31)
+        elseif ($periode == 'bulan_ini' || $periode == 'bulan_lalu') {
+            $targetBulan = ($periode == 'bulan_ini') ? date('m') : date('m', strtotime('-1 month'));
+            $targetTahun = ($periode == 'bulan_ini') ? date('Y') : date('Y', strtotime('-1 month'));
+            $jumlahHari = cal_days_in_month(CAL_GREGORIAN, (int)$targetBulan, (int)$targetTahun);
 
+            $builder = $this->db->table($this->table);
             $builder->select("DAY(created_at) as hari_angka, COUNT(DISTINCT id_santri) as total_santri");
             $builder->where('MONTH(created_at)', $targetBulan);
             $builder->where('YEAR(created_at)', $targetTahun);
@@ -167,10 +225,11 @@ class HafalanModel extends Model
                 $values[] = $dataPerHari[$i] ?? 0;
             }
         }
-        // 3. JIKA FILTER TAHUN INI -> Tampilkan 12 Bulan (Januari - Desember)
+        // FILTER TAHUN INI / TAHUN LALU -> Tampilkan 12 Bulan (Januari - Desember)
         else {
-            $tahunDipilih = date('Y');
+            $tahunDipilih = ($periode == 'tahun_lalu') ? date('Y') - 1 : date('Y');
 
+            $builder = $this->db->table($this->table);
             $builder->select("MONTH(created_at) as bulan_angka, COUNT(DISTINCT id_santri) as total_santri");
             $builder->where('YEAR(created_at)', $tahunDipilih);
             $builder->groupBy("MONTH(created_at)");
@@ -259,14 +318,16 @@ class HafalanModel extends Model
     // ==========================================
     private function applyPeriodeFilter($builder, $periode)
     {
+        $tahunIni = date('Y');
+        $tahunLalu = $tahunIni - 1;
+
         if ($periode == 'minggu_ini') {
             $builder->where('hafalan.created_at >=', date('Y-m-d', strtotime('-7 days')));
         } elseif ($periode == 'bulan_ini') {
             $builder->where('MONTH(hafalan.created_at)', date('m'))
-                ->where('YEAR(hafalan.created_at)', date('Y'));
+                ->where('YEAR(hafalan.created_at)', $tahunIni);
         } elseif ($periode == 'semester_ini') {
             $bulanIni = date('n');
-            $tahunIni = date('Y');
             if ($bulanIni >= 1 && $bulanIni <= 6) {
                 $builder->where('hafalan.created_at >=', "$tahunIni-01-01")
                     ->where('hafalan.created_at <=', "$tahunIni-06-30");
@@ -274,7 +335,12 @@ class HafalanModel extends Model
                 $builder->where('hafalan.created_at >=', "$tahunIni-07-01")
                     ->where('hafalan.created_at <=', "$tahunIni-12-31");
             }
+        } elseif ($periode == 'tahun_lalu') {
+            $builder->where('YEAR(hafalan.created_at)', $tahunLalu);
+        } else {
+            $builder->where('YEAR(hafalan.created_at)', $tahunIni);
         }
+
         return $builder;
     }
 
