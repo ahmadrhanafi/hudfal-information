@@ -164,6 +164,20 @@
                 <?= csrf_field(); ?>
                 <div class="modal-body p-4">
 
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Ustadz/ah Pengampu</label>
+                        <select class="form-select" disabled>
+                            <?php if (!empty($guru)): ?>
+                                <?php foreach ($guru as $g): ?>
+                                    <option value="<?= $g['id']; ?>" <?= (session()->get('ref_id') == $g['id']) ? 'selected' : ''; ?>>
+                                        <?= esc($g['nama_guru']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                        <input type="hidden" name="id_guru" value="<?= session()->get('ref_id'); ?>">
+                    </div>
+
                     <!-- Pilihan Santri Binaan -->
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Pilih Santri</label>
@@ -175,20 +189,6 @@
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-medium small text-muted">Guru Pengampu / Penilai</label>
-                        <select class="form-select" disabled>
-                            <?php if (!empty($guru)): ?>
-                                <?php foreach ($guru as $g): ?>
-                                    <option value="<?= $g['id']; ?>" <?= (session()->get('ref_id') == $g['id']) ? 'selected' : ''; ?>>
-                                        <?= esc($g['nama_guru']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </select>
-                        <input type="hidden" name="id_guru" value="<?= session()->get('ref_id'); ?>">
                     </div>
 
                     <div class="row">

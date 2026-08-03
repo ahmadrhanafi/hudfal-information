@@ -118,16 +118,19 @@ $hafalan  = $hafalan ?? [];
                                                 <?= $initials; ?>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($h['nama_santri']); ?></h6>
-                                                <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y', strtotime($h['created_at'])); ?></small>
+                                                <h6 class="mb-0 fw-semibold text-secondary" style="font-size: 0.9rem;"><?= esc($h['nama_santri']); ?></h6>
+                                                <small class="text-secondary" style="font-size: 12px;"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y', strtotime($h['created_at'])); ?></small>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-dark d-block">Juz <?= esc($h['juz']); ?> <span class="badge bg-light text-secondary border ms-1"><?= ucfirst($h['jenis']); ?></span></span>
-                                        <small class="text-muted">Surah <?= esc($h['surah']); ?> (Ayat <?= $h['ayat_mulai']; ?>-<?= $h['ayat_selesai']; ?>)</small>
+                                        <span class="fw-semibold text-secondary d-block">Juz <?= esc($h['juz']); ?> <span class="badge bg-light text-secondary border ms-1"><?= ucfirst($h['jenis']); ?></span></span>
+                                        <small class="text-secondary" style="font-size: 12px;">Surah <?= esc($h['surah']); ?> (Ayat <?= $h['ayat_mulai']; ?>-<?= $h['ayat_selesai']; ?>)</small>
                                     </td>
-                                    <td><span class="text-secondary small fw-medium"><?= esc($h['nama_guru']); ?></span></td>
+                                    <td>
+                                        <span class="fw-semibold text-secondary d-block"><?= esc($h['nama_guru']); ?></span>
+                                        <small class="text-secondary" style="font-size: 12px;"><i class="fa-solid fa-chalkboard-user me-1"></i> Pengampu <?= esc($h['nama_kelas']); ?></small>
+                                    </td>
                                     <td class="text-center">
                                         <span class="badge bg-<?= $badgeColor; ?> bg-opacity-10 text-<?= $badgeColor; ?> px-3 py-1 rounded-pill small fw-semibold">
                                             <?= esc($h['predikat']); ?>

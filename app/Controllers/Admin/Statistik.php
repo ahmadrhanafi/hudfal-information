@@ -19,7 +19,7 @@ class Statistik extends BaseController
         $periode = $this->request->getGet('periode') ?? 'tahun_ini';
 
         $data = [
-            'title'           => 'Statistik & Analitik Hafalan',
+            'title'           => 'Statistik Hafalan',
             'icon'            => 'fa-solid fa-chart-line',
             'periode'         => $periode,
             'rata_setoran'    => $this->hafalanModel->getRataRataGlobal($periode),

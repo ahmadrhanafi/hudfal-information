@@ -54,12 +54,61 @@ class HafalanModel extends Model
 
     public function getProgressJuzGlobal($periode = 'tahun_ini')
     {
-        return [
-            ['nama' => 'Juz 30 (Amma)', 'persen' => 42, 'color' => 'success'],
-            ['nama' => 'Juz 29', 'persen' => 28, 'color' => 'primary'],
-            ['nama' => 'Juz 1 - 5 (Al-Baqarah/Ali \'Imran)', 'persen' => 18, 'color' => 'warning'],
-            ['nama' => 'Lainnya (Juz 6 - 28)', 'persen' => 12, 'color' => 'secondary'],
-        ];
+        $builder = $this->db->table($this->table);
+
+        if ($periode == 'bulan_ini') {
+            $builder->where('MONTH(created_at)', date('m'));
+            $builder->where('YEAR(created_at)', date('Y'));
+        } elseif ($periode == 'bulan_lalu') {
+            $builder->where('MONTH(created_at)', date('m', strtotime('-1 month')));
+            $builder->where('YEAR(created_at)', date('Y', strtotime('-1 month')));
+        } elseif ($periode == 'tahun_lalu') {
+            $builder->where('YEAR(created_at)', date('Y', strtotime('-1 year')));
+        } else {
+            $builder->where('YEAR(created_at)', date('Y'));
+        }
+
+        $builder->select("juz, SUM((ayat_selesai - ayat_mulai) + 1) as total_ayat_juz");
+        $builder->groupBy("juz");
+        $result = $builder->get()->getResultArray();
+
+        $grandTotalAyat = array_sum(array_column($result, 'total_ayat_juz'));
+
+        $dataMentah = [];
+        foreach ($result as $row) {
+            $juzAngka = $row['juz'];
+            $jumlahAyat = (int)$row['total_ayat_juz'];
+            $persen = ($grandTotalAyat > 0) ? round(($jumlahAyat / $grandTotalAyat) * 100) : 0;
+
+            $dataMentah[] = [
+                'nama' => 'Juz ' . $juzAngka,
+                'persen' => $persen,
+                'total' => $jumlahAyat
+            ];
+        }
+
+        usort($dataMentah, function ($a, $b) {
+            return $b['total'] <=> $a['total'];
+        });
+
+        $warnaList = ['success', 'primary', 'warning', 'info', 'danger', 'secondary'];
+        $output = [];
+
+        foreach ($dataMentah as $index => $item) {
+            $output[] = [
+                'nama' => $item['nama'],
+                'persen' => $item['persen'],
+                'color' => $warnaList[$index % count($warnaList)]
+            ];
+        }
+
+        if (empty($output)) {
+            $output = [
+                ['nama' => 'Belum ada data setoran', 'persen' => 0, 'color' => 'secondary']
+            ];
+        }
+
+        return $output;
     }
 
     public function getGrafikSetoranGlobal($periode = 'tahun_ini')
@@ -134,9 +183,10 @@ class HafalanModel extends Model
     // Fungsi untuk mengambil data hafalan lengkap dengan relasi santri dan guru
     public function getHafalanWithRelations($id = null)
     {
-        $builder = $this->select('hafalan.*, santri.nama_santri, guru.nama_guru')
-            ->join('santri', 'santri.id = hafalan.id_santri')
-            ->join('guru', 'guru.id = hafalan.id_guru');
+        $builder = $this->select('hafalan.*, santri.nama_santri, guru.nama_guru, kelas.nama_kelas AS nama_kelas')
+            ->join('santri', 'santri.id = hafalan.id_santri', 'left')
+            ->join('guru', 'guru.id = hafalan.id_guru', 'left')
+            ->join('kelas', 'kelas.id = guru.id_kelas_diampu', 'left');
 
         if ($id) {
             return $builder->where('hafalan.id', $id)->first();
@@ -303,16 +353,26 @@ class HafalanModel extends Model
 
     public function getRekapSantriKelas($id_guru, $periode = 'bulan_ini')
     {
-        if (!$id_guru) return [];
-
         $builder = $this->db->table('hafalan');
-        $builder->select('santri.nama_santri, COUNT(hafalan.id) as total_setoran, AVG((hafalan.ayat_selesai - hafalan.ayat_mulai) + 1) as rata_ayat, MAX(hafalan.juz) as juz_terakhir');
+        $builder->select('
+        santri.nama_santri, 
+        COUNT(hafalan.id) as frekuensi_setor, 
+        SUM((hafalan.ayat_selesai - hafalan.ayat_mulai) + 1) as total_ayat,
+        AVG((hafalan.ayat_selesai - hafalan.ayat_mulai) + 1) as rata_ayat,
+        MAX(hafalan.juz) as juz_terakhir
+    ');
         $builder->join('santri', 'santri.id = hafalan.id_santri');
         $builder->where('hafalan.id_guru', $id_guru);
 
-        $this->applyPeriodeFilter($builder, $periode);
+        // Contoh filter periode sederhana
+        if ($periode == 'bulan_ini') {
+            $builder->where('MONTH(hafalan.created_at)', date('m'));
+            $builder->where('YEAR(hafalan.created_at)', date('Y'));
+        }
 
         $builder->groupBy('hafalan.id_santri');
+        $builder->orderBy('total_ayat', 'DESC');
+
         return $builder->get()->getResultArray();
     }
 

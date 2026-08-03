@@ -19,8 +19,8 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Statistik Hafalan Santri Binaan</h3>
-            <p class="text-muted mb-0 small text-dark-mode" style="text-transform: none !important;">Analisis grafik perkembangan setoran dan rata-rata hafalan santri.</p>
+            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Statistik Hafalan Santri Kelas <?= esc($nama_kelas); ?></h3>
+            <p class="text-muted mb-0 small text-dark-mode" style="text-transform: none !important;">Analisis grafik perkembangan setoran hafalan dan rata-rata hafalan santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <?php $currentPeriode = $_GET['periode'] ?? 'bulan_ini'; ?>
@@ -101,7 +101,7 @@
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h5 class="fw-bold text-dark-mode m-0" style="text-transform: none !important;">
-                            <i class="fa-solid fa-chart-area text-success me-2"></i> Grafik Progres Hafalan Kelas Binaan
+                            <i class="fa-solid fa-chart-area text-success me-2"></i> Grafik Progres Hafalan Kelas (<?= ucwords(str_replace('_', ' ', $currentPeriode)); ?>)
                         </h5>
                         <span class="badge bg-light text-secondary border"><?= esc($nama_kelas); ?></span>
                     </div>
@@ -167,12 +167,13 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped align-middle">
                     <thead>
                         <tr>
-                            <th>No</th>
+                            <th class="text-center" width="5%">No</th>
                             <th>Nama Santri</th>
-                            <th>Total Setoran</th>
+                            <th class="text-center">Frekuensi Setor</th>
+                            <th class="text-center">Total Ayat</th>
                             <th>Rata-rata Ayat</th>
                             <th>Juz Terakhir</th>
                         </tr>
@@ -180,7 +181,6 @@
                     <tbody>
                         <?php if (!empty($rekap_santri) && is_array($rekap_santri)): ?>
                             <?php
-                            // Hitung nomor urut kontinu jika menggunakan pager
                             $currentPage = isset($pager) ? ($pager->getCurrentPage('rekap') ?? 1) : 1;
                             $perPage = isset($pager) ? ($pager->getPerPage('rekap') ?? 10) : 10;
                             $no = ($currentPage - 1) * $perPage + 1;
@@ -188,16 +188,23 @@
                             foreach ($rekap_santri as $santri):
                             ?>
                                 <tr>
-                                    <td><?= $no++; ?></td>
+                                    <td class="text-center"><?= $no++; ?></td>
                                     <td><?= esc($santri['nama_santri'] ?? '-'); ?></td>
-                                    <td><?= esc($santri['total_setoran'] ?? 0); ?> Ayat</td>
-                                    <td><?= round($santri['rata_ayat'] ?? 0, 1); ?> Ayat</td>
+                                    <!-- Menampilkan frekuensi berapa kali setor -->
+                                    <td class="text-center">
+                                        <span class="badge bg-secondary"><?= esc($santri['frekuensi_setor'] ?? 0); ?> Kali Setoran</span>
+                                    </td>
+                                    <!-- Menampilkan total akumulasi ayat -->
+                                    <td class="text-center">
+                                        <span class="badge bg-success"><?= esc($santri['total_ayat'] ?? 0); ?> Ayat</span>
+                                    </td>
+                                    <td><?= round($santri['rata_ayat'] ?? 0); ?> Ayat / Setor Hafalan</td>
                                     <td>Juz <?= esc($santri['juz_terakhir'] ?? '-'); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="5" class="text-center text-muted py-4">
+                                <td colspan="6" class="text-center text-muted py-4">
                                     <i class="fa-solid fa-info-circle mb-2 fa-lg"></i>
                                     <p class="mb-0">Belum ada data setoran santri untuk periode ini.</p>
                                 </td>

@@ -6,22 +6,26 @@ use App\Controllers\BaseController;
 use App\Models\HafalanModel;
 use App\Models\SantriModel;
 use App\Models\GuruModel;
+use App\Models\KelasModel;
 
 class Hafalan extends BaseController
 {
     protected $hafalanModel;
     protected $santriModel;
     protected $guruModel;
+    protected $kelasModel;
 
     public function __construct()
     {
         $this->hafalanModel = new HafalanModel();
         $this->santriModel = new SantriModel();
         $this->guruModel = new GuruModel();
+        $this->kelasModel = new KelasModel();
     }
     public function index()
     {
         $role = session()->get('role');
+        $namakelas = $this->kelasModel->findAll();
 
         if ($role == 'admin') {
             $data = [
@@ -31,7 +35,8 @@ class Hafalan extends BaseController
                 'pager'   => $this->hafalanModel->pager,
                 'santri'  => $this->santriModel->findAll(),
                 'guru'    => $this->guruModel->findAll(),
-                'role'    => $role
+                'kelas'   => $this->kelasModel->findAll(),
+                'role'    => $role,
             ];
 
             return view('admin/data_hafalan', $data);
