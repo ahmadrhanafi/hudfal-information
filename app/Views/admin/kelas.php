@@ -48,7 +48,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light text-muted small text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
                         <tr>
-                            <th class="py-3 ps-4">ID Kelas</th>
+                            <th class="py-3 ps-4">No</th>
                             <th class="py-3">Nama Kelas</th>
                             <th class="py-3">Guru Pengampu</th>
                             <th class="py-3 text-center" style="width: 20%;">Jumlah Santri</th>
@@ -62,12 +62,20 @@
                             foreach ($kelas as $k): ?>
                                 <tr class="kelas-row">
                                     <td class="ps-4"><?= $no++; ?></td>
-                                    <td class="fw-semibold text-secondary"><?= esc($k['nama_kelas']); ?></td>
+                                    <td class="fw-semibold text-secondary small">
+                                        <div>
+                                            <h6 class="mb-0 text-secondary small" style="font-size: 0.65rem;">Kelas:</h6>
+                                            <small class="fw-semibold text-dark-mode" style="font-size: 0.9rem;"><i class=" fa-solid fa-school text-secondary me-1"></i><?= esc($k['nama_kelas']); ?></small>
+                                        </div>
+                                    </td>
                                     <td class="text-secondary small">
                                         <?php if (!empty($k['nama_guru'])): ?>
-                                            <span class="fw-semibold text-secondary"><?= esc($k['nama_guru']); ?></span>
+                                            <div>
+                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($k['nama_guru']); ?></h6>
+                                                <small class="text-secondary"><i class="fa-solid fa-id-card text-secondary me-1"></i> NIP: <?= esc($k['nip']); ?></small>
+                                            </div>
                                         <?php else: ?>
-                                            <span class="text-secondary small">Belum ada guru pengampu</span>
+                                            <span class="text-warning small">Belum ada guru pengampu</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-center">

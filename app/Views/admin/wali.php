@@ -47,9 +47,9 @@
                 <table class="table table-hover align-middle">
                     <thead class="bg-light text-muted small text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
                         <tr>
-                            <th class="py-3">No</th>
+                            <th class="py-3 text-center">No</th>
                             <th class="py-3">Nama Wali</th>
-                            <th class="py-3">No. HP / WhatsApp</th>
+                            <th class="py-3">Chat WhatsApp</th>
                             <th class="py-3">Alamat</th>
                             <th class="py-3 text-center">Aksi</th>
                         </tr>
@@ -64,10 +64,30 @@
 
                             foreach ($wali as $w):
                             ?>
+                                <?php
+                                $words = explode(' ', $w['nama_wali'] ?? '');
+                                $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+                                ?>
                                 <tr class="wali-row">
-                                    <td><?= $no++; ?></td>
-                                    <td class="fw-semibold text-dark"><?= esc($w['nama_wali']); ?></td>
-                                    <td><span class="badge bg-light text-dark border"><?= esc($w['no_hp'] ?? '-'); ?></span></td>
+                                    <td class="text-center"><?= $no++; ?></td>
+                                    <td class="fw-semibold text-dark">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                <?= $initials; ?>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($w['nama_wali']); ?></h6>
+                                                <small class="text-secondary"><i class="fa-solid fa-phone-volume text-secondary me-1"></i>: <?= esc($w['no_hp'] ?? 'Tidak ada data'); ?></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="https://wa.me/<?= esc($w['no_hp'] ?? ''); ?>" target="_blank" rel="noopener noreferrer">
+                                            <span class="badge bg-success text-light border">
+                                                <i class="fa-brands fa-whatsapp text-light me-1"></i> Click to Chat
+                                            </span>
+                                        </a>
+                                    </td>
                                     <td class="text-muted small"><?= esc($w['alamat']); ?></td>
                                     <td class="text-center">
                                         <!-- Tombol Detail Baru -->

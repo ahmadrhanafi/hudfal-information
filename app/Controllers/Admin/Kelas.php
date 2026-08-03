@@ -22,7 +22,7 @@ class Kelas extends BaseController
         $db = \Config\Database::connect();
 
         $builder = $db->table('kelas');
-        $builder->select('kelas.*, guru.nama_guru, (SELECT COUNT(id) FROM santri WHERE santri.id_kelas = kelas.id) as total_santri');
+        $builder->select('kelas.*, guru.nama_guru, guru.nip, (SELECT COUNT(id) FROM santri WHERE santri.id_kelas = kelas.id) as total_santri');
         $builder->join('guru', 'guru.id_kelas_diampu = kelas.id', 'left');
 
         $kelasWithTotal = $builder->get()->getResultArray();
