@@ -3,7 +3,18 @@
 <?= $this->section('content') ?>
 
 <?php
-/** @var \CodeIgniter\Pager\Pager $pager */
+/** 
+ * @var \CodeIgniter\Pager\Pager $pager 
+ * @var int $countLunasBulanIni
+ * @var int $countPending
+ * @var float|int $totalBulanIni
+ * @var array $administrasi
+ * @var array $listSantri
+ * @var string|null $selectedMonth
+ * @var string|null $selectedYear
+ * @var string|null $selectedStatus
+ * @var string|null $keyword
+ **/
 ?>
 
 <div class="container-fluid px-0">
@@ -11,13 +22,13 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Manajemen Administrasi & Keuangan</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola catatan pembayaran SPP, iuran bulanan, serta administrasi keuangan santri.</p>
+            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Manajemen Administrasi Keuangan</h3>
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola catatan tagihan pembayaran serta administrasi keuangan santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
-                <i class="fa-solid fa-file-excel text-success me-1"></i> Rekap Keuangan
-            </button>
+            <a href="<?= site_url('admin/administrasi/export?month=' . ($selectedMonth ?? date('m')) . '&status=' . ($selectedStatus ?? '')); ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none" style="text-transform: none !important;">
+                <i class="fa-solid fa-file-excel text-success me-1"></i> Rekap Pembayaran
+            </a>
             <a href="#" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" style="text-transform: none !important;" data-bs-toggle="modal" data-bs-target="#tambahModal">
                 <i class="fa-solid fa-plus me-1"></i> Catat Pembayaran Baru
             </a>
@@ -26,6 +37,7 @@
 
     <!-- Ringkasan Kartu Keuangan -->
     <div class="row g-4 mb-4">
+        <!-- Kartu 1: Pembayaran Masuk Bulan Ini -->
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
@@ -33,12 +45,14 @@
                         <i class="fa-solid fa-wallet fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">PEMBAYARAN BULAN INI</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">Rp 12.5 Juta</h3>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">PEMBAYARAN MASUK</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">Rp <?= number_format($totalBulanIni ?? 0, 0, ',', '.'); ?></h3>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Kartu 2: Total Transaksi Lunas Bulan Ini -->
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
@@ -46,12 +60,14 @@
                         <i class="fa-solid fa-circle-check fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">SANTRI LUNAS (BULAN INI)</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">132 <span class="fs-6 fw-normal text-muted">Santri</span></h3>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">PEMBAYARAN LUNAS</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1"><?= $countLunasBulanIni ?? 0; ?> <span class="fs-6 fw-normal text-secondary">Transaksi</span></h3>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Kartu 3: Belum Lunas / Tertunda -->
         <div class="col-xl-4 col-md-12">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
@@ -59,8 +75,8 @@
                         <i class="fa-solid fa-clock-rotate-left fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">BELUM LUNAS / TERTUNDA</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">16 <span class="fs-6 fw-normal text-danger">Santri</span></h3>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">BELUM LUNAS / TERTUNDA</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1"><?= $countPending ?? 0; ?> <span class="fs-6 fw-normal text-danger">Pembayaran Pending</span></h3>
                     </div>
                 </div>
             </div>
@@ -70,31 +86,40 @@
     <!-- Filter & Search Toolbar Card -->
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
         <div class="card-body p-3">
-            <div class="row g-3 align-items-center">
-                <div class="col-lg-5">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-light border-0 ps-3 text-muted">
-                            <i class="fa-solid fa-search"></i>
-                        </span>
-                        <input type="text" class="form-control bg-light border-0 py-2" placeholder="Cari nama santri atau nomor transaksi...">
+            <form action="" method="get" id="filterForm">
+                <div class="row g-3 align-items-center">
+                    <div class="col-lg-5">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-light border-0 ps-3 text-muted">
+                                <i class="fa-solid fa-search"></i>
+                            </span>
+                            <input type="text" name="keyword" value="<?= esc($keyword ?? ''); ?>" class="form-control bg-light border-0 py-2" placeholder="Cari nama santri..." onchange="this.form.submit()">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <select name="month" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
+                            <option value="09" <?= ($selectedMonth == '09') ? 'selected' : ''; ?>>September 2026</option>
+                            <option value="08" <?= ($selectedMonth == '08') ? 'selected' : ''; ?>>Agustus 2026</option>
+                            <option value="07" <?= ($selectedMonth == '07') ? 'selected' : ''; ?>>Juli 2026</option>
+                            <option value="06" <?= ($selectedMonth == '06') ? 'selected' : ''; ?>>Juni 2026</option>
+                            <option value="05" <?= ($selectedMonth == '05') ? 'selected' : ''; ?>>Mei 2026</option>
+                            <option value="04" <?= ($selectedMonth == '04') ? 'selected' : ''; ?>>April 2026</option>
+                            <option value="03" <?= ($selectedMonth == '03') ? 'selected' : ''; ?>>Maret 2026</option>
+                            <option value="02" <?= ($selectedMonth == '02') ? 'selected' : ''; ?>>Februari 2026</option>
+                            <option value="01" <?= ($selectedMonth == '01') ? 'selected' : ''; ?>>Januari 2026</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <select name="status" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
+                            <option value="">Status: Semua Status Pembayaran</option>
+                            <option value="Lunas" <?= ($selectedStatus == 'Lunas') ? 'selected' : ''; ?>>Lunas</option>
+                            <option value="Pending" <?= ($selectedStatus == 'Pending') ? 'selected' : ''; ?>>Pending</option>
+                            <option value="Gagal" <?= ($selectedStatus == 'Gagal') ? 'selected' : ''; ?>>Gagal</option>
+                            <option value="Menunggu Verifikasi" <?= ($selectedStatus == 'Menunggu Verifikasi') ? 'selected' : ''; ?>>Menunggu Verifikasi</option>
+                        </select>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <select class="form-select form-select-sm bg-light border-0 py-2">
-                        <option selected>Bulan: Juli 2026</option>
-                        <option value="6">Juni 2026</option>
-                        <option value="5">Mei 2026</option>
-                        <option value="4">April 2026</option>
-                    </select>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <select class="form-select form-select-sm bg-light border-0 py-2">
-                        <option selected>Status: Semua Status Pembayaran</option>
-                        <option value="lunas">Lunas</option>
-                        <option value="tertunda">Belum Lunas (Tertunda)</option>
-                    </select>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 
@@ -113,7 +138,7 @@
                             <th class="py-3 text-end pe-4" style="width: 20%;">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tableData">
                         <?php if (!empty($administrasi)): ?>
                             <?php
                             // Hitung nomor urut untuk pagination
@@ -136,7 +161,7 @@
                                     $statusClass = 'danger';
                                 }
                                 ?>
-                                <tr>
+                                <tr class="searchable-row" data-status="<?= strtolower($row['status']); ?>" data-month="<?= date('F Y', strtotime($row['tanggal'])); ?>">
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
@@ -144,16 +169,16 @@
                                                 <?= $initials; ?>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($row['nama_santri']); ?></h6>
-                                                <small class="text-muted"><?= esc($row['nama_kelas'] ?? 'Belum ada kelas'); ?></small>
+                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($row['nama_santri']); ?></h6>
+                                                <small class="text-secondary"><?= esc($row['nama_kelas'] ?? 'Belum ada kelas'); ?></small>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-dark d-block"><?= esc($row['jenis_pembayaran']); ?></span>
-                                        <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y, H:i', strtotime($row['tanggal'])); ?></small>
+                                        <span class="fw-semibold text-dark-mode d-block"><?= esc($row['jenis_pembayaran']); ?></span>
+                                        <small class="text-secondary"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y, H:i', strtotime($row['tanggal'])); ?></small>
                                     </td>
-                                    <td><span class="font-monospace fw-semibold text-dark">Rp <?= number_format($row['jumlah'], 0, ',', '.'); ?></span></td>
+                                    <td><span class="font-monospace fw-semibold text-dark-mode">Rp <?= number_format($row['jumlah'], 0, ',', '.'); ?></span></td>
                                     <td class="text-center">
                                         <span class="badge bg-<?= $statusClass; ?> bg-opacity-10 text-<?= $statusClass; ?> px-3 py-1 rounded-pill small fw-semibold"><?= esc($row['status']); ?></span>
                                     </td>
@@ -336,6 +361,11 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <!-- Elemen jika data tidak ditemukan -->
+                <div id="noDataMessage" class="text-center py-4 text-muted d-none">
+                    <i class="fa-solid fa-face-frown fa-2x mb-2"></i>
+                    <p class="mb-0">Tidak ada data yang cocok dengan pencarian.</p>
+                </div>
             </div>
         </div>
         <!-- Card Footer / Pagination -->
@@ -420,5 +450,60 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("searchInput");
+        const filterMonth = document.getElementById("filterMonth");
+        const filterStatus = document.getElementById("filterStatus");
+        const rows = document.querySelectorAll(".searchable-row");
+        const noDataMessage = document.getElementById("noDataMessage");
+
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const selectedMonth = filterMonth.value.toLowerCase();
+            const selectedStatus = filterStatus.value.toLowerCase();
+
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                const rowStatus = row.getAttribute("data-status") || "";
+                const rowMonth = row.getAttribute("data-month") || "";
+
+                // Cek kondisi pencarian teks (nama santri / nomor transaksi, dll)
+                const matchesSearch = rowText.includes(searchTerm);
+
+                // Cek kondisi filter bulan
+                const matchesMonth = selectedMonth === "" || rowMonth.toLowerCase().includes(selectedMonth);
+
+                // Cek kondisi filter status
+                const matchesStatus = selectedStatus === "" || rowStatus.includes(selectedStatus);
+
+                // Jika semua kondisi terpenuhi, tampilkan baris, jika tidak sembunyikan
+                if (matchesSearch && matchesMonth && matchesStatus) {
+                    row.style.display = "";
+                    visibleCount++;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            // Tampilkan pesan jika data kosong
+            if (visibleCount === 0) {
+                noDataMessage.classList.remove("d-none");
+            } else {
+                noDataMessage.classList.add("d-none");
+            }
+        }
+
+        // Event listener untuk input pencarian (ketik real-time)
+        searchInput.addEventListener("keyup", filterTable);
+
+        // Event listener untuk dropdown filter
+        filterMonth.addEventListener("change", filterTable);
+        filterStatus.addEventListener("change", filterTable);
+    });
+</script>
 
 <?= $this->endSection() ?>

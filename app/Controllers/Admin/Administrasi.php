@@ -19,17 +19,75 @@ class Administrasi extends BaseController
 
     public function index()
     {
-        $perPage = 10; // Jumlah data per halaman
+        $perPage = 10;
+
+        // Ambil nilai filter dari parameter URL (GET), jika kosong gunakan bulan/tahun saat ini
+        $selectedMonth = $this->request->getGet('month') ?? date('m');
+        $selectedYear  = $this->request->getGet('year') ?? date('Y');
+        $selectedStatus = $this->request->getGet('status') ?? '';
+        $keyword       = $this->request->getGet('keyword') ?? '';
+
+        // Base query untuk pembayaran
+        $builder = $this->pembayaranModel->getPembayaranWithSantri();
+
+        // Filter berdasarkan Bulan & Tahun
+        if (!empty($selectedMonth)) {
+            $builder->where('MONTH(pembayaran.tanggal)', $selectedMonth);
+            $builder->where('YEAR(pembayaran.tanggal)', $selectedYear);
+        }
+
+        // Filter berdasarkan Status jika dipilih
+        if (!empty($selectedStatus)) {
+            $builder->where('pembayaran.status', $selectedStatus);
+        }
+
+        if (!empty($keyword)) {
+            $builder->groupStart()
+                ->like('santri.nama_santri', $keyword)
+                ->orLike('pembayaran.keterangan', $keyword)
+                ->groupEnd();
+        }
+
+        // Hitung Total Pembayaran Masuk (Status Lunas) menggunakan query murni
+        $totalBulanIni = $this->pembayaranModel->db->table('pembayaran')
+            ->selectSum('jumlah')
+            ->where('status', 'Lunas')
+            ->where('MONTH(tanggal)', $selectedMonth)
+            ->where('YEAR(tanggal)', $selectedYear)
+            ->get()
+            ->getRow()
+            ->jumlah ?? 0;
+
+        // Hitung Jumlah Transaksi Lunas
+        $countLunasBulanIni = $this->pembayaranModel->db->table('pembayaran')
+            ->where('status', 'Lunas')
+            ->where('MONTH(tanggal)', $selectedMonth)
+            ->where('YEAR(tanggal)', $selectedYear)
+            ->countAllResults();
+
+        // Hitung Jumlah Pending / Belum Lunas
+        $countPending = $this->pembayaranModel->db->table('pembayaran')
+            ->whereIn('status', ['Pending', 'Menunggu Verifikasi', 'tertunda'])
+            ->where('MONTH(tanggal)', $selectedMonth)
+            ->where('YEAR(tanggal)', $selectedYear)
+            ->countAllResults();
 
         $data = [
-            'title'        => 'Administrasi',
-            'icon'         => 'fa-solid fa-file-invoice-dollar',
-            'administrasi' => $this->pembayaranModel->getPembayaranWithSantri()->paginate($perPage, 'administrasi'),
-            'pager'        => $this->pembayaranModel->pager,
-            'listSantri'   => $this->santriModel->select('santri.id, santri.nama_santri, kelas.nama_kelas')
+            'title'              => 'Administrasi',
+            'icon'               => 'fa-solid fa-file-invoice-dollar',
+            'administrasi'       => $builder->paginate($perPage, 'administrasi'),
+            'pager'              => $this->pembayaranModel->pager,
+            'listSantri'         => $this->santriModel->select('santri.id, santri.nama_santri, kelas.nama_kelas')
                 ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
                 ->findAll(),
-            'role'         => session()->get('role') ?? 'admin'
+            'role'               => session()->get('role') ?? 'admin',
+            'totalBulanIni'      => $totalBulanIni,
+            'countLunasBulanIni' => $countLunasBulanIni,
+            'countPending'       => $countPending,
+            'selectedMonth'      => $selectedMonth,
+            'selectedYear'       => $selectedYear,
+            'selectedStatus'     => $selectedStatus,
+            'keyword'            => $keyword
         ];
 
         return view('admin/administrasi', $data);
@@ -114,5 +172,69 @@ class Administrasi extends BaseController
         $this->pembayaranModel->delete($id);
 
         return redirect()->to(base_url('admin/administrasi'))->with('success', 'Data pembayaran berhasil dihapus!');
+    }
+
+    public function exportExcel()
+    {
+        $selectedMonth  = $this->request->getGet('month') ?? date('m');
+        $selectedYear   = $this->request->getGet('year') ?? date('Y');
+        $selectedStatus = $this->request->getGet('status') ?? '';
+
+        // Ambil data sesuai filter yang sedang aktif
+        $builder = $this->pembayaranModel->getPembayaranWithSantri();
+
+        if (!empty($selectedMonth)) {
+            $builder->where('MONTH(pembayaran.tanggal)', $selectedMonth);
+            $builder->where('YEAR(pembayaran.tanggal)', $selectedYear);
+        }
+
+        if (!empty($selectedStatus)) {
+            $builder->where('pembayaran.status', $selectedStatus);
+        }
+
+        $dataPembayaran = $builder->findAll();
+
+        // Nama file berdasarkan bulan rekap
+        $filename = "Rekap-Keuangan-Bulan-" . $selectedMonth . "-" . $selectedYear . ".xls";
+
+        // Header agar browser mendownloadnya sebagai file Excel
+        header("Content-Type: application/vnd.ms-excel");
+        header("Content-Disposition: attachment; filename=\"$filename\"");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        // Buat tabel HTML sederhana yang otomatis dibaca rapi oleh Excel
+        echo '<table border="1">';
+        echo '<thead>';
+        echo '<tr style="background-color: #d1e7dd;">';
+        echo '<th>No</th>';
+        echo '<th>Nama Santri</th>';
+        echo '<th>Kelas</th>';
+        echo '<th>Tanggal</th>';
+        echo '<th>Jenis Pembayaran</th>';
+        echo '<th>Jumlah (Rp)</th>';
+        echo '<th>Status</th>';
+        echo '<th>Keterangan</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+
+        $no = 1;
+        foreach ($dataPembayaran as $row) {
+            echo '<tr>';
+            echo '<td>' . $no++ . '</td>';
+            echo '<td>' . $row['nama_santri'] . '</td>';
+            echo '<td>' . ($row['nama_kelas'] ?? '-') . '</td>';
+            echo '<td>' . $row['tanggal'] . '</td>';
+            echo '<td>' . $row['jenis_pembayaran'] . '</td>';
+            echo '<td>' . $row['jumlah'] . '</td>';
+            echo '<td>' . $row['status'] . '</td>';
+            echo '<td>' . ($row['keterangan'] ?? '-') . '</td>';
+            echo '</td>';
+        }
+
+        echo '</tbody>';
+        echo '</table>';
+        exit();
     }
 }

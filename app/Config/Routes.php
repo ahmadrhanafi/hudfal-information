@@ -62,7 +62,7 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('administrasi/update/(:num)', 'Admin\Administrasi::update/$1');
     $routes->get('administrasi/verifikasi/(:num)', 'Admin\Administrasi::verifikasi/$1');
     $routes->get('administrasi/detail/(:num)', 'Admin\Administrasi::detail/$1');
-    $routes->get('administrasi/export', 'Admin\Administrasi::export');
+    $routes->get('administrasi/export', 'Admin\Administrasi::exportExcel');
     $routes->get('administrasi/export/(:num)', 'Admin\Administrasi::export/$1');
     $routes->get('administrasi/delete/(:num)', 'Admin\Administrasi::delete/$1');
 
