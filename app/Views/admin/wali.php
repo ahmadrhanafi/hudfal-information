@@ -6,11 +6,11 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Manajemen Wali Santri</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola penambahan dan update data wali santri.</p>
+            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Manajemen Wali Santri</h3>
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola penambahan dan update data wali santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-success px-4" data-bs-toggle="modal" data-bs-target="#modalTambah">
+            <button type="button" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah">
                 <i class="fa-solid fa-plus me-1"></i> Tambah Wali
             </button>
         </div>

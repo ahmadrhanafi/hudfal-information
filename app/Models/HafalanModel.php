@@ -111,18 +111,46 @@ class HafalanModel extends Model
         return $output;
     }
 
-    public function getGrafikSetoranGlobal($periode = 'tahun_ini')
+    public function getGrafikSetoranGlobal($periode = 'bulan_ini')
     {
         $builder = $this->db->table($this->table);
         $labels = [];
         $values = [];
 
-        if ($periode == 'bulan_ini' || $periode == 'bulan_lalu') {
-            $targetBulan = ($periode == 'bulan_ini') ? date('m') : date('m', strtotime('-1 month'));
-            $targetTahun = ($periode == 'bulan_ini') ? date('Y') : date('Y', strtotime('-1 month'));
+        // 1. JIKA FILTER MINGGU INI -> Tampilkan per Hari dalam Minggu Ini (Senin - Minggu)
+        if ($periode == 'minggu_ini') {
+            $builder->select("DATE(created_at) as tanggal, MIN(created_at) as created_at, COUNT(DISTINCT id_santri) as total_santri");
+            $builder->where('YEARWEEK(created_at, 1)', 'YEARWEEK(NOW(), 1)');
+            $builder->groupBy("DATE(created_at)");
+            $result = $builder->get()->getResultArray();
+
+            $dataPerHari = [];
+            foreach ($result as $row) {
+                $translation = [
+                    'Monday' => 'Senin',
+                    'Tuesday' => 'Selasa',
+                    'Wednesday' => 'Rabu',
+                    'Thursday' => 'Kamis',
+                    'Friday' => 'Jumat',
+                    'Saturday' => 'Sabtu',
+                    'Sunday' => 'Minggu'
+                ];
+                $hariIndo = $translation[$row['nama_hari']] ?? $row['nama_hari'];
+                $dataPerHari[$hariIndo] = (int)$row['total_santri'];
+            }
+
+            $daftarHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+            foreach ($daftarHari as $hari) {
+                $labels[] = $hari;
+                $values[] = $dataPerHari[$hari] ?? 0;
+            }
+        }
+        // 2. JIKA FILTER BULAN INI -> Tampilkan per Tanggal (1 sampai 30/31)
+        elseif ($periode == 'bulan_ini') {
+            $targetBulan = date('m');
+            $targetTahun = date('Y');
             $jumlahHari = cal_days_in_month(CAL_GREGORIAN, $targetBulan, $targetTahun);
 
-            // Ambil data dari database
             $builder->select("DAY(created_at) as hari_angka, COUNT(DISTINCT id_santri) as total_santri");
             $builder->where('MONTH(created_at)', $targetBulan);
             $builder->where('YEAR(created_at)', $targetTahun);
@@ -138,8 +166,10 @@ class HafalanModel extends Model
                 $labels[] = $i;
                 $values[] = $dataPerHari[$i] ?? 0;
             }
-        } else {
-            $tahunDipilih = ($periode == 'tahun_lalu') ? date('Y', strtotime('-1 year')) : date('Y');
+        }
+        // 3. JIKA FILTER TAHUN INI -> Tampilkan 12 Bulan (Januari - Desember)
+        else {
+            $tahunDipilih = date('Y');
 
             $builder->select("MONTH(created_at) as bulan_angka, COUNT(DISTINCT id_santri) as total_santri");
             $builder->where('YEAR(created_at)', $tahunDipilih);

@@ -7,11 +7,11 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Manajemen Kelas</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola penambahan dan update data kelas.</p>
+            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Manajemen Kelas</h3>
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola penambahan dan update data kelas.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-success px-4" data-bs-toggle="modal" data-bs-target="#modalTambah">
+            <button type="button" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah">
                 <i class="fa-solid fa-plus me-1"></i> Tambah Kelas
             </button>
         </div>
@@ -50,6 +50,7 @@
                         <tr>
                             <th class="py-3 ps-4">ID Kelas</th>
                             <th class="py-3">Nama Kelas</th>
+                            <th class="py-3">Guru Pengampu</th>
                             <th class="py-3 text-center" style="width: 20%;">Jumlah Santri</th>
                             <th class="py-3">Dibuat Pada</th>
                             <th class="py-3 text-center pe-4">Aksi</th>
@@ -61,7 +62,14 @@
                             foreach ($kelas as $k): ?>
                                 <tr class="kelas-row">
                                     <td class="ps-4"><?= $no++; ?></td>
-                                    <td class="fw-semibold text-dark"><?= esc($k['nama_kelas']); ?></td>
+                                    <td class="fw-semibold text-secondary"><?= esc($k['nama_kelas']); ?></td>
+                                    <td class="text-secondary small">
+                                        <?php if (!empty($k['nama_guru'])): ?>
+                                            <span class="fw-semibold text-secondary"><?= esc($k['nama_guru']); ?></span>
+                                        <?php else: ?>
+                                            <span class="text-secondary small">Belum ada guru pengampu</span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td class="text-center">
                                         <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-semibold">
                                             <i class="fa-solid fa-users me-1"></i> <?= $k['total_santri']; ?> Santri

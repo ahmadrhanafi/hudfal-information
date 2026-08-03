@@ -4,30 +4,36 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\KelasModel;
+use App\Models\GuruModel;
 
 class Kelas extends BaseController
 {
     protected $kelasModel;
+    protected $guruModel;
 
     public function __construct()
     {
         $this->kelasModel = new KelasModel();
+        $this->guruModel = new GuruModel();
     }
 
     public function index()
     {
         $db = \Config\Database::connect();
+
         $builder = $db->table('kelas');
-        $builder->select('kelas.*, COUNT(santri.id) as total_santri');
-        $builder->join('santri', 'santri.id_kelas = kelas.id', 'left');
-        $builder->groupBy('kelas.id');
+        $builder->select('kelas.*, guru.nama_guru, (SELECT COUNT(id) FROM santri WHERE santri.id_kelas = kelas.id) as total_santri');
+        $builder->join('guru', 'guru.id_kelas_diampu = kelas.id', 'left');
+
         $kelasWithTotal = $builder->get()->getResultArray();
+        $guruList = $this->guruModel->findAll();
 
         $data = [
-            'title' => 'Data Kelas',
-            'icon' => 'fa-solid fa-school',
-            'kelas' => $kelasWithTotal,
-            'role'  => session()->get('role') ?? 'admin'
+            'title'    => 'Data Kelas',
+            'icon'     => 'fa-solid fa-school',
+            'kelas'    => $kelasWithTotal,
+            'guruList' => $guruList,
+            'role'     => session()->get('role') ?? 'admin'
         ];
 
         return view('admin/kelas', $data);
