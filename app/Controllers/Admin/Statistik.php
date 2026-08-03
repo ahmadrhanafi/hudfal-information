@@ -26,7 +26,7 @@ class Statistik extends BaseController
             'juz_dominan'     => $this->hafalanModel->getJuzDominanGlobal($periode),
             'predikat_umum'   => $this->hafalanModel->getPredikatTerbanyakGlobal($periode),
             'capaian_juz'     => $this->hafalanModel->getProgressJuzGlobal($periode),
-            'grafik_setoran'  => $this->hafalanModel->getGrafikSetoranGlobal($periode), // <-- INI YANG KURANG
+            'grafik_setoran'  => $this->hafalanModel->getGrafikSetoranGlobal($periode),
         ];
 
         return view('admin/statistik_hafalan', $data);

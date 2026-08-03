@@ -32,12 +32,17 @@
             <!-- Dropdown Filter Periode -->
             <div class="dropdown">
                 <button class="btn btn-success btn-sm px-3 rounded-pill shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" style="text-transform: none !important;">
-                    <i class="fa-solid fa-filter me-1"></i> Periode: <?= ucwords(str_replace('_', ' ', $periode)); ?>
+                    <i class="fa-solid fa-filter me-1"></i>
+                    Periode: <span class="fw-semibold"><?= ucwords(str_replace('_', ' ', $periode)); ?></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-                    <li><a class="dropdown-item small <?= ($periode == 'bulan_ini') ? 'active' : ''; ?>" href="<?= base_url('admin/statistik-hafalan?periode=bulan_ini'); ?>">Bulan Ini</a></li>
-                    <li><a class="dropdown-item small <?= ($periode == 'semester_ini') ? 'active' : ''; ?>" href="<?= base_url('admin/statistik-hafalan?periode=semester_ini'); ?>">Semester Ini</a></li>
-                    <li><a class="dropdown-item small <?= ($periode == 'tahun_ini') ? 'active' : ''; ?>" href="<?= base_url('admin/statistik-hafalan?periode=tahun_ini'); ?>">Tahun Ini</a></li>
+                    <li><a class="dropdown-item small <?= ($periode == 'bulan_ini') ? 'active' : ''; ?>" href="<?= base_url('admin/statistik-hafalan?periode=bulan_ini'); ?>">Bulan Ini (Harian)</a></li>
+                    <li><a class="dropdown-item small <?= ($periode == 'bulan_lalu') ? 'active' : ''; ?>" href="<?= base_url('admin/statistik-hafalan?periode=bulan_lalu'); ?>">Bulan Lalu (Harian)</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item small <?= ($periode == 'tahun_ini') ? 'active' : ''; ?>" href="<?= base_url('admin/statistik-hafalan?periode=tahun_ini'); ?>">Tahun Ini (Bulanan)</a></li>
+                    <li><a class="dropdown-item small <?= ($periode == 'tahun_lalu') ? 'active' : ''; ?>" href="<?= base_url('admin/statistik-hafalan?periode=tahun_lalu'); ?>">Tahun Lalu (Bulanan)</a></li>
                 </ul>
             </div>
         </div>
@@ -94,7 +99,7 @@
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h5 class="fw-bold text-dark m-0" style="text-transform: none !important;">
-                            <i class="fa-solid fa-chart-area text-success me-2"></i> Grafik Tren Setoran Global (<?= ucwords(str_replace('_', ' ', $periode)); ?>)
+                            <i class="fa-solid fa-chart-area text-success me-2"></i> Grafik Tren Santri Menyetor Hafalan (<?= ucwords(str_replace('_', ' ', $periode)); ?>)
                         </h5>
                         <span class="badge bg-light text-secondary border">Real-time Data</span>
                     </div>
@@ -170,7 +175,7 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Total Ayat Disetor',
+                    label: 'Jumlah Santri Menyetor',
                     data: dataValues,
                     backgroundColor: 'rgba(25, 135, 84, 0.1)',
                     borderColor: '#198754',
@@ -212,7 +217,9 @@
                         ticks: {
                             font: {
                                 size: 11
-                            }
+                            },
+                            stepSize: 1,
+                            precision: 0
                         }
                     },
                     x: {

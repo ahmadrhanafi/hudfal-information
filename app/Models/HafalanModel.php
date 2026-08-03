@@ -44,19 +44,16 @@ class HafalanModel extends Model
 
     public function getJuzDominanGlobal($periode = 'tahun_ini')
     {
-        // Mengembalikan array juz terbanyak, misal: ['juz' => 30, 'persen' => 42]
         return ['juz' => '30', 'persen' => 42];
     }
 
     public function getPredikatTerbanyakGlobal($periode = 'tahun_ini')
     {
-        // Mengembalikan predikat dominan, misal: 'Mumtaz'
         return 'Mumtaz';
     }
 
     public function getProgressJuzGlobal($periode = 'tahun_ini')
     {
-        // Mengembalikan data per juz untuk progress bar
         return [
             ['nama' => 'Juz 30 (Amma)', 'persen' => 42, 'color' => 'success'],
             ['nama' => 'Juz 29', 'persen' => 28, 'color' => 'primary'],
@@ -67,9 +64,68 @@ class HafalanModel extends Model
 
     public function getGrafikSetoranGlobal($periode = 'tahun_ini')
     {
+        $builder = $this->db->table($this->table);
+        $labels = [];
+        $values = [];
+
+        if ($periode == 'bulan_ini' || $periode == 'bulan_lalu') {
+            $targetBulan = ($periode == 'bulan_ini') ? date('m') : date('m', strtotime('-1 month'));
+            $targetTahun = ($periode == 'bulan_ini') ? date('Y') : date('Y', strtotime('-1 month'));
+            $jumlahHari = cal_days_in_month(CAL_GREGORIAN, $targetBulan, $targetTahun);
+
+            // Ambil data dari database
+            $builder->select("DAY(created_at) as hari_angka, COUNT(DISTINCT id_santri) as total_santri");
+            $builder->where('MONTH(created_at)', $targetBulan);
+            $builder->where('YEAR(created_at)', $targetTahun);
+            $builder->groupBy("DAY(created_at)");
+            $result = $builder->get()->getResultArray();
+
+            $dataPerHari = [];
+            foreach ($result as $row) {
+                $dataPerHari[(int)$row['hari_angka']] = (int)$row['total_santri'];
+            }
+
+            for ($i = 1; $i <= $jumlahHari; $i++) {
+                $labels[] = $i;
+                $values[] = $dataPerHari[$i] ?? 0;
+            }
+        } else {
+            $tahunDipilih = ($periode == 'tahun_lalu') ? date('Y', strtotime('-1 year')) : date('Y');
+
+            $builder->select("MONTH(created_at) as bulan_angka, COUNT(DISTINCT id_santri) as total_santri");
+            $builder->where('YEAR(created_at)', $tahunDipilih);
+            $builder->groupBy("MONTH(created_at)");
+            $result = $builder->get()->getResultArray();
+
+            $dataPerBulan = [];
+            foreach ($result as $row) {
+                $dataPerBulan[(int)$row['bulan_angka']] = (int)$row['total_santri'];
+            }
+
+            $namaBulan = [
+                1 => 'Jan',
+                2 => 'Feb',
+                3 => 'Mar',
+                4 => 'Apr',
+                5 => 'Mei',
+                6 => 'Jun',
+                7 => 'Jul',
+                8 => 'Agu',
+                9 => 'Sep',
+                10 => 'Okt',
+                11 => 'Nov',
+                12 => 'Des'
+            ];
+
+            for ($i = 1; $i <= 12; $i++) {
+                $labels[] = $namaBulan[$i];
+                $values[] = $dataPerBulan[$i] ?? 0;
+            }
+        }
+
         return [
-            'labels' => ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
-            'values' => [45, 80, 60, 95]
+            'labels' => $labels,
+            'values' => $values
         ];
     }
 
