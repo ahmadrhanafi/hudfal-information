@@ -49,7 +49,7 @@ class Statistik extends BaseController
         }
 
         $id_santri   = $santri['id'];
-        $nama_santri = $santri['nama_santri'] ?? 'Ananda';
+        $nama_santri = $santri['nama_lengkap'] ?? $santri['nama_santri'] ?? 'Ananda';
 
         $periode = $this->request->getGet('periode') ?? 'bulan_ini';
 
@@ -72,20 +72,21 @@ class Statistik extends BaseController
             $chartMurojaah = [0];
         }
 
-        $data['title']          = 'Statistik Hafalan';
-        $data['icon']           = 'fa-solid fa-chart-line';
-        $data['santri']         = $data['anak'];
-        $data['selected_santri'] = $santri;
-        $data['nama_santri']    = $nama_santri;
-        $data['periode']        = $periode;
-        $data['total_juz']      = $this->hafalanModel->getTotalJuzSelesai($id_santri, $periode);
-        $data['streak']         = $this->hafalanModel->getStreakHarian($id_santri);
-        $data['rata_predikat']  = $this->hafalanModel->getRataPredikatSantri($id_santri, $periode);
-        $data['komposisi']      = $this->hafalanModel->getKomposisiSetoran($id_santri, $periode);
-        $data['chart_labels']   = $chartLabels;
-        $data['chart_ziyadah']  = $chartZiyadah;
-        $data['chart_murojaah'] = $chartMurojaah;
-        $data['detail_juz']     = $this->hafalanModel->getDetailCapaianJuz($id_santri, $periode);
+        $data['title']              = 'Statistik Hafalan';
+        $data['icon']               = 'fa-solid fa-chart-line';
+        $data['santri']             = $data['anak'];
+        $data['selected_santri']    = $santri;
+        $data['nama_santri']        = $nama_santri;
+        $data['periode']            = $periode;
+
+        $data['total_juz']          = $this->hafalanModel->getTotalJuzSelesai($id_santri);
+        $data['streak']             = $this->hafalanModel->getStreakHarian($id_santri);
+        $data['rata_predikat']      = $this->hafalanModel->getRataPredikatSantri($id_santri, $periode);
+        $data['komposisi']          = $this->hafalanModel->getKomposisiSetoran($id_santri, $periode);
+        $data['chart_labels']       = $chartLabels;
+        $data['chart_ziyadah']      = $chartZiyadah;
+        $data['chart_murojaah']     = $chartMurojaah;
+        $data['detail_juz']         = $this->hafalanModel->getDetailCapaianJuz($id_santri, $periode);
 
         return view('wali/statistik_hafalan', $data);
     }

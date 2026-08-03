@@ -4,23 +4,55 @@ namespace App\Controllers\Wali;
 
 use App\Controllers\BaseController;
 use App\Models\SantriModel;
+use App\Models\HafalanModel;
 
 class Dashboard extends BaseController
 {
     public function index()
     {
-        $santriModel = new SantriModel();
-        $idWali = session()->get('ref_id');
+        $santriModel  = new SantriModel();
+        $hafalanModel = new HafalanModel();
+        $idWali       = session()->get('ref_id') ?? session()->get('id');
 
-        // Ambil semua data anak berdasarkan id_wali yang login beserta informasi kelasnya
         $anak = $santriModel->select('santri.*, kelas.nama_kelas')
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
             ->where('santri.id_wali', $idWali)
             ->findAll();
 
+        if (!empty($anak)) {
+            foreach ($anak as &$a) {
+                $a['stat_total_setoran'] = $hafalanModel->where('id_santri', $a['id'])->countAllResults();
+
+                $terakhir = $hafalanModel->select('juz, ayat_mulai, ayat_selesai')
+                    ->where('id_santri', $a['id'])
+                    ->orderBy('created_at', 'DESC')
+                    ->first();
+
+                if ($terakhir) {
+                    $a['stat_juz'] = 'Juz ' . $terakhir['juz'] . ' (Ayat ' . $terakhir['ayat_mulai'] . '-' . $terakhir['ayat_selesai'] . ')';
+                } else {
+                    $a['stat_juz'] = 'Belum ada setoran';
+                }
+            }
+            unset($a);
+        }
+
+        $idsAnak = array_column($anak, 'id');
+        $setoranTerbaru = [];
+        if (!empty($idsAnak)) {
+            $setoranTerbaru = $hafalanModel->select('hafalan.*, santri.nama_santri as nama_santri, santri.nis')
+                ->join('santri', 'santri.id = hafalan.id_santri', 'inner')
+                ->whereIn('hafalan.id_santri', $idsAnak)
+                ->orderBy('hafalan.created_at', 'DESC')
+                ->limit(5)
+                ->findAll();
+        }
+
         $data = [
-            'title' => 'Dashboard Wali Santri',
-            'anak'  => $anak
+            'title'           => 'Dashboard Wali Santri',
+            'anak'            => $anak,
+            'setoran_terbaru' => $setoranTerbaru,
+            'stat_jumlah_anak' => count($anak)
         ];
 
         return view('wali/dashboard', $data);

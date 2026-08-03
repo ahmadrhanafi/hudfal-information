@@ -35,9 +35,9 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
     <!-- Page Header & Filter Pilihan Anak & Periode -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-user-name mb-1" style="text-transform: none !important;">Statistik Hafalan Ananda</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">
-                Menampilkan rekam jejak hafalan santri: <span class="fw-semibold text-user-name"><?= esc($selected_santri['nama_santri'] ?? $nama_santri ?? 'Ananda'); ?></span>
+            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Statistik Hafalan <?= esc($selected_santri['nama_santri'] ?? 'Ananda'); ?></h3>
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">
+                Menampilkan rekam jejak hafalan ananda di pesantren.</span>
             </p>
         </div>
 
@@ -85,9 +85,9 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                         <i class="fa-solid fa-book-quran fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">TOTAL JUZ SELESAI</span>
-                        <h3 class="fw-bold mb-0 mt-1 text-user-name">
-                            <?= esc($total_juz ?? 0); ?> <span class="fs-6 fw-normal text-muted">Juz</span>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">TOTAL JUZ SELESAI</span>
+                        <h3 class="fw-bold mb-0 mt-1 text-dark-mode">
+                            <?= esc($total_juz ?? 0); ?> <span class="fs-6 fw-normal text-secondary">Juz</span>
                         </h3>
                     </div>
                 </div>
@@ -102,9 +102,9 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                         <i class="fa-solid fa-fire fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">STREAK SETORAN</span>
-                        <h3 class="fw-bold mb-0 mt-1 text-user-name">
-                            <?= esc($streak ?? 0); ?> <span class="fs-6 fw-normal text-muted">Hari Aktif</span>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">STREAK SETORAN</span>
+                        <h3 class="fw-bold mb-0 mt-1 text-dark-mode">
+                            <?= esc($streak ?? 0); ?> <span class="fs-6 fw-normal text-secondary">Hari Aktif</span>
                         </h3>
                     </div>
                 </div>
@@ -119,7 +119,7 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                         <i class="fa-solid fa-award fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">PREDIKAT RATA-RATA</span>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">PREDIKAT RATA-RATA</span>
                         <h3 class="fw-bold text-primary mb-0 mt-1">
                             <?php
                             if (is_array($rata_predikat)) {
@@ -154,13 +154,13 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                         <div class="text-success">
                             <i class="fa-solid fa-chart-line fa-lg"></i>
                         </div>
-                        <h5 class="fw-bold mb-0 text-user-name" style="text-transform: none !important; font-size: 1.05rem;">Grafik Progres Hafalan Ananda</h5>
+                        <h5 class="fw-bold mb-0 text-dark-mode" style="text-transform: none !important; font-size: 1.05rem;">Grafik Setor Hafalan Al-Qur'an</h5>
                     </div>
                     <span class="badge bg-secondary-subtle text-secondary border px-3 py-2 rounded-pill small fw-semibold">
                         <?= esc(ucwords(str_replace('_', ' ', $periode ?? 'bulan_ini'))); ?>
                     </span>
                 </div>
-                <p class="text-muted small mb-4">Grafik tren pencapaian setoran hafalan berdasarkan rentang waktu terpilih.</p>
+                <p class="text-secondary small mb-4">Grafik tren pencapaian setoran hafalan berdasarkan rentang waktu terpilih.</p>
 
                 <div style="position: relative; height: 300px; width: 100%;">
                     <canvas id="progresHafalanChart"></canvas>
@@ -171,8 +171,10 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
         <!-- Komposisi Ziyadah vs Murojaah -->
         <div class="col-xl-4">
             <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-                <h5 class="fw-bold mb-1 text-user-name" style="text-transform: none !important; font-size: 1.05rem;">Komposisi Setoran</h5>
-                <p class="text-muted small mb-4">Rasio perbandingan antara hafalan baru dan pengulangan.</p>
+                <h5 class="fw-bold text-dark-mode mb-4" style="text-transform: none !important; font-size: 1.05rem;">
+                    <i class="fa-solid fa-layer-group text-success me-2"></i> Komposisi Setoran
+                </h5>
+                <p class="text-secondary small mb-4">Persentase rasio perbandingan antara hafalan baru dan pengulangan.</p>
 
                 <div class="mb-4">
                     <div class="d-flex justify-content-between small fw-semibold mb-1">
@@ -237,8 +239,14 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                                 <tr>
                                     <td class="ps-4 fw-semibold text-dark">Juz <?= esc($rJuz); ?></td>
                                     <td>
-                                        <span class="fw-semibold text-dark d-block small"><?= esc($rSurah); ?></span>
-                                        <small class="text-muted" style="font-size: 0.75rem;">Terekam di sistem</small>
+                                        <span class="fw-semibold text-dark-mode d-block small"><?= esc($row['surah'] ?? $row['capaian'] ?? '-'); ?></span>
+                                        <small class="text-secondary" style="font-size: 0.75rem;">
+                                            <?php if (!empty($row['ayat_mulai']) && !empty($row['ayat_selesai'])): ?>
+                                                Ayat <?= esc($row['ayat_mulai']); ?> - <?= esc($row['ayat_selesai']); ?>
+                                            <?php else: ?>
+                                                <?= esc($row['keterangan'] ?? 'Capaian Juz'); ?>
+                                            <?php endif; ?>
+                                        </small>
                                     </td>
                                     <td>
                                         <span class="badge bg-light text-dark border px-2 py-1"><?= esc($rTotal); ?> Kali Setor</span>
@@ -340,6 +348,10 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                         position: 'top',
                         labels: {
                             boxWidth: 12,
+                            boxHeight: 12,
+                            borderRadius: 4,
+                            useBorderRadius: true,
+                            padding: 4,
                             font: {
                                 size: 12,
                                 family: 'inherit'

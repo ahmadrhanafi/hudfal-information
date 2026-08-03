@@ -13,9 +13,9 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Riwayat Hafalan Ananda</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">
-                Catatan lengkap setoran hafalan Al-Qur'an ananda <strong><?= esc($santri_aktif['nama_santri'] ?? '-'); ?></strong> di pesantren.
+            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Riwayat Hafalan <?= esc($santri_aktif['nama_santri'] ?? 'Ananda'); ?></h3>
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">
+                Catatan lengkap setoran hafalan Al-Qur'an ananda di pesantren.
             </p>
         </div>
         <div class="d-flex align-items-center gap-2">
@@ -43,9 +43,9 @@
                         <i class="fa-solid fa-book-quran fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">JUZ AKTIF SAAT INI</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">
-                            <?= esc($juz_aktif ?? 'Juz 30'); ?> <span class="fs-6 fw-normal text-success">(<?= esc($keterangan_juz ?? 'Amma'); ?>)</span>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">JUZ AKTIF SAAT INI</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">
+                            <?= esc($juz_aktif ?? 'Juz 30'); ?>
                         </h3>
                     </div>
                 </div>
@@ -58,9 +58,9 @@
                         <i class="fa-solid fa-layer-group fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">TOTAL SETORAN PERIODE INI</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">
-                            <?= esc($total_setoran ?? 0); ?> <span class="fs-6 fw-normal text-muted">Kali Setor</span>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">TOTAL SETORAN PERIODE INI</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">
+                            <?= esc($total_setoran ?? 0); ?> <span class="fs-6 fw-normal text-secondary">Kali Setor</span>
                         </h3>
                     </div>
                 </div>
@@ -73,8 +73,8 @@
                         <i class="fa-solid fa-award fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">PREDIKAT DOMINAN</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">PREDIKAT DOMINAN</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">
                             <?= esc($predikat_dominan ?? '-'); ?>
                         </h3>
                     </div>
@@ -155,16 +155,16 @@
                                 <tr>
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
-                                        <div class="fw-semibold text-dark small"><?= date('d M Y', strtotime($row['created_at'])); ?></div>
-                                        <small class="text-muted" style="font-size: 0.75rem;"><i class="fa-regular fa-clock me-1"></i> <?= date('H:i', strtotime($row['created_at'])); ?> WIB</small>
+                                        <div class="fw-semibold text-dark-mode small"><?= date('d M Y', strtotime($row['created_at'])); ?></div>
+                                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-clock me-1"></i> <?= date('H:i', strtotime($row['created_at'])); ?> WIB</small>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-dark d-block">Surah <?= esc($row['surah']); ?> <span class="badge bg-secondary rounded-lg text-white small"><?= esc($row['jenis']); ?></span></span>
-                                        <small class="text-muted">Juz <?= esc($row['juz']); ?> (Ayat <?= esc($row['ayat_mulai']); ?> - <?= esc($row['ayat_selesai']); ?>)</small>
+                                        <span class="fw-semibold text-dark-mode d-block">Surah <?= esc($row['surah']); ?> <span class="badge bg-secondary rounded-lg text-white small"><?= esc($row['jenis']); ?></span></span>
+                                        <small class="text-secondary">Juz <?= esc($row['juz']); ?> (Ayat <?= esc($row['ayat_mulai']); ?> - <?= esc($row['ayat_selesai']); ?>)</small>
                                     </td>
                                     <td>
-                                        <span class="small text-dark d-block"><?= esc($row['nama_guru'] ?? 'Ustadz Pembimbing'); ?></span>
-                                        <small class="text-muted" style="font-size: 0.75rem;">Pengampu Tahfidz</small>
+                                        <span class="small text-dark-mode d-block"><?= esc($row['nama_guru'] ?? 'Ustadz Pembimbing'); ?></span>
+                                        <small class="text-secondary" style="font-size: 0.75rem;">Pengampu Tahfidz</small>
                                     </td>
                                     <td class="text-center">
                                         <?php
@@ -174,7 +174,7 @@
                                         elseif (str_contains($predikat, 'jayyid')) $badgeClass = 'bg-warning bg-opacity-10 text-warning text-dark';
                                         ?>
                                         <span class="badge <?= $badgeClass; ?> px-3 py-1 rounded-pill small fw-semibold mb-1"><?= esc($row['predikat']); ?></span>
-                                        <small class="d-block text-muted" style="font-size: 0.7rem;"><?= esc($row['catatan'] ?? 'Lancar'); ?></small>
+                                        <small class="d-block text-secondary" style="font-size: 0.7rem;"><?= esc($row['catatan'] ?? 'Lancar'); ?></small>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

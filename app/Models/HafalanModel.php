@@ -418,13 +418,21 @@ class HafalanModel extends Model
         return $builder->orderBy('created_at', 'DESC')->findAll();
     }
 
-    public function getTotalJuzSelesai($id_santri)
+    public function getTotalJuzSelesai($id_santri, $periode = 'bulan_ini')
     {
         if (!$id_santri) return 0;
 
-        $result = $this->select('COUNT(DISTINCT juz) as total_juz')
-            ->where('id_santri', $id_santri)
-            ->first();
+        $builder = $this->select('COUNT(DISTINCT juz) as total_juz')
+            ->where('id_santri', $id_santri);
+
+        if ($periode == 'bulan_ini') {
+            $builder->where('MONTH(created_at)', date('m'))
+                ->where('YEAR(created_at)', date('Y'));
+        } elseif ($periode == 'tahun_ini') {
+            $builder->where('YEAR(created_at)', date('Y'));
+        }
+
+        $result = $builder->first();
 
         return $result['total_juz'] ?? 0;
     }
@@ -432,7 +440,23 @@ class HafalanModel extends Model
     public function getStreakHarian($id_santri)
     {
         if (!$id_santri) return 0;
-        return 14; // Default/dummy aman untuk streak aktif
+
+        $setoran = $this->select('created_at')
+            ->where('id_santri', $id_santri)
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+
+        if (empty($setoran)) return 0;
+
+        $tanggalUnik = [];
+        foreach ($setoran as $row) {
+            if (!empty($row['created_at'])) {
+                $tgl = date('Y-m-d', strtotime($row['created_at']));
+                $tanggalUnik[$tgl] = true;
+            }
+        }
+
+        return count($tanggalUnik);
     }
 
     public function getRataPredikatSantri($id_santri)
@@ -469,7 +493,7 @@ class HafalanModel extends Model
 
     public function getGrafikAyatBulanan($id_santri, $periode = 'bulan_ini')
     {
-        $builder = $this->db->table('hafalan'); // Sesuaikan nama tabel kamu
+        $builder = $this->db->table('hafalan');
         $builder->select('DATE(created_at) as created_at, COUNT(*) as total');
         $builder->where('id_santri', $id_santri);
 
@@ -493,7 +517,7 @@ class HafalanModel extends Model
     {
         if (!$id_santri) return [];
 
-        $builder = $this->select('juz, MAX(surah) as surah, COUNT(id) as total_setoran, MAX(predikat) as predikat')
+        $builder = $this->select('juz, MAX(surah) as surah, MIN(ayat_mulai) as ayat_mulai, MAX(ayat_selesai) as ayat_selesai, COUNT(id) as total_setoran, MAX(predikat) as predikat')
             ->where('id_santri', $id_santri);
 
         $this->applyPeriodeFilter($builder, $periode);
