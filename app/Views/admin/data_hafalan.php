@@ -12,8 +12,8 @@ $hafalan  = $hafalan ?? [];
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Monitoring Data Hafalan</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Pantau perkembangan setoran hafalan Al-Qur'an, juz, surah, serta predikat nilai santri.</p>
+            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Monitoring Data Hafalan</h3>
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">Pantau perkembangan setoran hafalan Al-Qur'an, juz, surah, serta predikat nilai santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
@@ -60,8 +60,8 @@ $hafalan  = $hafalan ?? [];
                     <!-- Tambahkan id="predikatFilter" -->
                     <select id="predikatFilter" class="form-select form-select-sm bg-light border-0 py-2">
                         <option value="semua" selected>Predikat: Semua Nilai</option>
-                        <option value="mumtaz">Mumtaz (Sangat Baik)</option>
-                        <option value="jayyid jiddan">Jayyid Jiddan</option>
+                        <option value="mumtaz">Mumtaz (Sempurna)</option>
+                        <option value="jayyid jiddan">Jayyid Jiddan (Sangat Baik)</option>
                         <option value="jayyid">Jayyid (Baik)</option>
                         <option value="maqbul">Maqbul (Cukup)</option>
                     </select>
@@ -118,17 +118,17 @@ $hafalan  = $hafalan ?? [];
                                                 <?= $initials; ?>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-semibold text-secondary" style="font-size: 0.9rem;"><?= esc($h['nama_santri']); ?></h6>
+                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($h['nama_santri']); ?></h6>
                                                 <small class="text-secondary" style="font-size: 12px;"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y', strtotime($h['created_at'])); ?></small>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-secondary d-block">Juz <?= esc($h['juz']); ?> <span class="badge bg-light text-secondary border ms-1"><?= ucfirst($h['jenis']); ?></span></span>
+                                        <span class="fw-semibold text-dark-mode d-block">Juz <?= esc($h['juz']); ?> <span class="badge bg-light text-dark-mode border ms-1"><?= ucfirst($h['jenis']); ?></span></span>
                                         <small class="text-secondary" style="font-size: 12px;">Surah <?= esc($h['surah']); ?> (Ayat <?= $h['ayat_mulai']; ?>-<?= $h['ayat_selesai']; ?>)</small>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-secondary d-block"><?= esc($h['nama_guru']); ?></span>
+                                        <span class="fw-semibold text-dark-mode d-block"><?= esc($h['nama_guru']); ?></span>
                                         <small class="text-secondary" style="font-size: 12px;"><i class="fa-solid fa-chalkboard-user me-1"></i> Pengampu <?= esc($h['nama_kelas']); ?></small>
                                     </td>
                                     <td class="text-center">
