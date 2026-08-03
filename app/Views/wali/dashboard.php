@@ -25,7 +25,7 @@
                     </span>
                     <h2 class="fw-bold text-dark-mode mb-2" style="text-transform: none !important;">Ahlan wa Sahlan, <?= session()->get('name') ?>!</h2>
                     <p class="text-secondary mb-3 small" style="text-transform: none !important;">
-                        Pantau perkembangan hafalan Al-Qur'an, status kehadiran, serta informasi pembayaran sekolah ananda
+                        Pantau perkembangan hafalan Al-Qur'an dan informasi pembayaran sekolah ananda
                         <strong>
                             <?php if (!empty($anak)): ?>
                                 <?php
@@ -35,7 +35,7 @@
                             <?php else: ?>
                                 (Belum ada data anak terhubung)
                             <?php endif; ?>
-                        </strong> di sini.
+                        </strong> melalui sistem dashboard monitoring di sini.
                     </p>
 
                     <!-- Status Chip / Indikator Jumlah Anak Terhubung -->
