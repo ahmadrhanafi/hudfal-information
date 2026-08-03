@@ -32,8 +32,8 @@ $kelas = $kelas ?? [];
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Manajemen Data Pengajar</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola informasi data pengajar dan penugasan kelas di pesantren.</p>
+            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Manajemen Data Pengajar</h3>
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola informasi data pengajar dan penugasan kelas di pesantren.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
@@ -110,8 +110,8 @@ $kelas = $kelas ?? [];
                                                 <?= $initials; ?>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($g['nama_guru']); ?></h6>
-                                                <small class="text-muted"><i class="fa-solid fa-id-card text-secondary me-1"></i> NIP: <?= esc($g['nip']); ?></small>
+                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($g['nama_guru']); ?></h6>
+                                                <small class="text-secondary"><i class="fa-solid fa-id-card text-secondary me-1"></i> NIP: <?= esc($g['nip']); ?></small>
                                             </div>
                                         </div>
                                     </td>
@@ -162,7 +162,7 @@ $kelas = $kelas ?? [];
 
                         <!-- BARIS KOSONG JIKA TIDAK DITEMUKAN -->
                         <tr id="emptyRowUstadz" class="d-none">
-                            <td colspan="6" class="text-center py-4 text-muted">
+                            <td colspan="6" class="text-center py-4 text-secondary small">
                                 <i class="fa-solid fa-folder-open me-1"></i> Tidak ada data pengajar yang ditemukan.
                             </td>
                         </tr>

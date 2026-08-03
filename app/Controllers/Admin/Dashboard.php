@@ -25,7 +25,6 @@ class Dashboard extends BaseController
     {
         $periode = $this->request->getGet('periode') ?? 'bulan_ini';
 
-        // Logika sederhana untuk data grafik berdasarkan filter di dashboard
         $grafikData = $this->hafalanModel->getGrafikSetoranGlobal($periode);
 
         $data = [
@@ -35,7 +34,7 @@ class Dashboard extends BaseController
             'total_ustadz'    => $this->guruModel->countAll(),
             'total_santri'    => $this->santriModel->countAll(),
             'total_setoran'   => $this->hafalanModel->countAll(),
-            'total_pembayaran' => 0,
+            'total_khatam'     => $this->santriModel->where('status_aktif', 'lulus')->countAllResults(),
             'grafik_data'    => $grafikData,
         ];
 

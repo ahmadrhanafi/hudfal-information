@@ -7,7 +7,6 @@
  * @var string $total_santri
  * @var string $total_ustadz
  * @var string $total_setoran
- * @var string $total_pembayaran
  * @var string $periode
  * @var array{juz: string|int, persen: int|float} $juz_dominan
  * @var float|int $rata_setoran
@@ -52,7 +51,7 @@
                         <div class="bg-primary bg-opacity-10 p-3 rounded-3 text-primary">
                             <i class="fa-solid fa-chalkboard-user fa-lg"></i>
                         </div>
-                        <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold" style="text-transform: none !important;">Aktif</span>
+                        <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold" style="text-transform: none !important;">Status Aktif</span>
                     </div>
                     <h6 class="text-secondary mb-1 font-monospace small" style="text-transform: none !important;">TOTAL USTADZ</h6>
                     <h2 class="fw-bold text-dark-mode mb-0"><?= esc($total_ustadz ?? 0); ?></h2>
@@ -84,7 +83,7 @@
                         <div class="bg-warning bg-opacity-10 p-3 rounded-3 text-warning">
                             <i class="fa-solid fa-book-quran fa-lg"></i>
                         </div>
-                        <span class="badge bg-warning bg-opacity-10 text-warning fw-semibold" style="text-transform: none !important;">Bulan Ini</span>
+                        <span class="badge bg-warning bg-opacity-10 text-warning fw-semibold" style="text-transform: none !important;">Semua Data</span>
                     </div>
                     <h6 class="text-secondary mb-1 font-monospace small" style="text-transform: none !important;">SETORAN HAFALAN</h6>
                     <h2 class="fw-bold text-dark-mode mb-0"><?= esc($total_setoran ?? 0); ?></h2>
@@ -92,19 +91,23 @@
             </div>
         </div>
 
-        <!-- Card 4: Administrasi / Pembayaran -->
+        <!-- Card 4: Santri Khatam / Lulus -->
         <div class="col-xl-3 col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white position-relative overflow-hidden">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-3">
-                        <div class="bg-danger bg-opacity-10 p-3 rounded-3 text-danger">
-                            <i class="fa-solid fa-file-invoice-dollar fa-lg"></i>
+                        <div class="bg-success bg-opacity-10 p-3 rounded-3 text-success">
+                            <i class="fa-solid fa-award fa-lg"></i>
                         </div>
-                        <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold" style="text-transform: none !important;">Pembayaran</span>
+                        <span class="badge bg-success bg-opacity-10 text-success fw-semibold" style="text-transform: none !important;">Kelulusan
+                        </span>
                     </div>
-                    <h6 class="text-secondary mb-1 font-monospace small" style="text-transform: none !important;">PEMBAYARAN MASUK</h6>
-                    <!-- Gunakan number_format untuk format nominal rupiah otomatis -->
-                    <h2 class="fw-bold text-dark-mode mb-0" style="font-size: 1.5rem;">Rp <?= number_format($total_pembayaran ?? 0, 0, ',', '.'); ?></h2>
+                    <h6 class="text-secondary mb-1 font-monospace small" style="text-transform: none !important;">TOTAL HAFIDZ/AH</h6>
+                    <div class="d-flex align-baseline gap-2 mt-1">
+                        <h2 class="fw-bold text-dark-mode mb-0" style="font-size: 1.8rem;">
+                            <?= number_format($total_khatam ?? 0, 0, ',', '.'); ?>
+                        </h2>
+                    </div>
                 </div>
             </div>
         </div>
@@ -159,8 +162,8 @@
                             <span><i class="fa-solid fa-user-graduate me-2 text-success"></i> Kelola Data Santri</span>
                             <i class="fa-solid fa-arrow-right small"></i>
                         </a>
-                        <a href="<?= base_url('admin/administrasi') ?>" class="btn btn-light text-success fw-semibold rounded-3 py-2 text-start px-3 shadow-sm d-flex align-items-center justify-content-between" style="text-transform: none !important;">
-                            <span><i class="fa-solid fa-receipt me-2 text-success"></i> Kelola Pembayaran</span>
+                        <a href="<?= base_url('admin/hafalan') ?>" class="btn btn-light text-success fw-semibold rounded-3 py-2 text-start px-3 shadow-sm d-flex align-items-center justify-content-between" style="text-transform: none !important;">
+                            <span><i class="fa-solid fa-receipt me-2 text-success"></i> Data Hafalan Santri</span>
                             <i class="fa-solid fa-arrow-right small"></i>
                         </a>
                         <a href="<?= base_url('admin/ustadz') ?>" class="btn btn-light text-success fw-semibold rounded-3 py-2 text-start px-3 shadow-sm d-flex align-items-center justify-content-between" style="text-transform: none !important;">

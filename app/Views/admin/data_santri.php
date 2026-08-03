@@ -28,8 +28,8 @@ $wali   = $wali ?? [];
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Manajemen Data Santri</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola data induk, status keaktifan, dan informasi akademik seluruh santri pesantren.</p>
+            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Manajemen Data Santri</h3>
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola data induk, status keaktifan, dan informasi akademik seluruh santri pesantren.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
@@ -117,8 +117,8 @@ $wali   = $wali ?? [];
                                                 <?= $initials; ?>
                                             </div>
                                             <div>
-                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($s['nama_santri']); ?></h6>
-                                                <small class="text-muted">Wali: <?= esc($s['nama_wali'] ?? 'Tidak ada data'); ?></small>
+                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($s['nama_santri']); ?></h6>
+                                                <small class="text-secondary">Wali: <?= esc($s['nama_wali'] ?? 'Tidak ada data'); ?></small>
                                             </div>
                                         </div>
                                     </td>
