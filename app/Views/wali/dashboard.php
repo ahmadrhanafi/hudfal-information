@@ -23,7 +23,7 @@
                     <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill mb-2 fw-semibold small">
                         <i class="fa-solid fa-house-chimney-user me-1"></i> Portal Wali Santri
                     </span>
-                    <h2 class="fw-bold text-dark mb-2" style="text-transform: none !important;">Ahlan wa Sahlan, <?= session()->get('name') ?>!</h2>
+                    <h2 class="fw-bold text-dark-mode mb-2" style="text-transform: none !important;">Ahlan wa Sahlan, <?= session()->get('name') ?>!</h2>
                     <p class="text-secondary mb-3 small" style="text-transform: none !important;">
                         Pantau perkembangan hafalan Al-Qur'an, status kehadiran, serta informasi pembayaran sekolah ananda
                         <strong>
@@ -44,14 +44,14 @@
                             <div class="text-warning d-flex align-items-center justify-content-center">
                                 <i class="fa-solid fa-users-rectangle"></i>
                             </div>
-                            <span class="text-dark fw-semibold small"><?= esc((string)$stat_jumlah_anak); ?> Santri Aktif dalam Pantauan</span>
+                            <span class="text-dark fw-semibold small"><?= esc((string)$stat_jumlah_anak); ?> Santri Aktif Terhubung</span>
                         </div>
 
-                        <div class="d-flex gap-2">
+                        <!-- <div class="d-flex gap-2">
                             <a href="<?= base_url('wali/administrasi') ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
                                 <i class="fa-solid fa-wallet text-success me-1"></i> Cek Tagihan SPP
                             </a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -69,7 +69,7 @@
     <div class="row g-4">
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between">
-                <h5 class="fw-bold text-dark mb-0" style="margin-left: 20px !important;"><i class="fa-solid fa-layer-group text-success me-2"></i> Rekapitulasi Hafalan Ananda</h5>
+                <h5 class="fw-bold text-dark-mode mb-0" style="margin-left: 20px !important;"><i class="fa-solid fa-layer-group text-success me-2"></i> Rekapitulasi Hafalan Ananda</h5>
             </div>
         </div>
 
@@ -87,7 +87,7 @@
                                             <?= strtoupper(substr($a['nama_santri'], 0, 1)); ?>
                                         </div>
                                         <div>
-                                            <h5 class="fw-bold text-dark mb-1"><?= esc($a['nama_santri']); ?></h5>
+                                            <h5 class="fw-bold text-dark-mode mb-1"><?= esc($a['nama_santri']); ?></h5>
                                             <div class="d-flex flex-wrap gap-2 align-items-center">
                                                 <span class="badge bg-light text-secondary border px-2.5 py-1 rounded-pill" style="font-size: 10px;">
                                                     NIS: <?= esc($a['nis']); ?>
@@ -111,7 +111,7 @@
                                                 </div>
                                                 <div class="overflow-hidden">
                                                     <span class="text-secondary d-block fw-semibold text-uppercase" style="font-size: 0.6rem;">Capaian Terakhir</span>
-                                                    <span class="fw-bold text-dark text-truncate d-block" style="font-size: 0.7rem;"><?= esc($a['stat_juz'] ?? 'Belum ada data'); ?></span>
+                                                    <span class="fw-bold text-dark-mode text-truncate d-block" style="font-size: 0.7rem;"><?= esc($a['stat_juz'] ?? 'Belum ada data'); ?></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -124,7 +124,7 @@
                                                 </div>
                                                 <div class="overflow-hidden">
                                                     <span class="text-secondary d-block fw-semibold text-uppercase" style="font-size: 0.6rem;">Total Setoran</span>
-                                                    <span class="fw-bold text-dark d-block" style="font-size: 0.7rem;"><?= esc($a['stat_total_setoran'] ?? 0); ?> <span class="fw-normal text-secondary" style="font-size: 0.75rem;">Kali</span></span>
+                                                    <span class="fw-bold text-dark-mode d-block" style="font-size: 0.7rem;"><?= esc($a['stat_total_setoran'] ?? 0); ?> <span class="fw-normal text-secondary" style="font-size: 0.75rem;">Kali</span></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -151,7 +151,7 @@
                         <div class="text-warning mb-3">
                             <i class="fa-solid fa-triangle-exclamation fa-3x"></i>
                         </div>
-                        <h5 class="fw-bold text-dark">Belum Ada Anak Terhubung</h5>
+                        <h5 class="fw-bold text-dark-mode">Belum Ada Anak Terhubung</h5>
                         <p class="text-secondary small mb-0">Belum ada data santri/anak yang dihubungkan dengan akun wali ini. Silakan hubungi admin pesantren.</p>
                     </div>
                 </div>
@@ -166,7 +166,7 @@
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-3">
-                        <h5 class="fw-bold text-dark m-0" style="text-transform: none !important;">
+                        <h5 class="fw-bold text-dark-mode m-0" style="text-transform: none !important;">
                             <i class="fa-solid fa-book-open-reader text-success me-2"></i> Setoran Hafalan Terbaru Ananda
                         </h5>
                         <a href="<?= base_url('wali/riwayat-hafalan') ?>" class="text-success small fw-semibold text-decoration-none">Riwayat Lengkap <i class="fa-solid fa-arrow-right ms-1"></i></a>
@@ -188,10 +188,10 @@
                                     <?php foreach ($setoran_terbaru as $row): ?>
                                         <tr>
                                             <td class="ps-3">
-                                                <div class="fw-semibold text-dark small">
+                                                <div class="fw-semibold text-dark-mode small">
                                                     <?= date('d M Y', strtotime($row['tanggal'] ?? 'now')); ?>
                                                 </div>
-                                                <small class="text-muted" style="font-size: 0.75rem;">
+                                                <small class="text-secondary" style="font-size: 0.75rem;">
                                                     <i class="fa-regular fa-clock me-1"></i>
                                                     <?php
                                                     $waktuInput = $row['jam'] ?? $row['created_at'] ?? $row['waktu'] ?? null;
@@ -204,7 +204,7 @@
                                                 </small>
                                             </td>
                                             <td>
-                                                <div class="fw-semibold text-dark small">
+                                                <div class="fw-semibold text-dark-mode small">
                                                     <?= esc($row['nama_santri']); ?>
                                                 </div>
                                                 <span class="badge bg-success bg-opacity-10 text-success px-2 py-0 rounded-pill" style="font-size: 0.65rem;">
@@ -212,8 +212,8 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <span class="small text-dark d-block fw-semibold"><?= esc($row['surah'] ?? $row['capaian'] ?? '-'); ?></span>
-                                                <small class="text-muted" style="font-size: 0.75rem;">
+                                                <span class="small text-dark-mode d-block fw-semibold"><?= esc($row['surah'] ?? $row['capaian'] ?? '-'); ?></span>
+                                                <small class="text-secondary" style="font-size: 0.75rem;">
                                                     <?php
                                                     if (!empty($row['ayat_mulai']) && !empty($row['ayat_selesai'])) {
                                                         echo 'Ayat ' . esc($row['ayat_mulai']) . ' - ' . esc($row['ayat_selesai']);
