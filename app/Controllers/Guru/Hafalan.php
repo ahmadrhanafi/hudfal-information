@@ -6,18 +6,22 @@ use App\Controllers\BaseController;
 use App\Models\HafalanModel;
 use App\Models\SantriModel;
 use App\Models\GuruModel;
+use App\Models\KelasModel;
+
 
 class Hafalan extends BaseController
 {
     protected $hafalanModel;
     protected $santriModel;
     protected $guruModel;
+    protected $kelasModel;
 
     public function __construct()
     {
         $this->hafalanModel = new HafalanModel();
         $this->santriModel  = new SantriModel();
         $this->guruModel = new GuruModel();
+        $this->kelasModel = new KelasModel();
     }
 
     public function index()
@@ -25,13 +29,21 @@ class Hafalan extends BaseController
         $idGuru  = session()->get('ref_id');
         $idKelas = session()->get('id_kelas');
 
+        $guru = $this->guruModel->find($idGuru);
+        $id_kelas_diampu = $guru['id_kelas_diampu'] ?? $idKelas;
+
+        $kelas = $this->kelasModel->find($id_kelas_diampu);
+
+        $namaKelasString = $kelas['nama_kelas'] ?? '-';
+
         $data = [
-            'title'   => 'Data Hafalan',
-            'icon'    => 'fa-solid fa-book-quran',
-            'hafalan' => $this->hafalanModel->getHafalanByGuru($idGuru)->paginate(10, 'hafalan'),
-            'pager'   => $this->hafalanModel->pager, // Wajib ada agar link pagination bisa dirender di view
-            'santri'  => $this->santriModel->getSantriByKelas($idKelas),
-            'guru'    => $this->guruModel->findAll()
+            'title'      => 'Data Hafalan',
+            'icon'       => 'fa-solid fa-book-quran',
+            'nama_kelas' => $namaKelasString,
+            'hafalan'    => $this->hafalanModel->getHafalanByGuru($idGuru)->paginate(10, 'hafalan'),
+            'pager'      => $this->hafalanModel->pager,
+            'santri'     => $this->santriModel->getSantriByKelas($id_kelas_diampu),
+            'guru'       => $this->guruModel->findAll()
         ];
 
         return view('guru/data_hafalan', $data);

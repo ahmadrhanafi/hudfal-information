@@ -5,23 +5,24 @@ namespace App\Controllers\Guru;
 use App\Controllers\BaseController;
 use App\Models\SantriModel;
 use App\Models\GuruModel;
+use App\Models\KelasModel;
 
 class Santri extends BaseController
 {
     protected $santriModel;
     protected $guruModel;
+    protected $kelasModel;
 
     public function __construct()
     {
         $this->santriModel = new SantriModel();
         $this->guruModel = new GuruModel();
+        $this->kelasModel = new KelasModel();
     }
+
     public function index()
     {
         $role = session()->get('role');
-
-        // Asumsikan saat login Anda juga menyimpan NIP atau ID Guru di session, 
-        // atau kita cari berdasarkan nama yang sedang aktif.
         $namaGuru = session()->get('name');
 
         if ($role == 'guru') {
@@ -33,16 +34,27 @@ class Santri extends BaseController
 
             $idKelasDiampu = $guru ? $guru['id_kelas_diampu'] : null;
 
+            $namaKelasString = '-';
+            if ($idKelasDiampu) {
+                $kelas = $this->kelasModel->find($idKelasDiampu);
+                $namaKelasString = $kelas['nama_kelas'] ?? '-';
+            }
+
             $keyword = $this->request->getGet('keyword');
             $status = $this->request->getGet('status');
 
             $santri = $this->santriModel->searchSantri($keyword, $idKelasDiampu, $status);
 
+            // Jika searchSantri mengembalikan query builder, tambahkan paginate(10) atau findAll()
+            // Contoh jika pakai pagination: 
+            // $santri = $this->santriModel->searchSantri($keyword, $idKelasDiampu, $status)->paginate(10, 'santri');
+
             $data = [
-                'title'  => 'Data Santri',
-                'icon'   => 'fa-solid fa-user-graduate',
-                'santri' => $santri,
-                'role'   => $role
+                'title'      => 'Data Santri',
+                'icon'       => 'fa-solid fa-user-graduate',
+                'santri'     => $santri,
+                'nama_kelas' => $namaKelasString,
+                'role'       => $role
             ];
 
             return view('guru/data_santri', $data);

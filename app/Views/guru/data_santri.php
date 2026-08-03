@@ -4,6 +4,9 @@
 
 <?php
 $santri = $santri ?? [];
+/** @var \CodeIgniter\Pager\Pager $pager
+ * @var string $nama_kelas
+ **/
 ?>
 
 <div class="container-fluid px-0">
@@ -11,7 +14,7 @@ $santri = $santri ?? [];
     <!-- Page Header -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Data Santri Binaan</h3>
+            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Data Santri Kelas <?= esc($nama_kelas); ?></h3>
             <p class="text-muted mb-0 small text-dark-mode" style="text-transform: none !important;">Daftar santri yang berada di bawah perwalian atau kelas yang Anda ajar.</p>
         </div>
         <div class="d-flex align-items-center gap-2">

@@ -5,22 +5,46 @@ namespace App\Controllers\Guru;
 use App\Controllers\BaseController;
 use App\Models\HafalanModel;
 use App\Models\SantriModel;
+use App\Models\GuruModel;
+use App\Models\KelasModel;
 
 class RiwayatHafalan extends BaseController
 {
     protected $hafalanModel;
     protected $santriModel;
+    protected $guruModel;
+    protected $kelasModel;
 
     public function __construct()
     {
         $this->hafalanModel = new HafalanModel();
-        $this->santriModel = new SantriModel();
+        $this->santriModel  = new SantriModel();
+        $this->guruModel    = new GuruModel();
+        $this->kelasModel   = new KelasModel();
     }
 
     public function index()
     {
         $keyword = $this->request->getGet('keyword');
+
+        $namaGuru = session()->get('name');
+        $idGuru = session()->get('ref_id');
+
         $idKelasGuru = session()->get('id_kelas');
+        if (empty($idKelasGuru) && !empty($idGuru)) {
+            $guru = $this->guruModel->find($idGuru);
+            if (!$guru) {
+                $guru = $this->guruModel->where('nama_guru', $namaGuru)->first();
+            }
+            $idKelasGuru = $guru['id_kelas_diampu'] ?? null;
+        }
+
+        // Ambil string nama kelas untuk ditampilkan di view
+        $namaKelasString = '-';
+        if (!empty($idKelasGuru)) {
+            $kelas = $this->kelasModel->find($idKelasGuru);
+            $namaKelasString = $kelas['nama_kelas'] ?? '-';
+        }
 
         $builder = $this->santriModel->select('santri.*, kelas.nama_kelas, users.name as nama_wali')
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
@@ -48,23 +72,22 @@ class RiwayatHafalan extends BaseController
         $predikatUmum = 'Belum Ada';
 
         if (!empty($idSantriKelas)) {
-            $hafalanModel = new \App\Models\HafalanModel();
             $bulanIni = date('m');
             $tahunIni = date('Y');
 
-            $totalSetoranBulanIni = $hafalanModel->whereIn('id_santri', $idSantriKelas)
+            $totalSetoranBulanIni = $this->hafalanModel->whereIn('id_santri', $idSantriKelas)
                 ->where('MONTH(created_at)', $bulanIni)
                 ->where('YEAR(created_at)', $tahunIni)
                 ->countAllResults();
 
-            $santriAktifBulanIni = $hafalanModel->select('id_santri')
+            $santriAktifBulanIni = $this->hafalanModel->select('id_santri')
                 ->whereIn('id_santri', $idSantriKelas)
                 ->where('MONTH(created_at)', $bulanIni)
                 ->where('YEAR(created_at)', $tahunIni)
                 ->groupBy('id_santri')
                 ->countAllResults();
 
-            $dominantPredikat = $hafalanModel->select('predikat, COUNT(predikat) as jumlah')
+            $dominantPredikat = $this->hafalanModel->select('predikat, COUNT(predikat) as jumlah')
                 ->whereIn('id_santri', $idSantriKelas)
                 ->where('MONTH(created_at)', $bulanIni)
                 ->where('YEAR(created_at)', $tahunIni)
@@ -81,6 +104,7 @@ class RiwayatHafalan extends BaseController
             'title'                   => 'Riwayat Hafalan',
             'santri'                  => $santri,
             'keyword'                 => $keyword,
+            'nama_kelas'              => $namaKelasString,
             'total_setoran_bulan_ini' => $totalSetoranBulanIni,
             'santri_aktif'            => $santriAktifBulanIni,
             'total_santri'            => count($santri),
@@ -102,17 +126,17 @@ class RiwayatHafalan extends BaseController
             return redirect()->back()->with('error', 'Data santri tidak ditemukan.');
         }
 
-        // Ambil semua riwayat hafalan berdasarkan id_santri
         $riwayat = $this->hafalanModel->where('id_santri', $id_santri)
             ->orderBy('created_at', 'DESC')
             ->findAll();
 
         $data = [
             'title'   => 'Detail Riwayat Hafalan - ' . $santri['nama_santri'],
+            'icon'    => 'fa-solid fa-book-quran',
             'santri'  => $santri,
             'riwayat' => $riwayat
         ];
 
-        return view('guru/_detail_riwayat_hafalan', $data); // Sesuaikan path view lo
+        return view('guru/_detail_riwayat_hafalan', $data);
     }
 }

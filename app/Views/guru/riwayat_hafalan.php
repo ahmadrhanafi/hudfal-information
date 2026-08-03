@@ -4,6 +4,9 @@
 
 <?php
 $santri = $santri ?? [];
+/** @var \CodeIgniter\Pager\Pager $pager
+ * @var string $nama_kelas
+ **/
 ?>
 
 <div class="container-fluid px-0">
@@ -11,7 +14,7 @@ $santri = $santri ?? [];
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Riwayat Setoran Hafalan Santri</h3>
+            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Riwayat Hafalan Santri Kelas <?= esc($nama_kelas); ?></h3>
             <p class="text-muted mb-0 small text-dark-mode" style="text-transform: none !important;">Pantau rekam jejak hafalan Al-Qur'an (ziyadah dan murojaah) santri binaan kelas Anda.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
@@ -33,7 +36,7 @@ $santri = $santri ?? [];
                     <div>
                         <span class="text-muted text-dark-mode small fw-medium" style="text-transform: none !important;">TOTAL SETORAN BULAN INI</span>
                         <h3 class="fw-bold text-dark-mode mb-0 mt-1">
-                            <?= $total_setoran_bulan_ini ?? 0; ?> <span class="fs-6 fw-normal text-muted text-dark-mode">Sesi</span>
+                            <?= $total_setoran_bulan_ini ?? 0; ?> <span class="fs-6 fw-normal text-muted text-dark-mode">Hafalan</span>
                         </h3>
                     </div>
                 </div>

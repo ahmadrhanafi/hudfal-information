@@ -84,8 +84,10 @@
                     <div>
                         <span class="text-muted text-dark-mode small fw-medium" style="text-transform: none !important;">PREDIKAT TERBANYAK</span>
                         <h3 class="fw-bold text-dark-mode mb-0 mt-1">
-                            <?= esc($predikat_umum['predikat'] ?? 'Mumtaz'); ?>
-                            <span class="fs-6 fw-normal text-muted text-dark-mode">(<?= esc($predikat_umum['keterangan'] ?? 'Sangat Baik'); ?>)</span>
+                            <?= esc($predikat_umum['predikat'] ?? 'Mumtaz'); ?> <br>
+                            <span class="fs-6 fw-normal text-secondary" style="font-size: 0.75rem !important;">
+                                (<?= esc($predikat_umum['keterangan'] ?? 'Sangat Baik'); ?>)
+                            </span>
                         </h3>
                     </div>
                 </div>

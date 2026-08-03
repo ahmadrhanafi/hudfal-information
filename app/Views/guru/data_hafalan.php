@@ -3,7 +3,9 @@
 <?= $this->section('content') ?>
 
 <?php
-/** @var \CodeIgniter\Pager\Pager $pager */
+/** @var \CodeIgniter\Pager\Pager $pager
+ * @var string $nama_kelas
+ **/
 ?>
 
 <div class="container-fluid px-0">
@@ -11,7 +13,7 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Input & Rekap Hafalan Santri</h3>
+            <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Data Hafalan Santri Kelas <?= esc($nama_kelas); ?></h3>
             <p class="text-muted mb-0 small text-dark-mode" style="text-transform: none !important;">Kelola catatan setoran hafalan Al-Qur'an harian untuk santri kelas binaan Anda.</p>
         </div>
         <div class="d-flex align-items-center gap-2">

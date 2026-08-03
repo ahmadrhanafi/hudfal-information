@@ -62,7 +62,6 @@ $santri = $santri ?? [];
                         <th class="py-3" style="width: 20%;">Jenis & Target</th>
                         <th class="py-3" style="width: 20%;">Capaian (Juz / Surah)</th>
                         <th class="py-3 text-center" style="width: 15%;">Predikat</th>
-                        <th class="py-3 text-end pe-4" style="width: 15%;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="tabelRiwayat">
@@ -97,16 +96,6 @@ $santri = $santri ?? [];
                                     elseif ($predikat == 'jayyid') $badgeClass = 'bg-warning text-dark';
                                     ?>
                                     <span class="badge <?= $badgeClass; ?> px-3 py-1 rounded-pill small fw-semibold"><?= esc($row['predikat']); ?></span>
-                                </td>
-                                <td class="text-end pe-4">
-                                    <div class="d-flex justify-content-end gap-1">
-                                        <a href="<?= base_url('guru/hafalan/edit/' . $row['id']) ?>" class="btn btn-sm btn-light text-success border-0 rounded-2" title="Edit Detail">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </a>
-                                        <a href="<?= base_url('guru/hafalan/hapus/' . $row['id']) ?>" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus Log" onclick="return confirm('Hapus riwayat setoran ini?')">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </a>
-                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
