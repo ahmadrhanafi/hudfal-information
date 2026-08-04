@@ -6,13 +6,13 @@ use CodeIgniter\Model;
 
 class HafalanModel extends Model
 {
-    protected $table            = 'hafalan';
-    protected $primaryKey       = 'id';
+    protected $table = 'hafalan';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType = 'array';
 
     // Sesuaikan dengan kolom yang ada di database migration
-    protected $allowedFields    = [
+    protected $allowedFields = [
         'id_santri',
         'id_guru',
         'jenis',
@@ -26,9 +26,9 @@ class HafalanModel extends Model
 
     // Mengaktifkan fitur timestamp otomatis (created_at & updated_at)
     protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    protected $dateFormat = 'datetime';
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
 
     // ==========================================
     // GLOBAL DI DASHBOARD ADMIN    
@@ -44,8 +44,8 @@ class HafalanModel extends Model
 
         $totalAyat = 0;
         foreach ($rows as $row) {
-            $mulai = (int)($row['ayat_mulai'] ?? 0);
-            $selesai = (int)($row['ayat_selesai'] ?? 0);
+            $mulai = (int) ($row['ayat_mulai'] ?? 0);
+            $selesai = (int) ($row['ayat_selesai'] ?? 0);
             if ($selesai >= $mulai) {
                 $totalAyat += ($selesai - $mulai + 1);
             }
@@ -132,7 +132,7 @@ class HafalanModel extends Model
         $dataMentah = [];
         foreach ($result as $row) {
             $juzAngka = $row['juz'];
-            $jumlahAyat = (int)$row['total_ayat_juz'];
+            $jumlahAyat = (int) $row['total_ayat_juz'];
             $persen = ($grandTotalAyat > 0) ? round(($jumlahAyat / $grandTotalAyat) * 100) : 0;
 
             $dataMentah[] = [
@@ -193,7 +193,7 @@ class HafalanModel extends Model
             foreach ($result as $row) {
                 $hariInggris = $row['nama_hari_en'];
                 $hariIndo = $translation[$hariInggris] ?? $hariInggris;
-                $dataPerHari[$hariIndo] = (int)$row['total_santri'];
+                $dataPerHari[$hariIndo] = (int) $row['total_santri'];
             }
 
             $daftarHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
@@ -206,7 +206,7 @@ class HafalanModel extends Model
         elseif ($periode == 'bulan_ini' || $periode == 'bulan_lalu') {
             $targetBulan = ($periode == 'bulan_ini') ? date('m') : date('m', strtotime('-1 month'));
             $targetTahun = ($periode == 'bulan_ini') ? date('Y') : date('Y', strtotime('-1 month'));
-            $jumlahHari = cal_days_in_month(CAL_GREGORIAN, (int)$targetBulan, (int)$targetTahun);
+            $jumlahHari = cal_days_in_month(CAL_GREGORIAN, (int) $targetBulan, (int) $targetTahun);
 
             $builder = $this->db->table($this->table);
             $builder->select("DAY(created_at) as hari_angka, COUNT(DISTINCT id_santri) as total_santri");
@@ -217,7 +217,7 @@ class HafalanModel extends Model
 
             $dataPerHari = [];
             foreach ($result as $row) {
-                $dataPerHari[(int)$row['hari_angka']] = (int)$row['total_santri'];
+                $dataPerHari[(int) $row['hari_angka']] = (int) $row['total_santri'];
             }
 
             for ($i = 1; $i <= $jumlahHari; $i++) {
@@ -237,7 +237,7 @@ class HafalanModel extends Model
 
             $dataPerBulan = [];
             foreach ($result as $row) {
-                $dataPerBulan[(int)$row['bulan_angka']] = (int)$row['total_santri'];
+                $dataPerBulan[(int) $row['bulan_angka']] = (int) $row['total_santri'];
             }
 
             $namaBulan = [
@@ -350,7 +350,8 @@ class HafalanModel extends Model
 
     public function getRataRataKelas($id_guru, $periode = 'bulan_ini')
     {
-        if (!$id_guru) return 0;
+        if (!$id_guru)
+            return 0;
 
         $builder = $this->select("AVG((ayat_selesai - ayat_mulai) + 1) as rata_rata")
             ->where('id_guru', $id_guru);
@@ -363,7 +364,8 @@ class HafalanModel extends Model
 
     public function getJuzDominanKelas($id_guru, $periode = 'bulan_ini')
     {
-        if (!$id_guru) return ['nama' => 'Juz 30', 'persentase' => 0];
+        if (!$id_guru)
+            return ['nama' => 'Juz 30', 'persentase' => 0];
 
         $builder = $this->select('juz, COUNT(*) as total')
             ->where('id_guru', $id_guru);
@@ -373,7 +375,8 @@ class HafalanModel extends Model
             ->orderBy('total', 'DESC')
             ->first();
 
-        if (!$query) return ['nama' => 'Juz 30', 'persentase' => 0];
+        if (!$query)
+            return ['nama' => 'Juz 30', 'persentase' => 0];
 
         // Hitung total keseluruhan pada periode yang sama
         $builderTotal = $this->where('id_guru', $id_guru);
@@ -390,7 +393,8 @@ class HafalanModel extends Model
 
     public function getPredikatTerbanyakKelas($id_guru, $periode = 'bulan_ini')
     {
-        if (!$id_guru) return ['predikat' => 'Mumtaz', 'keterangan' => 'Sangat Baik'];
+        if (!$id_guru)
+            return ['predikat' => 'Mumtaz', 'keterangan' => 'Sangat Baik'];
 
         $builder = $this->select('predikat, COUNT(*) as total')
             ->where('id_guru', $id_guru);
@@ -403,15 +407,18 @@ class HafalanModel extends Model
         $predikat = $query['predikat'] ?? 'Mumtaz';
 
         $ket = 'Sangat Baik';
-        if ($predikat == 'Jayyid Jiddan') $ket = 'Baik Sekali';
-        elseif ($predikat == 'Jayyid') $ket = 'Baik';
+        if ($predikat == 'Jayyid Jiddan')
+            $ket = 'Baik Sekali';
+        elseif ($predikat == 'Jayyid')
+            $ket = 'Baik';
 
         return ['predikat' => $predikat, 'keterangan' => $ket];
     }
 
     public function getProgressJuzKelas($id_guru, $periode = 'bulan_ini')
     {
-        if (!$id_guru) return [];
+        if (!$id_guru)
+            return [];
 
         $builder = $this->select('juz, COUNT(*) as jumlah')
             ->where('id_guru', $id_guru);
@@ -422,7 +429,8 @@ class HafalanModel extends Model
 
     public function getGrafikSetoranKelas($id_guru, $periode = 'bulan_ini')
     {
-        if (!$id_guru) return [];
+        if (!$id_guru)
+            return [];
 
         $builder = $this->select("DATE(created_at) as created_at, COUNT(*) as total")
             ->where('id_guru', $id_guru);
@@ -436,7 +444,8 @@ class HafalanModel extends Model
     // Method untuk mengambil rincian data laporan cetak
     public function getDetailHafalanByPeriode($id_guru, $periode = 'bulan_ini')
     {
-        if (!$id_guru) return [];
+        if (!$id_guru)
+            return [];
 
         $this->select('hafalan.*, santri.nama_santri');
         $this->join('santri', 'santri.id = hafalan.id_santri');
@@ -478,7 +487,8 @@ class HafalanModel extends Model
 
     public function getDetailHafalanSantriByPeriode($id_santri, $periode = 'bulan_ini')
     {
-        if (!$id_santri) return [];
+        if (!$id_santri)
+            return [];
         $builder = $this->select('*')->where('id_santri', $id_santri);
         $this->applyPeriodeFilter($builder, $periode);
         return $builder->orderBy('created_at', 'DESC')->findAll();
@@ -486,7 +496,8 @@ class HafalanModel extends Model
 
     public function getTotalJuzSelesai($id_santri, $periode = 'bulan_ini')
     {
-        if (!$id_santri) return 0;
+        if (!$id_santri)
+            return 0;
 
         $builder = $this->select('COUNT(DISTINCT juz) as total_juz')
             ->where('id_santri', $id_santri);
@@ -505,14 +516,16 @@ class HafalanModel extends Model
 
     public function getStreakHarian($id_santri)
     {
-        if (!$id_santri) return 0;
+        if (!$id_santri)
+            return 0;
 
         $setoran = $this->select('created_at')
             ->where('id_santri', $id_santri)
             ->orderBy('created_at', 'DESC')
             ->findAll();
 
-        if (empty($setoran)) return 0;
+        if (empty($setoran))
+            return 0;
 
         $tanggalUnik = [];
         foreach ($setoran as $row) {
@@ -527,7 +540,8 @@ class HafalanModel extends Model
 
     public function getRataPredikatSantri($id_santri)
     {
-        if (!$id_santri) return ['predikat' => '-', 'keterangan' => '-'];
+        if (!$id_santri)
+            return ['predikat' => '-', 'keterangan' => '-'];
 
         $query = $this->select('predikat, COUNT(*) as total')
             ->where('id_santri', $id_santri)
@@ -541,10 +555,12 @@ class HafalanModel extends Model
 
     public function getKomposisiSetoran($id_santri)
     {
-        if (!$id_santri) return ['ziyadah' => 0, 'murojaah' => 0];
+        if (!$id_santri)
+            return ['ziyadah' => 0, 'murojaah' => 0];
 
         $total = $this->where('id_santri', $id_santri)->countAllResults();
-        if ($total == 0) return ['ziyadah' => 0, 'murojaah' => 0];
+        if ($total == 0)
+            return ['ziyadah' => 0, 'murojaah' => 0];
 
         $ziyadah = $this->where('id_santri', $id_santri)->where('jenis', 'ziyadah')->countAllResults();
 
@@ -581,9 +597,10 @@ class HafalanModel extends Model
 
     public function getDetailCapaianJuz($id_santri, $periode = 'bulan_ini')
     {
-        if (!$id_santri) return [];
+        if (!$id_santri)
+            return [];
 
-        $builder = $this->select('juz, MAX(surah) as surah, MIN(ayat_mulai) as ayat_mulai, MAX(ayat_selesai) as ayat_selesai, COUNT(id) as total_setoran, MAX(predikat) as predikat')
+        $builder = $this->select('juz, MAX(surah) as surah, MIN(ayat_mulai) as ayat_mulai, MAX(ayat_selesai) as ayat_selesai, COUNT(id) as total_setoran, MAX(predikat) as predikat, MAX(created_at) as created_at, MAX(jenis) as jenis')
             ->where('id_santri', $id_santri);
 
         $this->applyPeriodeFilter($builder, $periode);
@@ -619,7 +636,8 @@ class HafalanModel extends Model
 
     public function getRiwayatBySantri($idSantri, $periode = 'bulan_ini')
     {
-        if (!$idSantri) return [];
+        if (!$idSantri)
+            return [];
 
         $builder = $this->select('hafalan.*, guru.nama_guru, guru.no_hp')
             ->join('guru', 'guru.id = hafalan.id_guru', 'left')
@@ -653,8 +671,8 @@ class HafalanModel extends Model
         $predikatDominan = is_array($predikatData) ? ($predikatData['predikat'] ?? '-') : '-';
 
         return [
-            'juz_aktif'        => $juzAktif,
-            'total_setoran'    => $totalSetoran,
+            'juz_aktif' => $juzAktif,
+            'total_setoran' => $totalSetoran,
             'predikat_dominan' => $predikatDominan
         ];
     }
