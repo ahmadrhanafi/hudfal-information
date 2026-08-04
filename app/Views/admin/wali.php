@@ -95,27 +95,27 @@
                                     <td class="text-muted small"><?= esc($w['alamat']); ?></td>
                                     <td class="text-center">
                                         <!-- Tombol Detail Baru -->
-                                        <button type="button" class="btn btn-sm btn-outline-info me-2 btn-detail"
+                                        <button type="button" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Detail"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalDetail"
                                             data-nama="<?= esc($w['nama_wali']); ?>"
                                             data-nohp="<?= esc($w['no_hp'] ?? ''); ?>"
                                             data-alamat="<?= esc($w['alamat']); ?>"
                                             data-santri='<?= json_encode($w['santri'] ?? []); ?>'>
-                                            <i class="fa-solid fa-eye"></i> Detail
+                                            <i class="fa-solid fa-eye"></i>
                                         </button>
 
-                                        <button type="button" class="btn btn-sm btn-outline-primary me-2 btn-edit"
+                                        <button type="button" class="btn btn-sm btn-light text-warning border-0 rounded-2 btn-edit" title="Edit"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalEdit"
                                             data-id="<?= $w['id']; ?>"
                                             data-nama="<?= esc($w['nama_wali']); ?>"
                                             data-nohp="<?= esc($w['no_hp'] ?? ''); ?>"
                                             data-alamat="<?= esc($w['alamat']); ?>">
-                                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                                            <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
-                                        <a href="<?= base_url('admin/wali-santri/delete/' . $w['id']); ?>" onclick="return confirm('Yakin ingin menghapus data wali ini?')" class="btn btn-sm btn-outline-danger">
-                                            <i class="fa-solid fa-trash"></i> Hapus
+                                        <a href="<?= base_url('admin/wali-santri/delete/' . $w['id']); ?>" onclick="return confirm('Yakin ingin menghapus data wali ini?')" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus">
+                                            <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>
                                 </tr>

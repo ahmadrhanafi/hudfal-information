@@ -84,7 +84,7 @@ $kelas = $kelas ?? [];
                         <tr>
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
                             <th class="py-3" style="width: 30%;">NIP & Nama Pengajar</th>
-                            <th class="py-3" style="width: 25%;">No Whatsapp</th>
+                            <th class="py-3" style="width: 25%;">Chat Whatsapp</th>
                             <th class="py-3" style="width: 15%;">Jenis Kelamin</th>
                             <th class="py-3" style="width: 25%;">Kelas Diampu</th>
                             <th class="py-3" style="width: 25%;">Status</th>
@@ -116,9 +116,11 @@ $kelas = $kelas ?? [];
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="text-secondary small fw-medium">
-                                            <?= esc($g['no_hp'] ?? '-'); ?>
-                                        </span>
+                                        <a href="https://wa.me/<?= esc($w['no_hp'] ?? ''); ?>" target="_blank" rel="noopener noreferrer">
+                                            <span class="badge bg-success text-light border">
+                                                <i class="fa-brands fa-whatsapp text-light me-1"></i> Click to Chat
+                                            </span>
+                                        </a>
                                     </td>
                                     <td>
                                         <span class="text-secondary small fw-medium">

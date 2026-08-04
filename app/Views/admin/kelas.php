@@ -90,15 +90,15 @@
                                     <td class="text-muted small"><?= esc($k['created_at']); ?></td>
                                     <td class="text-center pe-4">
                                         <!-- Tombol Trigger Modal Edit -->
-                                        <button type="button" class="btn btn-sm btn-outline-primary me-2 btn-edit"
+                                        <button type="button" class="btn btn-sm btn-light text-warning border-0 rounded-2 btn-edit" title="Edit"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalEdit"
                                             data-id="<?= $k['id']; ?>"
                                             data-namakelas="<?= esc($k['nama_kelas']); ?>">
-                                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                                            <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
-                                        <a href="<?= base_url('admin/kelas/delete/' . $k['id']); ?>" onclick="return confirm('Yakin ingin menghapus kelas ini?')" class="btn btn-sm btn-outline-danger">
-                                            <i class="fa-solid fa-trash"></i> Hapus
+                                        <a href="<?= base_url('admin/kelas/delete/' . $k['id']); ?>" onclick="return confirm('Yakin ingin menghapus kelas ini?')" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus">
+                                            <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>
                                 </tr>
