@@ -26,7 +26,7 @@
             <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola catatan tagihan pembayaran serta administrasi keuangan santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <a href="<?= site_url('admin/administrasi/export?month=' . ($selectedMonth ?? date('m')) . '&status=' . ($selectedStatus ?? '')); ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none" style="text-transform: none !important;">
+            <a href="<?= site_url('admin/administrasi/export?month=' . ($selectedMonth ?? date('m')) . '&year=' . ($selectedYear ?? date('Y')) . '&status=' . ($selectedStatus ?? '')); ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none" style="text-transform: none !important;">
                 <i class="fa-solid fa-file-excel text-success me-1"></i> Rekap Pembayaran
             </a>
             <a href="#" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" style="text-transform: none !important;" data-bs-toggle="modal" data-bs-target="#tambahModal">
@@ -88,7 +88,8 @@
         <div class="card-body p-3">
             <form action="" method="get" id="filterForm">
                 <div class="row g-3 align-items-center">
-                    <div class="col-lg-5">
+                    <!-- Kolom Pencarian -->
+                    <div class="col-lg-4 col-md-6">
                         <div class="input-group input-group-sm">
                             <span class="input-group-text bg-light border-0 ps-3 text-muted">
                                 <i class="fa-solid fa-search"></i>
@@ -96,10 +97,11 @@
                             <input type="text" name="keyword" value="<?= esc($keyword ?? ''); ?>" class="form-control bg-light border-0 py-2" placeholder="Cari nama santri..." onchange="this.form.submit()">
                         </div>
                     </div>
+
+                    <!-- Kolom Pilih Bulan (Hanya Nama Bulan Saja) -->
                     <div class="col-lg-3 col-md-6">
                         <select name="month" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
                             <?php
-                            // Array nama-nama bulan dalam bahasa Indonesia
                             $namaBulan = [
                                 '01' => 'Januari',
                                 '02' => 'Februari',
@@ -115,21 +117,31 @@
                                 '12' => 'Desember'
                             ];
 
-                            $currentYear = $selectedYear ?? date('Y');
-
-                            for ($m = 12; $m >= 1; $m--) {
-                                $mFormatted = str_pad($m, 2, '0', STR_PAD_LEFT);
-                                $label = $namaBulan[$mFormatted] . ' ' . $currentYear;
-                                $isSelected = ($selectedMonth == $mFormatted) ? 'selected' : '';
-
-                                echo "<option value=\"{$mFormatted}\" {$isSelected}>{$label}</option>";
+                            foreach ($namaBulan as $mKey => $mVal) {
+                                $isSelected = ($selectedMonth == $mKey) ? 'selected' : '';
+                                echo "<option value=\"{$mKey}\" {$isSelected}>{$mVal}</option>";
                             }
                             ?>
                         </select>
                     </div>
-                    <div class="col-lg-4 col-md-6">
+
+                    <!-- Kolom Pilih Tahun -->
+                    <div class="col-lg-2 col-md-6">
+                        <select name="year" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
+                            <?php
+                            $tahunSekarang = date('Y');
+                            for ($t = $tahunSekarang + 4; $t >= 2026; $t--) {
+                                $isSelected = (($selectedYear ?? $tahunSekarang) == $t) ? 'selected' : '';
+                                echo "<option value=\"{$t}\" {$isSelected}>Tahun {$t}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- Kolom Status Pembayaran -->
+                    <div class="col-lg-3 col-md-6">
                         <select name="status" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
-                            <option value="">Status: Semua Status Pembayaran</option>
+                            <option value="">Semua Status</option>
                             <option value="Lunas" <?= ($selectedStatus == 'Lunas') ? 'selected' : ''; ?>>Lunas</option>
                             <option value="Pending" <?= ($selectedStatus == 'Pending') ? 'selected' : ''; ?>>Pending</option>
                             <option value="Gagal" <?= ($selectedStatus == 'Gagal') ? 'selected' : ''; ?>>Gagal</option>
