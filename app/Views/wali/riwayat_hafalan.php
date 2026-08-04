@@ -27,9 +27,9 @@
             ?>
             <a href="<?= !empty($noHpGuru) ? 'https://wa.me/' . esc($noHpGuru) : '#'; ?>"
                 <?= !empty($noHpGuru) ? 'target="_blank"' : 'onclick="alert(\'Nomor WhatsApp guru belum tersedia\'); return false;"'; ?>
-                class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none"
+                class="btn btn-outline-light btn-sm px-3 rounded-pill bg-success shadow-sm text-decoration-none"
                 style="text-transform: none !important;">
-                <i class="fab fa-whatsapp text-success me-1 fs-6"></i> <?= esc($santri_aktif['nama_guru'] ?? 'Belum ada'); ?>
+                <i class="fab fa-whatsapp text-white me-1 fs-6"></i> <span class="text-white"><?= esc($santri_aktif['nama_guru'] ?? 'Belum ada'); ?></span>
             </a>
         </div>
     </div>
@@ -126,9 +126,9 @@
 
     <!-- Main Table Card -->
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
-        <div class="card-header bg-white border-0 py-3 px-4">
-            <h5 class="fw-bold text-dark mb-1">Riwayat Setoran: <?= esc($santri_aktif['nama_santri'] ?? 'Tidak Ada Data Santri'); ?></h5>
-            <p class="text-muted small mb-0">NIS: <?= esc($santri_aktif['nis'] ?? '-'); ?> &bull; Kelas: <?= esc($santri_aktif['nama_kelas'] ?? '-'); ?></p>
+        <div class="card card-header border-0 py-3 px-4">
+            <h5 class="fw-bold text-dark-mode mb-1">Riwayat Setoran: <?= esc($santri_aktif['nama_santri'] ?? 'Tidak Ada Data Santri'); ?></h5>
+            <p class="text-secondary small mb-0">NIS: <?= esc($santri_aktif['nis'] ?? '-'); ?> &bull; Kelas: <?= esc($santri_aktif['nama_kelas'] ?? '-'); ?></p>
         </div>
 
         <div class="card-body p-0">
@@ -189,8 +189,8 @@
         </div>
 
         <!-- Card Footer / Info -->
-        <div class="card-footer bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
-            <span class="text-muted small">Menampilkan total <span id="jumlahBaris"><?= !empty($riwayat) ? count($riwayat) : 0; ?></span> riwayat setoran</span>
+        <div class="card card-footer border-0 py-3 px-4 d-flex justify-content-between">
+            <span class="text-secondary small">Menampilkan total <span id="jumlahBaris"><?= !empty($riwayat) ? count($riwayat) : 0; ?></span> riwayat setoran</span>
         </div>
     </div>
 

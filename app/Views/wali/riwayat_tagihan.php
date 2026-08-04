@@ -2,26 +2,32 @@
 
 <?= $this->section('content') ?>
 
+<?php
+$santri_list = $santri_list ?? [];
+/** @var \CodeIgniter\Pager\Pager $pager
+ * @var string $nama_kelas
+ * @var string $jumlahPending
+ **/
+?>
+
 <div class="container-fluid px-0">
 
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Riwayat Pembayaran & Tagihan</h3>
-            <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola dan pantau status pembayaran SPP, asrama, serta administrasi bulanan ananda.</p>
+            <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Riwayat Tagihan & Pembayaran</h3>
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola tagihan dan pantau status pembayaran administrasi bulanan ananda.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm" style="text-transform: none !important;">
-                <i class="fa-solid fa-download text-success me-1"></i> Unduh Bukti Lunas
-            </button>
-            <a href="<?= base_url('wali/administrasi/bayar') ?>" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" style="text-transform: none !important;">
-                <i class="fa-solid fa-credit-card me-1"></i> Bayar Tagihan Baru
+            <a href="<?= site_url('wali/riwayat-tagihan/export?id_santri=' . ($santri_aktif['id'] ?? '') . '&status=' . ($selectedStatus ?? '')); ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none" style="text-transform: none !important;">
+                <i class="fa-solid fa-download text-success me-1"></i> Unduh Semua Riwayat
             </a>
         </div>
     </div>
 
     <!-- Ringkasan Statistik Keuangan -->
     <div class="row g-4 mb-4">
+        <!-- Card 1: Total Pembayaran Lunas -->
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
@@ -29,12 +35,15 @@
                         <i class="fa-solid fa-wallet fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">STATUS SPP BULAN INI</span>
-                        <h3 class="fw-bold text-success mb-0 mt-1">Lunas <span class="fs-6 fw-normal text-muted">(Juli 2026)</span></h3>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">TOTAL PEMBAYARAN LUNAS</span>
+                        <h3 class="fw-bold text-success mb-0 mt-1">Rp <?= number_format($totalLunas ?? 0, 0, ',', '.'); ?></h3>
+                        <span class="text-success" style="font-size: 0.75rem;">Berhasil</span>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Card 2: Tagihan Aktif / Pending -->
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
@@ -42,21 +51,25 @@
                         <i class="fa-solid fa-file-invoice-dollar fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">TAGIHAN AKTIF</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">Rp 0 <span class="fs-6 fw-normal text-success">Tidak Ada Tunggakan</span></h3>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">TAGIHAN AKTIF / TERTUNDA</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">Rp <?= number_format($totalTagihanAktif ?? 0, 0, ',', '.'); ?></h3>
+                        <span class="text-warning" style="font-size: 0.75rem;"><?= $jumlahPending; ?> Tagihan</span>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Card 3: Jumlah Anak Terdaftar -->
         <div class="col-xl-4 col-md-12">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
                     <div class="bg-primary bg-opacity-15 p-3 rounded-3 text-primary">
-                        <i class="fa-solid fa-clock-rotate-left fa-2x"></i>
+                        <i class="fa-solid fa-users-rectangle fa-2x"></i>
                     </div>
                     <div>
-                        <span class="text-muted small fw-medium" style="text-transform: none !important;">TOTAL KASKUS / KANTIN E-KARTU</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1">Rp 125.000 <span class="fs-6 fw-normal text-muted">Saldo Sisa</span></h3>
+                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">ANAK TERDAFTAR</span>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1"><?= count($santri_list); ?></h3>
+                        <span class="text-primary" style="font-size: 0.75rem;">Santri Terhubung</span>
                     </div>
                 </div>
             </div>
@@ -66,24 +79,42 @@
     <!-- Filter & Search Toolbar Card -->
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
         <div class="card-body p-3">
-            <div class="row g-3 align-items-center">
-                <div class="col-lg-7">
+            <form method="get" action="" id="formFilterRiwayat" class="row g-3 align-items-center">
+
+                <!-- Search Bar (Lebar kolom menyesuaikan apakah ada dropdown anak atau tidak) -->
+                <div class="col-lg-<?= (!empty($santri_list) && count($santri_list) > 1) ? '4' : '7'; ?>">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light border-0 ps-3 text-muted">
                             <i class="fa-solid fa-search"></i>
                         </span>
-                        <input type="text" class="form-control bg-light border-0 py-2" placeholder="Cari berdasarkan nomor referensi atau jenis pembayaran...">
+                        <input type="text" name="keyword" id="searchRiwayat" value="<?= esc($keyword ?? ''); ?>" class="form-control bg-light border-0 py-2" placeholder="Cari nomor referensi atau jenis..." autocomplete="off">
                     </div>
                 </div>
-                <div class="col-lg-5">
-                    <select class="form-select form-select-sm bg-light border-0 py-2">
-                        <option selected>Filter Status: Semua Transaksi</option>
-                        <option value="lunas">Lunas (Berhasil)</option>
-                        <option value="pending">Menunggu Konfirmasi</option>
-                        <option value="gagal">Gagal / Dibatalkan</option>
+
+                <!-- Dropdown Pilih Anak (Hanya muncul jika anak lebih dari 1) -->
+                <div class="col-lg-4">
+                    <select name="id_santri" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
+                        <?php foreach ($santri_list as $s): ?>
+                            <!-- Pastikan value-nya adalah id, Bukan nama atau teks lain -->
+                            <option value="<?= esc($s['id']); ?>" <?= (isset($_GET['id_santri']) && $_GET['id_santri'] == $s['id']) ? 'selected' : ''; ?>>
+                                Anak: <?= esc($s['nama_santri']); ?> (<?= esc($s['nama_kelas'] ?? '-'); ?>)
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
-            </div>
+
+                <!-- Filter Status Pembayaran -->
+                <div class="col-lg-<?= (!empty($santri_list) && count($santri_list) > 1) ? '4' : '5'; ?>">
+                    <select name="status" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
+                        <option value="">Filter Status: Semua</option>
+                        <option value="Lunas" <?= (($selectedStatus ?? '') == 'Lunas') ? 'selected' : ''; ?>>Lunas (Terverifikasi)</option>
+                        <option value="Gagal" <?= (($selectedStatus ?? '') == 'Gagal') ? 'selected' : ''; ?>>Gagal / Dibatalkan</option>
+                        <option value="Pending" <?= (($selectedStatus ?? '') == 'Pending') ? 'selected' : ''; ?>>Pending (Tertunda)</option>
+                        <option value="Menunggu Verifikasi" <?= (($selectedStatus ?? '') == 'Menunggu Verifikasi') ? 'selected' : ''; ?>>Menunggu Verifikasi</option>
+                    </select>
+                </div>
+
+            </form>
         </div>
     </div>
 
@@ -91,11 +122,11 @@
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0" id="tabelRiwayatTagihan">
                     <thead class="bg-light text-muted small text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
                         <tr>
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
-                            <th class="py-3" style="width: 22%;">ID Transaksi & Tanggal</th>
+                            <th class="py-3" style="width: 22%;">Tagihan & Tanggal</th>
                             <th class="py-3" style="width: 20%;">Nama Santri</th>
                             <th class="py-3" style="width: 20%;">Jenis Pembayaran</th>
                             <th class="py-3" style="width: 15%;">Nominal</th>
@@ -110,19 +141,19 @@
                                 <tr>
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
-                                        <div class="fw-semibold text-dark small">TRX-<?= date('Ym', strtotime($row['tanggal'])); ?>-0<?= $row['id']; ?></div>
-                                        <small class="text-muted" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y, H:i', strtotime($row['tanggal'])); ?> WIB</small>
+                                        <div class="fw-semibold text-dark-mode small">THF-<?= date('Ym', strtotime($row['tanggal'])); ?>-0<?= $row['id']; ?></div>
+                                        <small class="text-secondary" style="font-size: 0.75rem;"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y, H:i', strtotime($row['tanggal'])); ?> WIB</small>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-dark d-block"><?= esc($row['nama_santri'] ?? '-'); ?></span>
-                                        <small class="text-muted"><?= esc($row['nama_kelas'] ?? '-'); ?></small>
+                                        <span class="fw-semibold text-dark-mode d-block"><?= esc($row['nama_santri'] ?? '-'); ?></span>
+                                        <small class="text-secondary"><?= esc($row['nama_kelas'] ?? '-'); ?></small>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-dark d-block"><?= esc($row['jenis_pembayaran']); ?></span>
-                                        <small class="text-muted"><?= esc($row['keterangan'] ?? '-'); ?></small>
+                                        <span class="fw-semibold text-dark-mode d-block"><?= esc($row['jenis_pembayaran']); ?></span>
+                                        <small class="text-secondary"><?= esc($row['keterangan'] ?? '-'); ?></small>
                                     </td>
                                     <td>
-                                        <span class="font-monospace fw-semibold text-dark">Rp <?= number_format($row['jumlah'], 0, ',', '.'); ?></span>
+                                        <span class="font-monospace fw-semibold text-dark-mode">Rp <?= number_format($row['jumlah'], 0, ',', '.'); ?></span>
                                     </td>
                                     <td class="text-center">
                                         <?php
@@ -335,7 +366,7 @@
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr>
+                            <tr id="emptyRow">
                                 <td colspan="7" class="text-center py-4 text-muted">Belum ada riwayat tagihan atau pembayaran untuk anak Anda.</td>
                             </tr>
                         <?php endif; ?>
@@ -345,11 +376,46 @@
         </div>
 
         <!-- Card Footer / Informasi Data -->
-        <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small">Total riwayat ditemukan: <?= !empty($tagihan) ? count($tagihan) : 0; ?> transaksi</span>
+        <div class="card card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <p class="text-secondary small">Total riwayat ditemukan <span id="jumlahBaris">: <?= !empty($tagihan) ? count($tagihan) : 0; ?></span> riwayat tagihan</p>
         </div>
     </div>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById('searchRiwayat');
+        const table = document.getElementById('tabelRiwayatTagihan');
+        if (!table) return;
+
+        const trs = table.getElementsByTagName('tr');
+        const jumlahBarisSpan = document.getElementById('jumlahBaris');
+
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function() {
+                const filter = searchInput.value.toLowerCase();
+                let visibleCount = 0;
+
+                for (let i = 1; i < trs.length; i++) {
+                    const tr = trs[i];
+                    // Skip jika ini row pesan kosong
+                    if (tr.id === 'emptyRow') continue;
+
+                    const textValue = tr.textContent || tr.innerText;
+                    if (textValue.toLowerCase().indexOf(filter) > -1) {
+                        tr.style.display = "";
+                        visibleCount++;
+                    } else {
+                        tr.style.display = "none";
+                    }
+                }
+                if (jumlahBarisSpan) {
+                    jumlahBarisSpan.textContent = visibleCount;
+                }
+            });
+        }
+    });
+</script>
 
 <?= $this->endSection() ?>

@@ -30,7 +30,7 @@
                 <i class="fa-solid fa-file-excel text-success me-1"></i> Rekap Pembayaran
             </a>
             <a href="#" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" style="text-transform: none !important;" data-bs-toggle="modal" data-bs-target="#tambahModal">
-                <i class="fa-solid fa-plus me-1"></i> Catat Pembayaran Baru
+                <i class="fa-solid fa-plus me-1"></i> Catat Tagihan Baru
             </a>
         </div>
     </div>
@@ -61,7 +61,7 @@
                     </div>
                     <div>
                         <span class="text-secondary small fw-medium" style="text-transform: none !important;">PEMBAYARAN LUNAS</span>
-                        <h3 class="fw-bold text-dark-mode mb-0 mt-1"><?= $countLunasBulanIni ?? 0; ?> <span class="fs-6 fw-normal text-secondary">Transaksi</span></h3>
+                        <h3 class="fw-bold text-dark-mode mb-0 mt-1"><?= $countLunasBulanIni ?? 0; ?> <span class="fs-6 fw-normal text-success">Data Pembayaran</span></h3>
                     </div>
                 </div>
             </div>
@@ -306,12 +306,23 @@
                                                 <div class="modal-body p-4">
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
+                                                            <label class="form-label small fw-semibold text-muted">Filter Berdasarkan Kelas</label>
+                                                            <select id="filterKelasEdit<?= $row['id']; ?>" class="form-select rounded-3">
+                                                                <option value="" selected>-- Pilih Kelas (Opsional) --</option>
+                                                                <?php if (isset($listKelas)): ?>
+                                                                    <?php foreach ($listKelas as $k): ?>
+                                                                        <option value="<?= $k['id']; ?>"><?= $k['nama_kelas']; ?></option>
+                                                                    <?php endforeach; ?>
+                                                                <?php endif; ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
                                                             <label class="form-label small fw-semibold text-muted">Pilih Santri</label>
-                                                            <select name="id_santri" class="form-select rounded-3" required>
+                                                            <select name="id_santri" id="selectSantriEdit<?= $row['id']; ?>" class="form-select rounded-3 select2-edit" required>
                                                                 <option value="" disabled>-- Pilih Santri --</option>
                                                                 <?php if (isset($listSantri)): ?>
                                                                     <?php foreach ($listSantri as $s): ?>
-                                                                        <option value="<?= $s['id']; ?>" <?= ($s['id'] == $row['id_santri']) ? 'selected' : ''; ?>>
+                                                                        <option value="<?= $s['id']; ?>" data-kelas="<?= $s['id_kelas']; ?>" <?= ($s['id'] == $row['id_santri']) ? 'selected' : ''; ?>>
                                                                             <?= $s['nama_santri']; ?> (<?= $s['nama_kelas'] ?? 'Tanpa Kelas'; ?>)
                                                                         </option>
                                                                     <?php endforeach; ?>
@@ -369,8 +380,8 @@
             </div>
         </div>
         <!-- Card Footer / Pagination -->
-        <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small">
+        <div class="card card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <span class="text-secondary small">
                 <?php
                 $currentPage = $pager->getCurrentPage('administrasi');
                 $perPage = $pager->getPerPage('administrasi');
@@ -396,7 +407,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow rounded-4">
             <div class="modal-header bg-light px-4 py-3">
-                <h5 class="modal-title fw-bold text-dark" id="tambahModalLabel"><i class="fa-solid fa-wallet text-success me-2"></i> Catat Pembayaran Baru</h5>
+                <h5 class="modal-title fw-bold text-dark" id="tambahModalLabel"><i class="fa-solid fa-wallet text-success me-2"></i> Catat Tagihan Baru</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?= base_url('admin/administrasi/store'); ?>" method="post">
@@ -404,13 +415,25 @@
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-6">
+                            <label class="form-label small fw-semibold text-muted">Filter Berdasarkan Kelas</label>
+                            <select id="filterKelasTambah" class="form-select rounded-3">
+                                <option value="" selected>-- Pilih Kelas (Opsional) --</option>
+                                <?php if (isset($listKelas)): ?>
+                                    <?php foreach ($listKelas as $k): ?>
+                                        <option value="<?= $k['id']; ?>"><?= $k['nama_kelas']; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label small fw-semibold text-muted">Pilih Santri</label>
-                            <select name="id_santri" class="form-select rounded-3" required>
+                            <select name="id_santri" id="selectSantriTambah" class="form-select rounded-3" required>
                                 <option value="" disabled selected>-- Pilih Santri --</option>
-                                <!-- Nanti data santri di-loop dari database -->
                                 <?php if (isset($listSantri)): ?>
                                     <?php foreach ($listSantri as $s): ?>
-                                        <option value="<?= $s['id']; ?>"><?= $s['nama_santri']; ?> (<?= $s['nama_kelas'] ?? 'Tanpa Kelas'; ?>)</option>
+                                        <option value="<?= $s['id']; ?>" data-kelas="<?= $s['id_kelas']; ?>">
+                                            <?= $s['nama_santri']; ?> (<?= $s['nama_kelas'] ?? 'Tanpa Kelas'; ?>)
+                                        </option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
@@ -452,6 +475,7 @@
 </div>
 
 <script>
+    // fungsi search dan filter tabel
     document.addEventListener("DOMContentLoaded", function() {
         const searchInput = document.getElementById("searchInput");
         const filterMonth = document.getElementById("filterMonth");
@@ -480,7 +504,6 @@
                 // Cek kondisi filter status
                 const matchesStatus = selectedStatus === "" || rowStatus.includes(selectedStatus);
 
-                // Jika semua kondisi terpenuhi, tampilkan baris, jika tidak sembunyikan
                 if (matchesSearch && matchesMonth && matchesStatus) {
                     row.style.display = "";
                     visibleCount++;
@@ -489,7 +512,6 @@
                 }
             });
 
-            // Tampilkan pesan jika data kosong
             if (visibleCount === 0) {
                 noDataMessage.classList.remove("d-none");
             } else {
@@ -497,12 +519,73 @@
             }
         }
 
-        // Event listener untuk input pencarian (ketik real-time)
         searchInput.addEventListener("keyup", filterTable);
 
-        // Event listener untuk dropdown filter
         filterMonth.addEventListener("change", filterTable);
         filterStatus.addEventListener("change", filterTable);
+    });
+
+    // fungsi select2 untuk dropdown di modal tambah
+    document.addEventListener("DOMContentLoaded", function() {
+        const filterKelas = document.getElementById('filterKelasTambah');
+        const selectSantri = $('#selectSantriTambah');
+
+        if (filterKelas && selectSantri.length) {
+            const allOptions = selectSantri.find('option').toArray();
+
+            filterKelas.addEventListener('change', function() {
+                const kelasId = this.value;
+
+                selectSantri.empty();
+
+                selectSantri.append(new Option('-- Pilih Santri --', '', true, true));
+                selectSantri.find('option:first').prop('disabled', true);
+
+                allOptions.forEach(function(opt) {
+                    const santriKelasId = $(opt).attr('data-kelas');
+                    if (opt.value !== "" && (kelasId === "" || santriKelasId === kelasId)) {
+                        selectSantri.append(opt);
+                    }
+                });
+
+                selectSantri.trigger('change');
+            });
+        }
+    });
+
+    // dropdown di modal edit
+    document.addEventListener("DOMContentLoaded", function() {
+        // Tangkap event ketika modal edit dibuka
+        $('.modal[id^="editModal"]').on('shown.bs.modal', function() {
+            const modalId = $(this).attr('id');
+            const rowId = modalId.replace('editModal', '');
+
+            const filterKelas = document.getElementById('filterKelasEdit' + rowId);
+            const selectSantri = $('#selectSantriEdit' + rowId);
+
+            if (filterKelas && selectSantri.length && !filterKelas.hasAttribute('data-initialized')) {
+                filterKelas.setAttribute('data-initialized', 'true');
+                const allOptions = selectSantri.find('option').toArray();
+
+                filterKelas.addEventListener('change', function() {
+                    const kelasId = this.value;
+                    const currentSelectedVal = selectSantri.val(); // Simpan nilai yang sedang terpilih
+
+                    selectSantri.empty();
+                    selectSantri.append(new Option('-- Pilih Santri --', '', true, true));
+                    selectSantri.find('option:first').prop('disabled', true);
+
+                    allOptions.forEach(function(opt) {
+                        const santriKelasId = $(opt).attr('data-kelas');
+                        if (opt.value !== "" && (kelasId === "" || santriKelasId === kelasId)) {
+                            selectSantri.append(opt);
+                        }
+                    });
+
+                    selectSantri.val(currentSelectedVal).trigger('change');
+                });
+            }
+        });
     });
 </script>
 

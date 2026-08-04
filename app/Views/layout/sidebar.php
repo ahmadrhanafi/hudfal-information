@@ -51,9 +51,6 @@
             <a href="<?= base_url('admin/esertifikat') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('admin/esertifikat*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-award fa-fw me-2"></i> <span>E-Sertifikat</span>
             </a>
-            <a href="<?= base_url('admin/ekartu') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('admin/ekartu*')) ? 'active' : '' ?>">
-                <i class="fa-solid fa-id-card fa-fw me-2"></i> <span>E-Kartu Santri</span>
-            </a>
         <?php endif; ?>
 
         <!-- MENU KHUSUS GURU/PENGAJAR -->
@@ -84,9 +81,6 @@
             </a>
             <a href="<?= base_url('wali/riwayat-tagihan') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('wali/riwayat-tagihan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-receipt fa-fw me-2"></i> <span>Riwayat Tagihan</span>
-            </a>
-            <a href="<?= base_url('wali/ekartu') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('wali/ekartu*')) ? 'active' : '' ?>">
-                <i class="fa-solid fa-id-card fa-fw me-2"></i> <span>E-Kartu Santri</span>
             </a>
             <a href="<?= base_url('wali/esertifikat') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('wali/esertifikat*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-award fa-fw me-2"></i> <span>E-Sertifikat</span>

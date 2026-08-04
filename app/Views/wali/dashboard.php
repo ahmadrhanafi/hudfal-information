@@ -12,6 +12,21 @@
  */
 ?>
 
+<style>
+    .custom-dashed-link {
+        display: inline-block;
+        border-bottom: 1.5px dashed #adb5bd;
+        padding-bottom: 1px;
+        line-height: 1.2;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .custom-dashed-link:hover {
+        border-bottom-color: #198754;
+        color: #198754 !important;
+    }
+</style>
+
 <div class="container-fluid px-0">
 
     <!-- Welcome Banner & Integrated Summary Section -->
@@ -87,8 +102,12 @@
                                             <?= strtoupper(substr($a['nama_santri'], 0, 1)); ?>
                                         </div>
                                         <div>
-                                            <h5 class="fw-bold text-dark-mode mb-1"><?= esc($a['nama_santri']); ?></h5>
-                                            <div class="d-flex flex-wrap gap-2 align-items-center">
+                                            <div class="mb-1">
+                                                <a href="<?= base_url('wali/santri-detail/' . $a['id']); ?>" class="fw-bold text-dark-mode text-decoration-none custom-dashed-link fs-5">
+                                                    <?= esc($a['nama_santri']); ?>
+                                                </a>
+                                            </div>
+                                            <div class="d-flex flex-wrap gap-2 align-items-center mt-1">
                                                 <span class="badge bg-light text-secondary border px-2.5 py-1 rounded-pill" style="font-size: 10px;">
                                                     NIS: <?= esc($a['nis']); ?>
                                                 </span>

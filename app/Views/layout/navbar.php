@@ -64,7 +64,7 @@
                         <hr class="dropdown-divider my-2">
                     </li>
                     <li>
-                        <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-danger hover-bg-danger-subtle transition-base" href="<?= base_url('logout') ?>">
+                        <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-danger custom-logout-hover transition-base" href="<?= base_url('logout') ?>">
                             <i class="fa-solid fa-right-from-bracket"></i> <span class="small fw-semibold">Keluar Akun</span>
                         </a>
                     </li>

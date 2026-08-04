@@ -8,6 +8,15 @@ use App\Models\HafalanModel;
 
 class Dashboard extends BaseController
 {
+    protected $santriModel;
+    protected $hafalanModel;
+
+    public function __construct()
+    {
+        $this->santriModel  = new SantriModel();
+        $this->hafalanModel = new HafalanModel();
+    }
+
     public function index()
     {
         $santriModel  = new SantriModel();
@@ -56,5 +65,25 @@ class Dashboard extends BaseController
         ];
 
         return view('wali/dashboard', $data);
+    }
+
+    public function detailSantri($id)
+    {
+        $santri = $this->santriModel->select('santri.*, kelas.nama_kelas, wali.nama_wali, wali.no_hp as no_hp_wali, wali.alamat as alamat_wali')
+            ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+            ->join('wali', 'wali.id = santri.id_wali', 'left')
+            ->find($id);
+
+        if (!$santri) {
+            return redirect()->to(base_url('admin/santri'))->with('error', 'Data santri tidak ditemukan.');
+        }
+
+        $data = [
+            'title'  => 'Detail Santri',
+            'icon'   => 'fa-solid fa-user-graduate',
+            'santri' => $santri
+        ];
+
+        return view('wali/santri-detail', $data);
     }
 }

@@ -92,13 +92,16 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
 
 $routes->group('wali', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'Wali\Dashboard::index');
+    $routes->get('santri-detail/(:num)', 'Wali\Dashboard::detailSantri/$1');
+
+    // Riwayat Hafalan
     $routes->get('riwayat-hafalan', 'Wali\RiwayatHafalan::index');
     $routes->get('detail-riwayat-hafalan/(:num)', 'Wali\RiwayatHafalan::detail/$1');
 
     // Riwayat Tagihan
     $routes->get('riwayat-tagihan', 'Wali\RiwayatTagihan::index');
     $routes->get('riwayat-tagihan/detail/(:num)', 'Wali\RiwayatTagihan::detail/$1');
-    $routes->get('riwayat-tagihan/export', 'Wali\RiwayatTagihan::export');
+    $routes->get('riwayat-tagihan/export', 'Wali\RiwayatTagihan::exportExcel');
     $routes->get('riwayat-tagihan/export/(:num)', 'Wali\RiwayatTagihan::export/$1');
     $routes->get('riwayat-tagihan/unduh-kuitansi/(:num)', 'Wali\RiwayatTagihan::unduhKuitansi/$1');
     $routes->post('riwayat-tagihan/konfirmasi/(:num)', 'Wali\RiwayatTagihan::konfirmasi/$1');

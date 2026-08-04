@@ -5,16 +5,19 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\PembayaranModel;
 use App\Models\SantriModel;
+use App\Models\KelasModel;
 
 class Administrasi extends BaseController
 {
     protected $pembayaranModel;
     protected $santriModel;
+    protected $kelasModel;
 
     public function __construct()
     {
         $this->pembayaranModel = new PembayaranModel();
         $this->santriModel     = new SantriModel();
+        $this->kelasModel      = new KelasModel();
     }
 
     public function index()
@@ -77,7 +80,8 @@ class Administrasi extends BaseController
             'icon'               => 'fa-solid fa-file-invoice-dollar',
             'administrasi'       => $builder->paginate($perPage, 'administrasi'),
             'pager'              => $this->pembayaranModel->pager,
-            'listSantri'         => $this->santriModel->select('santri.id, santri.nama_santri, kelas.nama_kelas')
+            'listKelas'          => $this->kelasModel->findAll(),
+            'listSantri'         => $this->santriModel->select('santri.id, santri.nama_santri, santri.id_kelas, kelas.nama_kelas')
                 ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
                 ->findAll(),
             'role'               => session()->get('role') ?? 'admin',
