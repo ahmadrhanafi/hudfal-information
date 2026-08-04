@@ -201,9 +201,9 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
 
     <!-- Tabel Rekap Progress Juz -->
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
-        <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
-            <h5 class="fw-bold text-dark mb-1" style="text-transform: none !important; font-size: 1.05rem;">Detail Capaian per Juz</h5>
-            <p class="text-muted small mb-3">Status penyelesaian juz Al-Qur'an ananda berdasarkan filter terpilih.</p>
+        <div class="card card-header bg-white border-0 pt-4 px-4 pb-0">
+            <h5 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important; font-size: 1.05rem;">Detail Capaian per Juz</h5>
+            <p class="text-secondary small mb-3">Status penyelesaian juz Al-Qur'an ananda berdasarkan filter terpilih.</p>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -265,8 +265,8 @@ $detailJuz      = is_array($detail_juz ?? null) ? $detail_juz : [];
                 </table>
             </div>
         </div>
-        <div class="card-footer bg-white border-0 py-3 px-4">
-            <small class="text-muted"><i class="fa-solid fa-circle-info me-1"></i> Data statistik diperbarui secara otomatis setiap kali ustadz pembimbing memasukkan log setoran harian.</small>
+        <div class="card card-footer bg-white border-0 py-3 px-4">
+            <small class="text-secondary"><i class="fa-solid fa-circle-info me-1"></i> Data statistik diperbarui secara otomatis setiap kali ustadz pembimbing memasukkan log setoran harian.</small>
         </div>
     </div>
 

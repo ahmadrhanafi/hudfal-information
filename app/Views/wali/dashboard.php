@@ -185,12 +185,13 @@
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-3">
-                        <h5 class="fw-bold text-dark-mode m-0" style="text-transform: none !important;">
+                        <h5 class="fw-bold text-dark-mode m-0" style="text-transform: none !important; font-size: 1rem;">
                             <i class="fa-solid fa-book-open-reader text-success me-2"></i> Setoran Hafalan Terbaru Ananda
                         </h5>
-                        <a href="<?= base_url('wali/riwayat-hafalan') ?>" class="text-success small fw-semibold text-decoration-none">Riwayat Lengkap <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                        <a href="<?= base_url('wali/riwayat-hafalan') ?>" class="text-success small fw-semibold text-decoration-none" style="font-size: 0.7rem;">
+                            Riwayat Lengkap <i class="fa-solid fa-arrow-right ms-1"></i></a>
                     </div>
-                    <p class="text-secondary small mb-3" style="text-transform: none !important;">Catatan setoran terakhir yang diuji oleh ustadz pengampu di pesantren.</p>
+                    <p class="text-secondary small mb-3" style="text-transform: none !important; font-size: 0.8rem;">Catatan setoran terakhir yang diuji oleh ustadz pengampu di pesantren.</p>
 
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
@@ -282,12 +283,13 @@
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold text-dark-mode mb-0" style="text-transform: none !important;">
+                        <h5 class="fw-bold text-dark-mode mb-0" style="text-transform: none !important; font-size: 1rem;">
                             <i class="fa-solid fa-file-invoice-dollar text-warning me-2"></i> Tagihan & Pembayaran
                         </h5>
-                        <a href="<?= base_url('wali/pembayaran'); ?>" class="small text-warning text-decoration-none fw-semibold">Lihat Semua <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                        <a href="<?= base_url('wali/pembayaran'); ?>" class="small text-warning text-decoration-none fw-semibold" style="font-size: 0.7rem;">
+                            Lihat Semua <i class="fa-solid fa-arrow-right ms-1"></i></a>
                     </div>
-                    <p class="text-secondary small mb-4" style="text-transform: none !important;">Status tagihan dan riwayat administrasi anak.</p>
+                    <p class="text-secondary small mb-4" style="text-transform: none !important; font-size: 0.8rem;">Status tagihan dan riwayat administrasi anak.</p>
 
                     <?php if (!empty($tagihan_terbaru)): ?>
                         <?php foreach ($tagihan_terbaru as $row): ?>
@@ -311,7 +313,7 @@
 
                                     <!-- Tombol untuk memicu modal berdasarkan ID tagihan -->
                                     <button type="button" class="btn btn-sm btn-primary py-0 px-2" style="font-size: 0.75rem;" data-bs-toggle="modal" data-bs-target="#modalDetail<?= $row['id']; ?>">
-                                        <?= (strtolower($status) == 'pending') ? 'Bayar / Konfirmasi' : 'Lihat Rincian'; ?>
+                                        <?= (strtolower($status) == 'pending') ? 'Konfirmasi' : 'Lihat Rincian'; ?>
                                     </button>
                                 </div>
                             </div>

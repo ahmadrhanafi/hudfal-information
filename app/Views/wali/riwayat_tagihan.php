@@ -20,8 +20,15 @@ $santri_list = $santri_list ?? [];
         </div>
         <div class="d-flex align-items-center gap-2">
             <a href="<?= site_url('wali/riwayat-tagihan/export?id_santri=' . ($santri_aktif['id'] ?? '') . '&status=' . ($selectedStatus ?? '')); ?>" class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none" style="text-transform: none !important;">
-                <i class="fa-solid fa-download text-success me-1"></i> Unduh Semua Riwayat
+                <i class="fa-solid fa-download text-success me-1"></i> Export Tagihan
             </a>
+            <div class="d-flex align-items-center gap-2">
+                <a href="https://wa.me/088276520357"
+                    class="btn btn-outline-light btn-sm px-3 rounded-pill bg-success shadow-sm text-decoration-none"
+                    style="text-transform: none !important;">
+                    <i class="fab fa-whatsapp text-white me-1 fs-6"></i> <span class="text-white"> Chat Admin</span>
+                </a>
+            </div>
         </div>
     </div>
 
