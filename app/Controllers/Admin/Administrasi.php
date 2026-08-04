@@ -47,6 +47,7 @@ class Administrasi extends BaseController
         if (!empty($keyword)) {
             $builder->groupStart()
                 ->like('santri.nama_santri', $keyword)
+                ->orLike('wali.nama_wali', $keyword)
                 ->orLike('pembayaran.keterangan', $keyword)
                 ->groupEnd();
         }
@@ -83,6 +84,7 @@ class Administrasi extends BaseController
             'listKelas'          => $this->kelasModel->findAll(),
             'listSantri'         => $this->santriModel->select('santri.id, santri.nama_santri, santri.id_kelas, kelas.nama_kelas')
                 ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+                ->where('santri.status_aktif', 'Aktif')
                 ->findAll(),
             'role'               => session()->get('role') ?? 'admin',
             'totalBulanIni'      => $totalBulanIni,
@@ -99,8 +101,10 @@ class Administrasi extends BaseController
 
     public function store()
     {
+        $targetType = $this->request->getPost('target_type') ?? 'satuan';
+
         $rules = [
-            'id_santri'        => 'required|integer',
+            'target_type'      => 'required|in_list[satuan,kelas,semua]',
             'tanggal'          => 'required|valid_date',
             'jenis_pembayaran' => 'required|string|max_length[100]',
             'jumlah'           => 'required|numeric',
@@ -111,16 +115,47 @@ class Administrasi extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $this->pembayaranModel->save([
-            'id_santri'        => $this->request->getPost('id_santri'),
+        $targetSantriIds = [];
+
+        if ($targetType === 'satuan') {
+            $targetSantriIds = [$this->request->getPost('id_santri')];
+        } elseif ($targetType === 'kelas') {
+            $idKelas = $this->request->getPost('id_kelas');
+            $santriKelas = $this->santriModel->where('id_kelas', $idKelas)
+                ->where('status_aktif', 'Aktif')
+                ->findAll();
+            $targetSantriIds = array_column($santriKelas, 'id');
+        } else {
+            $semuaSantri = $this->santriModel->where('status_aktif', 'Aktif')
+                ->findAll();
+            $targetSantriIds = array_column($semuaSantri, 'id');
+        }
+
+        // Validasi jika ternyata daftar santri kosong
+        if (empty($targetSantriIds) || empty($targetSantriIds[0])) {
+            return redirect()->back()->withInput()->with('error', 'Tidak ada santri aktif yang ditemukan pada target tersebut.');
+        }
+
+        $dataForm = [
             'tanggal'          => $this->request->getPost('tanggal'),
             'jenis_pembayaran' => $this->request->getPost('jenis_pembayaran'),
             'jumlah'           => $this->request->getPost('jumlah'),
             'status'           => $this->request->getPost('status'),
             'keterangan'       => $this->request->getPost('keterangan'),
-        ]);
+            'created_at'       => date('Y-m-d H:i:s')
+        ];
 
-        return redirect()->to(base_url('admin/administrasi'))->with('success', 'Data pembayaran berhasil ditambahkan!');
+        $batchData = [];
+        foreach ($targetSantriIds as $idSantri) {
+            $tmp = $dataForm;
+            $tmp['id_santri'] = $idSantri;
+            $batchData[] = $tmp;
+        }
+
+        // Simpan menggunakan insertBatch
+        $this->pembayaranModel->insertBatch($batchData);
+
+        return redirect()->to(base_url('admin/administrasi'))->with('success', 'Berhasil! Data tagihan ditambahkan ke ' . count($targetSantriIds) . ' santri.');
     }
 
     public function update($id)

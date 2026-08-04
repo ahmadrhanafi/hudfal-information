@@ -132,6 +132,7 @@
                         <tr>
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
                             <th class="py-3" style="width: 25%;">Nama Santri & Kelas</th>
+                            <th class="py-3" style="width: 25%;">Nama Wali</th>
                             <th class="py-3" style="width: 20%;">Jenis Pembayaran</th>
                             <th class="py-3" style="width: 15%;">Nominal</th>
                             <th class="py-3 text-center" style="width: 15%;">Status</th>
@@ -173,6 +174,10 @@
                                                 <small class="text-secondary"><?= esc($row['nama_kelas'] ?? 'Belum ada kelas'); ?></small>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($row['nama_wali']); ?></h6>
+                                        <small class="text-secondary"><i class="fa-brands fa-whatsapp me-1"></i> <?= esc($row['no_hp_wali'] ?? 'Belum ada nomor HP'); ?></small>
                                     </td>
                                     <td>
                                         <span class="fw-semibold text-dark-mode d-block"><?= esc($row['jenis_pembayaran']); ?></span>
@@ -414,20 +419,29 @@
                 <?= csrf_field(); ?>
                 <div class="modal-body p-4">
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label small fw-semibold text-muted">Filter Berdasarkan Kelas</label>
-                            <select id="filterKelasTambah" class="form-select rounded-3">
-                                <option value="" selected>-- Pilih Kelas (Opsional) --</option>
-                                <?php if (isset($listKelas)): ?>
-                                    <?php foreach ($listKelas as $k): ?>
-                                        <option value="<?= $k['id']; ?>"><?= $k['nama_kelas']; ?></option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
+                        <!-- Pilihan Target Penagihan -->
+                        <div class="col-md-12 mb-2">
+                            <label class="form-label small fw-semibold text-muted">Target Tagihan</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="target_type" id="targetSantri" value="satuan" checked onchange="toggleTargetType()">
+                                    <label class="form-check-label small" for="targetSantri">Satu Santri Saja</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="target_type" id="targetKelas" value="kelas" onchange="toggleTargetType()">
+                                    <label class="form-check-label small" for="targetKelas">Berdasarkan Kelas (Massal)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="target_type" id="targetSemua" value="semua" onchange="toggleTargetType()">
+                                    <label class="form-check-label small" for="targetSemua">Semua Santri Aktif</label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
+
+                        <!-- Input Santri Satuan -->
+                        <div class="col-md-6" id="wrapperSantri">
                             <label class="form-label small fw-semibold text-muted">Pilih Santri</label>
-                            <select name="id_santri" id="selectSantriTambah" class="form-select rounded-3" required>
+                            <select name="id_santri" id="selectSantriTambah" class="form-select select2-santri" data-dropdown-parent="#tambahModal">
                                 <option value="" disabled selected>-- Pilih Santri --</option>
                                 <?php if (isset($listSantri)): ?>
                                     <?php foreach ($listSantri as $s): ?>
@@ -438,6 +452,33 @@
                                 <?php endif; ?>
                             </select>
                         </div>
+
+                        <!-- Input Pilih Kelas (Muncul jika pilih 'kelas') -->
+                        <div class="col-md-6 d-none" id="wrapperKelas">
+                            <label class="form-label small fw-semibold text-muted">Pilih Kelas</label>
+                            <select name="id_kelas" class="form-select rounded-3">
+                                <option value="" disabled selected>-- Pilih Kelas Tujuan --</option>
+                                <?php if (isset($listKelas)): ?>
+                                    <?php foreach ($listKelas as $k): ?>
+                                        <option value="<?= $k['id']; ?>"><?= $k['nama_kelas']; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+
+                        <!-- Filter Kelas (Hanya muncul saat mode 'satuan') -->
+                        <div class="col-md-6" id="wrapperFilterKelas">
+                            <label class="form-label small fw-semibold text-muted">Filter Berdasarkan Kelas</label>
+                            <select id="filterKelasTambah" class="form-select rounded-3">
+                                <option value="" selected>-- Pilih Kelas (Opsional) --</option>
+                                <?php if (isset($listKelas)): ?>
+                                    <?php foreach ($listKelas as $k): ?>
+                                        <option value="<?= $k['id']; ?>"><?= $k['nama_kelas']; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+
                         <div class="col-md-6">
                             <label class="form-label small fw-semibold text-muted">Tanggal & Waktu</label>
                             <input type="datetime-local" name="tanggal" class="form-control rounded-3" value="<?= date('Y-m-d\TH:i'); ?>" required>
@@ -527,6 +568,31 @@
 
     // fungsi select2 untuk dropdown di modal tambah
     document.addEventListener("DOMContentLoaded", function() {
+        // Inisialisasi Select2 dengan tema Bootstrap 5
+        if ($.fn.select2) {
+            $('.select2-santri').select2({
+                theme: 'bootstrap-5',
+                dropdownParent: $('#tambahModal'),
+                width: '100%',
+                placeholder: '-- Pilih Santri --',
+                allowClear: true
+            });
+
+            // Kustomisasi placeholder & wrapper search box saat diklik
+            $('.select2-santri').on('select2:open', function() {
+                let searchField = document.querySelector('.select2-container--bootstrap-5 .select2-search__field');
+                if (searchField) {
+                    searchField.placeholder = "Cari nama santri atau kelas...";
+
+                    let parent = searchField.parentNode;
+                    if (!parent.classList.contains('select2-search-icon-wrapper')) {
+                        parent.classList.add('select2-search-icon-wrapper');
+                    }
+                }
+            });
+        }
+
+        // Logika Filter Kelas untuk Santri Satuan
         const filterKelas = document.getElementById('filterKelasTambah');
         const selectSantri = $('#selectSantriTambah');
 
@@ -537,7 +603,6 @@
                 const kelasId = this.value;
 
                 selectSantri.empty();
-
                 selectSantri.append(new Option('-- Pilih Santri --', '', true, true));
                 selectSantri.find('option:first').prop('disabled', true);
 
@@ -552,6 +617,43 @@
             });
         }
     });
+
+    // Fungsi Toggle Target Penagihan
+    function toggleTargetType() {
+        const targetType = document.querySelector('input[name="target_type"]:checked').value;
+        const wrapperSantri = document.getElementById('wrapperSantri');
+        const wrapperKelas = document.getElementById('wrapperKelas');
+        const wrapperFilterKelas = document.getElementById('wrapperFilterKelas');
+
+        // Ubah ke selector jQuery ($) agar bisa pakai method .prop() dengan aman
+        const selectSantri = $('#selectSantriTambah');
+        const selectKelasTujuan = document.querySelector('select[name="id_kelas"]');
+
+        if (targetType === 'satuan') {
+            wrapperSantri.classList.remove('d-none');
+            wrapperFilterKelas.classList.remove('d-none');
+            wrapperKelas.classList.add('d-none');
+
+            if (selectSantri.length) selectSantri.prop('required', true);
+            if (selectKelasTujuan) selectKelasTujuan.removeAttribute('required');
+
+        } else if (targetType === 'kelas') {
+            wrapperKelas.classList.remove('d-none');
+            wrapperSantri.classList.add('d-none');
+            wrapperFilterKelas.classList.add('d-none');
+
+            if (selectKelasTujuan) selectKelasTujuan.setAttribute('required', 'required');
+            if (selectSantri.length) selectSantri.prop('required', false);
+
+        } else {
+            wrapperSantri.classList.add('d-none');
+            wrapperKelas.classList.add('d-none');
+            wrapperFilterKelas.classList.add('d-none');
+
+            if (selectSantri.length) selectSantri.prop('required', false);
+            if (selectKelasTujuan) selectKelasTujuan.removeAttribute('required');
+        }
+    }
 
     // dropdown di modal edit
     document.addEventListener("DOMContentLoaded", function() {

@@ -81,31 +81,37 @@ $santri_list = $santri_list ?? [];
         <div class="card-body p-3">
             <form method="get" action="" id="formFilterRiwayat" class="row g-3 align-items-center">
 
-                <!-- Search Bar (Lebar kolom menyesuaikan apakah ada dropdown anak atau tidak) -->
-                <div class="col-lg-<?= (!empty($santri_list) && count($santri_list) > 1) ? '4' : '7'; ?>">
+                <?php
+                // Cek apakah dropdown anak aktif (jumlah anak > 1)
+                $hasMultiAnak = (!empty($santri_list) && count($santri_list) > 1);
+                ?>
+
+                <!-- Search Bar (Lebar menyesuaikan kondisi ada/tidaknya dropdown anak) -->
+                <div class="col-lg-<?= $hasMultiAnak ? '4' : '6'; ?>">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light border-0 ps-3 text-muted">
                             <i class="fa-solid fa-search"></i>
                         </span>
-                        <input type="text" name="keyword" id="searchRiwayat" value="<?= esc($keyword ?? ''); ?>" class="form-control bg-light border-0 py-2" placeholder="Cari nomor referensi atau jenis..." autocomplete="off">
+                        <input type="text" name="keyword" id="searchRiwayat" value="<?= esc($keyword ?? ''); ?>" class="form-control bg-light border-0 py-1.5" style="padding-top: 0.45rem; padding-bottom: 0.45rem;" placeholder="Cari nomor referensi atau jenis..." autocomplete="off">
                     </div>
                 </div>
 
                 <!-- Dropdown Pilih Anak (Hanya muncul jika anak lebih dari 1) -->
-                <div class="col-lg-4">
-                    <select name="id_santri" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
-                        <?php foreach ($santri_list as $s): ?>
-                            <!-- Pastikan value-nya adalah id, Bukan nama atau teks lain -->
-                            <option value="<?= esc($s['id']); ?>" <?= (isset($_GET['id_santri']) && $_GET['id_santri'] == $s['id']) ? 'selected' : ''; ?>>
-                                Anak: <?= esc($s['nama_santri']); ?> (<?= esc($s['nama_kelas'] ?? '-'); ?>)
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                <?php if ($hasMultiAnak): ?>
+                    <div class="col-lg-4">
+                        <select name="id_santri" class="form-select form-select-sm bg-light border-0" style="padding-top: 0.45rem; padding-bottom: 0.45rem;" onchange="this.form.submit()">
+                            <?php foreach ($santri_list as $s): ?>
+                                <option value="<?= esc($s['id']); ?>" <?= (isset($_GET['id_santri']) && $_GET['id_santri'] == $s['id']) ? 'selected' : ''; ?>>
+                                    Anak: <?= esc($s['nama_santri']); ?> (<?= esc($s['nama_kelas'] ?? '-'); ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Filter Status Pembayaran -->
-                <div class="col-lg-<?= (!empty($santri_list) && count($santri_list) > 1) ? '4' : '5'; ?>">
-                    <select name="status" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
+                <div class="col-lg-<?= $hasMultiAnak ? '4' : '6'; ?>">
+                    <select name="status" class="form-select form-select-sm bg-light border-0" style="padding-top: 0.45rem; padding-bottom: 0.45rem;" onchange="this.form.submit()">
                         <option value="">Filter Status: Semua</option>
                         <option value="Lunas" <?= (($selectedStatus ?? '') == 'Lunas') ? 'selected' : ''; ?>>Lunas (Terverifikasi)</option>
                         <option value="Gagal" <?= (($selectedStatus ?? '') == 'Gagal') ? 'selected' : ''; ?>>Gagal / Dibatalkan</option>

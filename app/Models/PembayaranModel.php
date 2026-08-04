@@ -29,9 +29,10 @@ class PembayaranModel extends Model
     // Method untuk mengambil data pembayaran beserta relasi ke tabel santri dan kelas
     public function getPembayaranWithSantri()
     {
-        return $this->select('pembayaran.*, santri.nama_santri, kelas.nama_kelas')
+        return $this->select('pembayaran.*, santri.nama_santri, kelas.nama_kelas, wali.nama_wali, wali.no_hp as no_hp_wali')
             ->join('santri', 'santri.id = pembayaran.id_santri', 'left')
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+            ->join('wali', 'wali.id = santri.id_wali', 'left')
             ->orderBy('pembayaran.created_at', 'DESC');
     }
 }

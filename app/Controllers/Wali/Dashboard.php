@@ -5,23 +5,26 @@ namespace App\Controllers\Wali;
 use App\Controllers\BaseController;
 use App\Models\SantriModel;
 use App\Models\HafalanModel;
+use App\Models\PembayaranModel;
 
 class Dashboard extends BaseController
 {
     protected $santriModel;
     protected $hafalanModel;
+    protected $pembayaranModel;
 
     public function __construct()
     {
         $this->santriModel  = new SantriModel();
         $this->hafalanModel = new HafalanModel();
+        $this->pembayaranModel = new PembayaranModel();
     }
 
     public function index()
     {
-        $santriModel  = new SantriModel();
-        $hafalanModel = new HafalanModel();
-        $idWali       = session()->get('ref_id') ?? session()->get('id');
+        $santriModel     = new SantriModel();
+        $this->hafalanModel = new HafalanModel();
+        $idWali          = session()->get('ref_id') ?? session()->get('id');
 
         $anak = $santriModel->select('santri.*, kelas.nama_kelas')
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
@@ -30,9 +33,9 @@ class Dashboard extends BaseController
 
         if (!empty($anak)) {
             foreach ($anak as &$a) {
-                $a['stat_total_setoran'] = $hafalanModel->where('id_santri', $a['id'])->countAllResults();
+                $a['stat_total_setoran'] = $this->hafalanModel->where('id_santri', $a['id'])->countAllResults();
 
-                $terakhir = $hafalanModel->select('juz, ayat_mulai, ayat_selesai')
+                $terakhir = $this->hafalanModel->select('juz, ayat_mulai, ayat_selesai')
                     ->where('id_santri', $a['id'])
                     ->orderBy('created_at', 'DESC')
                     ->first();
@@ -48,19 +51,30 @@ class Dashboard extends BaseController
 
         $idsAnak = array_column($anak, 'id');
         $setoranTerbaru = [];
+        $tagihanTerbaru = [];
+
         if (!empty($idsAnak)) {
-            $setoranTerbaru = $hafalanModel->select('hafalan.*, santri.nama_santri as nama_santri, santri.nis')
+            $setoranTerbaru = $this->hafalanModel->select('hafalan.*, santri.nama_santri as nama_santri, santri.nis')
                 ->join('santri', 'santri.id = hafalan.id_santri', 'inner')
                 ->whereIn('hafalan.id_santri', $idsAnak)
                 ->orderBy('hafalan.created_at', 'DESC')
                 ->limit(5)
                 ->findAll();
+
+            $tagihanTerbaru = $this->pembayaranModel->select('pembayaran.*, santri.nama_santri, kelas.nama_kelas')
+                ->join('santri', 'santri.id = pembayaran.id_santri', 'inner')
+                ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+                ->whereIn('pembayaran.id_santri', $idsAnak)
+                ->orderBy('pembayaran.created_at', 'DESC')
+                ->limit(4)
+                ->findAll();
         }
 
         $data = [
-            'title'           => 'Dashboard Wali',
-            'anak'            => $anak,
-            'setoran_terbaru' => $setoranTerbaru,
+            'title'            => 'Dashboard Wali',
+            'anak'             => $anak,
+            'setoran_terbaru'  => $setoranTerbaru,
+            'tagihan_terbaru'  => $tagihanTerbaru,
             'stat_jumlah_anak' => count($anak)
         ];
 
