@@ -3,11 +3,22 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\SantriModel;
 
 class Esertifikat extends BaseController
 {
+    protected $santriModel;
+
+    public function __construct()
+    {
+        $this->santriModel = new SantriModel();
+    }
+
     public function index()
     {
-        return view('admin/esertifikat');
+        // Ambil data santri beserta kelas dan walinya dari fungsi yang sudah ada
+        $data['sertifikat'] = $this->santriModel->getSantriWithRelations();
+
+        return view('admin/esertifikat', $data);
     }
 }

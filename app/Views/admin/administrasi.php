@@ -98,15 +98,33 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <select name="month" class="form-select form-select-sm bg-light border-0 py-2" onchange="this.form.submit()">
-                            <option value="09" <?= ($selectedMonth == '09') ? 'selected' : ''; ?>>September 2026</option>
-                            <option value="08" <?= ($selectedMonth == '08') ? 'selected' : ''; ?>>Agustus 2026</option>
-                            <option value="07" <?= ($selectedMonth == '07') ? 'selected' : ''; ?>>Juli 2026</option>
-                            <option value="06" <?= ($selectedMonth == '06') ? 'selected' : ''; ?>>Juni 2026</option>
-                            <option value="05" <?= ($selectedMonth == '05') ? 'selected' : ''; ?>>Mei 2026</option>
-                            <option value="04" <?= ($selectedMonth == '04') ? 'selected' : ''; ?>>April 2026</option>
-                            <option value="03" <?= ($selectedMonth == '03') ? 'selected' : ''; ?>>Maret 2026</option>
-                            <option value="02" <?= ($selectedMonth == '02') ? 'selected' : ''; ?>>Februari 2026</option>
-                            <option value="01" <?= ($selectedMonth == '01') ? 'selected' : ''; ?>>Januari 2026</option>
+                            <?php
+                            // Array nama-nama bulan dalam bahasa Indonesia
+                            $namaBulan = [
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember'
+                            ];
+
+                            $currentYear = $selectedYear ?? date('Y');
+
+                            for ($m = 12; $m >= 1; $m--) {
+                                $mFormatted = str_pad($m, 2, '0', STR_PAD_LEFT);
+                                $label = $namaBulan[$mFormatted] . ' ' . $currentYear;
+                                $isSelected = ($selectedMonth == $mFormatted) ? 'selected' : '';
+
+                                echo "<option value=\"{$mFormatted}\" {$isSelected}>{$label}</option>";
+                            }
+                            ?>
                         </select>
                     </div>
                     <div class="col-lg-4 col-md-6">

@@ -104,110 +104,75 @@
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
                             <th class="py-3" style="width: 25%;">Nama Santri & Nomor Sertifikat</th>
                             <th class="py-3" style="width: 25%;">Kategori / Jenis Penghargaan</th>
-                            <th class="py-3" style="width: 15%;">Tanggal Terbit</th>
-                            <th class="py-3 text-center" style="width: 15%;">Validasi QR</th>
+                            <th class="py-3" style="width: 15%;">Kelas & Wali</th>
+                            <th class="py-3 text-center" style="width: 15%;">Status Akun</th>
                             <th class="py-3 text-end pe-4" style="width: 15%;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Contoh Baris Data 1 -->
-                        <tr>
-                            <td class="ps-4 fw-medium text-muted">1</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                        AZ
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;">Ahmad Zaki Al-Faruq</h6>
-                                        <small class="font-monospace text-secondary" style="font-size: 0.75rem;">CERT/HUDFAL/2026/089</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="fw-semibold text-dark d-block">Sertifikat Khatam Tahfidz 30 Juz</span>
-                                <small class="text-muted">Predikat: Mumtaz (Sangat Baik)</small>
-                            </td>
-                            <td><span class="text-secondary small fw-medium">15 Juli 2026</span></td>
-                            <td class="text-center">
-                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-semibold">
-                                    <i class="fa-solid fa-check-circle me-1"></i> Valid
-                                </span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="d-flex justify-content-end gap-1">
-                                    <a href="#" class="btn btn-sm btn-light text-success border-0 rounded-2" title="Unduh PDF">
-                                        <i class="fa-solid fa-download"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Pratinjau">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-light text-warning border-0 rounded-2" title="Edit">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus" onclick="return confirm('Yakin ingin menghapus data sertifikat ini?')">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <!-- Contoh Baris Data 2 -->
-                        <tr>
-                            <td class="ps-4 fw-medium text-muted">2</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                        FN
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;">Fatimah Nurul Aini</h6>
-                                        <small class="font-monospace text-secondary" style="font-size: 0.75rem;">CERT/HUDFAL/2026/090</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="fw-semibold text-dark d-block">Piagam Juara Umum Kelas Aliyah</span>
-                                <small class="text-muted">Bidang Akademik Pesantren</small>
-                            </td>
-                            <td><span class="text-secondary small fw-medium">18 Juli 2026</span></td>
-                            <td class="text-center">
-                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-semibold">
-                                    <i class="fa-solid fa-check-circle me-1"></i> Valid
-                                </span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="d-flex justify-content-end gap-1">
-                                    <a href="#" class="btn btn-sm btn-light text-success border-0 rounded-2" title="Unduh PDF">
-                                        <i class="fa-solid fa-download"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Pratinjau">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-light text-warning border-0 rounded-2" title="Edit">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus" onclick="return confirm('Yakin ingin menghapus data sertifikat ini?')">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+                        <?php if (!empty($sertifikat)): ?>
+                            <?php $no = 1;
+                            foreach ($sertifikat as $row): ?>
+                                <?php
+                                // Membuat inisial nama untuk avatar
+                                $words = explode(' ', $row['nama_santri']);
+                                $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+
+                                // Generate nomor sertifikat virtual aman tanpa kolom tambahan
+                                $noSertifikat = 'CERT/PONTREN/' . date('Y') . '/' . ($row['nis'] ?? '000');
+                                ?>
+                                <tr>
+                                    <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                <?= $initials; ?>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-semibold text-dark" style="font-size: 0.9rem;"><?= esc($row['nama_santri']); ?></h6>
+                                                <small class="font-monospace text-secondary" style="font-size: 0.75rem;"><?= $noSertifikat; ?></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="fw-semibold text-dark d-block">Sertifikat Kelulusan & Pesantren</span>
+                                        <small class="text-muted">NIS: <?= esc($row['nis']); ?></small>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark small fw-medium d-block"><?= esc($row['nama_kelas'] ?? 'Belum ada Kelas'); ?></span>
+                                        <small class="text-muted">Wali: <?= esc($row['nama_wali'] ?? '-'); ?></small>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if (isset($row['status_aktif']) && $row['status_aktif'] == 'Aktif'): ?>
+                                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-semibold">
+                                                <i class="fa-solid fa-check-circle me-1"></i> Aktif
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-1 rounded-pill small fw-semibold">
+                                                <i class="fa-solid fa-minus-circle me-1"></i> Non-Aktif
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <div class="d-flex justify-content-end gap-1">
+                                            <a href="#" class="btn btn-sm btn-light text-success border-0 rounded-2" title="Unduh Sertifikat PDF">
+                                                <i class="fa-solid fa-download"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-sm btn-light text-primary border-0 rounded-2" title="Pratinjau E-Sertifikat">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">Belum ada data santri.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
-        </div>
-        <!-- Card Footer / Pagination -->
-        <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small">Menampilkan 1 hingga 2 dari total 94 data sertifikat</span>
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled"><span class="page-link rounded-start-3">Sebelumnya</span></li>
-                    <li class="page-item active"><span class="page-link bg-success border-success">1</span></li>
-                    <li class="page-item"><a class="page-link text-success" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link text-success" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link text-success rounded-end-3" href="#">Berikutnya</a></li>
-                </ul>
-            </nav>
         </div>
     </div>
 
