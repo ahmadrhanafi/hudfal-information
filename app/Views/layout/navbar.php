@@ -1,4 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-2 border-bottom sticky-top transition-base" id="mainNavbar">
+    <?php
+    $role = session()->get('role');
+    $dashboardUrl = base_url($role . '/dashboard');
+    ?>
     <div class="container-fluid">
         <!-- Brand / Title -->
         <div class="d-flex align-items-center gap-2">
@@ -45,14 +49,34 @@
                         <small class="text-muted"><?= session()->get('role') == 'guru' ? 'Pengampu: ' . session()->get('nama_kelas') : (session()->get('role') == 'wali' ? 'Wali Santri' : 'User') ?></small>
                     </li>
                     <li>
-                        <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-dark hover-bg-light transition-base" href="<?= base_url('profile') ?>">
-                            <i class="fa-solid fa-user text-success"></i> <span class="small fw-medium">Profile Saya</span>
-                        </a>
+                        <?php if ($role === 'admin'): ?>
+                            <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-dark hover-bg-light transition-base" href="<?= base_url('admin/profile') ?>">
+                                <i class="fa-solid fa-user text-success"></i> <span class="small fw-medium">Profile Saya</span>
+                            </a>
+                        <?php elseif ($role === 'guru'): ?>
+                            <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-dark hover-bg-light transition-base" href="<?= base_url('guru/profile') ?>">
+                                <i class="fa-solid fa-user text-success"></i> <span class="small fw-medium">Profile Saya</span>
+                            </a>
+                        <?php elseif ($role === 'wali'): ?>
+                            <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-dark hover-bg-light transition-base" href="<?= base_url('wali/profile') ?>">
+                                <i class="fa-solid fa-user text-success"></i> <span class="small fw-medium">Profile Saya</span>
+                            </a>
+                        <?php endif; ?>
                     </li>
                     <li>
-                        <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-dark hover-bg-light transition-base" href="<?= base_url('settings') ?>">
+                        <?php if ($role === 'admin'): ?>
+                        <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-dark hover-bg-light transition-base" href="<?= base_url('admin/pengaturan') ?>">
                             <i class="fa-solid fa-gear text-secondary"></i> <span class="small fw-medium">Pengaturan</span>
                         </a>
+                        <?php elseif ($role === 'guru'): ?>
+                            <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-dark hover-bg-light transition-base" href="<?= base_url('guru/pengaturan') ?>">
+                            <i class="fa-solid fa-gear text-secondary"></i> <span class="small fw-medium">Pengaturan</span>
+                        </a>
+                        <?php elseif ($role === 'wali'): ?>
+                            <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-dark hover-bg-light transition-base" href="<?= base_url('wali/pengaturan') ?>">
+                            <i class="fa-solid fa-gear text-secondary"></i> <span class="small fw-medium">Pengaturan</span>
+                        </a>
+                        <?php endif; ?>
                     </li>
                     <!-- Tombol Toggle Dark Mode Pindah ke Sini -->
                     <li>

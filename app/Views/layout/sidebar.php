@@ -48,9 +48,9 @@
             <a href="<?= base_url('admin/administrasi') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('admin/administrasi*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-file-invoice-dollar fa-fw me-2"></i> <span>Administrasi</span>
             </a>
-            <a href="<?= base_url('admin/esertifikat') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('admin/esertifikat*')) ? 'active' : '' ?>">
+            <!-- <a href="<?= base_url('admin/esertifikat') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('admin/esertifikat*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-award fa-fw me-2"></i> <span>E-Sertifikat</span>
-            </a>
+            </a> -->
         <?php endif; ?>
 
         <!-- MENU KHUSUS GURU/PENGAJAR -->
@@ -82,9 +82,9 @@
             <a href="<?= base_url('wali/riwayat-tagihan') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('wali/riwayat-tagihan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-receipt fa-fw me-2"></i> <span>Riwayat Tagihan</span>
             </a>
-            <a href="<?= base_url('wali/esertifikat') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('wali/esertifikat*')) ? 'active' : '' ?>">
+            <!-- <a href="<?= base_url('wali/esertifikat') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 <?= (url_is('wali/esertifikat*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-award fa-fw me-2"></i> <span>E-Sertifikat</span>
-            </a>
+            </a> -->
         <?php endif; ?>
     </nav>
 
@@ -93,7 +93,7 @@
         <div class="custom-divider mx-3 mb-2"></div>
 
         <?php if ($role === 'admin'): ?>
-            <a href="<?= base_url('admin/pengaturan') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 text-white <?= (url_is('settings*')) ? 'active' : '' ?>">
+            <a href="<?= base_url('admin/pengaturan') ?>" class="nav-link px-3 py-2 rounded-3 mb-1 text-white <?= (url_is('pengaturan*')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-gear fa-fw me-2"></i> <span>Settings</span>
             </a>
         <?php elseif ($role === 'guru'): ?>
