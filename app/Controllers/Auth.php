@@ -36,13 +36,16 @@ class Auth extends BaseController
             if ($data['role'] == 'guru' && !empty($data['ref_id'])) {
                 $db = \Config\Database::connect();
                 $guru = $db->table('guru')
-                    ->select('guru.id_kelas_diampu, kelas.nama_kelas')
+                    ->select('guru.id_kelas_diampu, guru.status_aktif, kelas.nama_kelas')
                     ->join('kelas', 'kelas.id = guru.id_kelas_diampu', 'left')
                     ->where('guru.id', $data['ref_id'])
                     ->get()
                     ->getRowArray();
 
                 if ($guru) {
+                    if (strtolower($guru['status_aktif']) == 'non-aktif') {
+                        return redirect()->back()->with('error', 'Akun Anda sudah non-aktif. Silakan hubungi admin.');
+                    }
                     $idKelas = $guru['id_kelas_diampu'];
                     $namaKelas = $guru['nama_kelas'];
                 }
@@ -60,15 +63,15 @@ class Auth extends BaseController
             }
 
             $session->set([
-                'id'           => $data['id'],
-                'role'         => $data['role'],
-                'name'         => $data['name'],
-                'nama_wali'    => $namaWali ? $namaWali : $data['name'], // Simpan nama wali
-                'foto'         => !empty($data['foto']) ? base_url('upload/profile/' . $data['foto']) : base_url('upload/profile/default.png'),
-                'ref_id'       => $data['ref_id'],
-                'id_kelas'     => $idKelas,
-                'nama_kelas'   => $namaKelas ? $namaKelas : 'Belum Ada Kelas',
-                'logged_in'    => TRUE
+                'id' => $data['id'],
+                'role' => $data['role'],
+                'name' => $data['name'],
+                'nama_wali' => $namaWali ? $namaWali : $data['name'], // Simpan nama wali
+                'foto' => !empty($data['foto']) ? base_url('upload/profile/' . $data['foto']) : base_url('upload/profile/default.png'),
+                'ref_id' => $data['ref_id'],
+                'id_kelas' => $idKelas,
+                'nama_kelas' => $namaKelas ? $namaKelas : 'Belum Ada Kelas',
+                'logged_in' => TRUE
             ]);
 
             return redirect()->to('/loading');

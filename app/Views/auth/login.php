@@ -89,8 +89,16 @@
             </div>
 
             <?php if (session()->getFlashdata('error')): ?>
-                <div id="flash-alert" class="alert alert-danger border-0 rounded-3 text-center">
-                    <?= session()->getFlashdata('error') ?>
+                <div id="flash-alert"
+                    class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-4 d-flex align-items-center p-3 mb-4"
+                    role="alert">
+                    <div class="flex-grow-1">
+                        <span class="fw-bold d-block text-danger mb-0" style="font-size: 14px;">
+                            <i class="fa fa-exclamation-triangle me-2"></i>Login Gagal!
+                        </span>
+                        <span class="text-secondary small"
+                            style="font-size: 10px;"><?= session()->getFlashdata('error') ?></span>
+                    </div>
                 </div>
             <?php endif; ?>
 
@@ -104,8 +112,10 @@
                 <div class="mb-4">
                     <label class="form-label fw-bold" style="font-size: 0.8rem; color: #1e970e;">Password</label>
                     <div class="input-group">
-                        <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
-                        <button class="btn btn-outline-secondary" type="button" id="togglePassword" style="border-color: #ddd;">
+                        <input type="password" name="password" id="password" class="form-control" placeholder="••••••••"
+                            required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword"
+                            style="border-color: #ddd;">
                             <i class="fa-solid fa-eye text-muted-gray" id="eyeIcon"></i>
                         </button>
                     </div>
@@ -117,7 +127,7 @@
 
     <script>
         // Alert Duration
-        window.setTimeout(function() {
+        window.setTimeout(function () {
             const alertElement = document.getElementById('flash-alert');
             if (alertElement) {
                 // Kita pakai fade out transisi dulu biar mulus
@@ -125,7 +135,7 @@
                 alertElement.style.opacity = "0";
 
                 // Setelah transisi selesai, hapus elemennya dari halaman
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     alertElement.remove();
                 }, 500);
             }
@@ -136,7 +146,7 @@
         const password = document.querySelector('#password');
         const eyeIcon = document.querySelector('#eyeIcon');
 
-        togglePassword.addEventListener('click', function(e) {
+        togglePassword.addEventListener('click', function (e) {
             const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
             password.setAttribute('type', type);
 
