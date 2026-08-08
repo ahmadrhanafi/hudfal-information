@@ -65,26 +65,39 @@ class Hafalan extends BaseController
                 'predikat' => 'required'
             ])
         ) {
-            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan! Mohon lengkapi data dengan benar.');
+            return redirect()->back()->withInput()->with('error', 'Mohon lengkapi data dengan benar.');
+        }
+
+        // TAMBAHAN: Validasi Logika Ayat
+        $ayatMulai = $this->request->getVar('ayat_mulai');
+        $ayatSelesai = $this->request->getVar('ayat_selesai');
+
+        if ($ayatSelesai < $ayatMulai) {
+            return redirect()->back()->withInput()->with('error', 'Ayat selesai tidak boleh lebih kecil dari ayat mulai.');
         }
 
         $this->hafalanModel->save([
             'id_santri' => $this->request->getVar('id_santri'),
-            'id_guru' => session()->get('ref_id'), // Otomatis dari guru yang login
+            'id_guru' => session()->get('ref_id'),
             'jenis' => $this->request->getVar('jenis'),
             'juz' => $this->request->getVar('juz'),
             'surah' => $this->request->getVar('surah'),
-            'ayat_mulai' => $this->request->getVar('ayat_mulai'),
-            'ayat_selesai' => $this->request->getVar('ayat_selesai'),
+            'ayat_mulai' => $ayatMulai,
+            'ayat_selesai' => $ayatSelesai,
             'predikat' => $this->request->getVar('predikat'),
             'keterangan' => $this->request->getVar('keterangan')
         ]);
 
-        return redirect()->to(base_url('guru/hafalan'))->with('success', 'Data setoran hafalan berhasil ditambahkan!');
+        return redirect()->to(base_url('guru/hafalan'))->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function update($id)
     {
+        $hafalan = $this->hafalanModel->find($id);
+        if (!$hafalan || $hafalan['id_guru'] != session()->get('ref_id')) {
+            return redirect()->to(base_url('guru/hafalan'))->with('error', 'Akses ditolak! Data tidak ditemukan atau bukan milik Anda.');
+        }
+
         if (
             !$this->validate([
                 'id_santri' => 'required|numeric',
@@ -96,12 +109,12 @@ class Hafalan extends BaseController
                 'predikat' => 'required'
             ])
         ) {
-            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui! Mohon cek kembali inputan anda.');
+            return redirect()->back()->withInput()->with('error', 'Mohon cek kembali inputan.');
         }
 
         $this->hafalanModel->update($id, [
             'id_santri' => $this->request->getVar('id_santri'),
-            'id_guru' => session()->get('ref_id'), // Tetap di-set ke guru yang sedang login
+            'id_guru' => session()->get('ref_id'),
             'jenis' => $this->request->getVar('jenis'),
             'juz' => $this->request->getVar('juz'),
             'surah' => $this->request->getVar('surah'),
@@ -111,19 +124,19 @@ class Hafalan extends BaseController
             'keterangan' => $this->request->getVar('keterangan')
         ]);
 
-        return redirect()->to(base_url('guru/hafalan'))->with('success', 'Data setoran hafalan berhasil diperbarui!');
+        return redirect()->to(base_url('guru/hafalan'))->with('success', 'Data berhasil diperbarui!');
     }
 
     public function delete($id)
     {
         $hafalan = $this->hafalanModel->find($id);
 
-        if (!$hafalan) {
-            return redirect()->to(base_url('guru/hafalan'))->with('error', 'Data hafalan tidak ditemukan.');
+        if (!$hafalan || $hafalan['id_guru'] != session()->get('ref_id')) {
+            return redirect()->to(base_url('guru/hafalan'))->with('error', 'Akses ditolak! Anda tidak berhak menghapus data ini.');
         }
 
         $this->hafalanModel->delete($id);
 
-        return redirect()->to(base_url('guru/hafalan'))->with('success', 'Data hafalan berhasil dihapus!');
+        return redirect()->to(base_url('guru/hafalan'))->with('success', 'Data berhasil dihapus!');
     }
 }

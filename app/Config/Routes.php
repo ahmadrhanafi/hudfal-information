@@ -82,6 +82,7 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     // Manajemen Hafalan
     $routes->get('hafalan', 'Guru\Hafalan::index');
     $routes->get('detail-riwayat-hafalan/(:num)', 'Guru\RiwayatHafalan::detail/$1');
+    $routes->get('hafalan/getSurahByJuz/(:num)', 'Guru\Hafalan::getSurahByJuz/$1');
     $routes->post('hafalan/store', 'Guru\Hafalan::store');
     $routes->post('hafalan/update/(:num)', 'Guru\Hafalan::update/$1');
     $routes->get('hafalan/delete/(:num)', 'Guru\Hafalan::delete/$1');

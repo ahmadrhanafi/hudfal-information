@@ -65,8 +65,10 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-semibold text-dark d-block text-dark-mode">Juz <?= $row['juz']; ?> (Surah <?= esc($row['surah']); ?>)</span>
-                                        <small class="text-muted text-dark-mode">Ayat <?= $row['ayat_mulai']; ?> - <?= $row['ayat_selesai']; ?></small>
+                                        <span class="fw-semibold text-dark-mode d-block">Juz <?= esc($row['juz']); ?> <span
+                                                class="badge bg-dark bg-opacity-50 text-dark-mode border ms-1"><?= ucfirst($row['jenis']); ?></span></span>
+                                        <small class="text-secondary" style="font-size: 12px;">Surah <?= esc($row['surah']); ?>
+                                            (Ayat <?= $row['ayat_mulai']; ?>-<?= $row['ayat_selesai']; ?>)</small>
                                     </td>
                                     <td class="text-center">
                                         <?php
@@ -198,15 +200,15 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-medium small text-muted">Jenis Setoran</label>
                             <select name="jenis" class="form-select" required>
-                                <option value="ziyadah">Ziyadah (Hafalan Baru)</option>
-                                <option value="murojaah">Murojaah (Ulang Hafalan)</option>
+                                <option value="ZIYADAH">Ziyadah (Hafalan Baru)</option>
+                                <option value="MUROJAAH">Murojaah (Ulang Hafalan)</option>
                             </select>
                         </div>
 
                         <!-- Juz -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-medium small text-muted">Juz</label>
-                            <select name="juz" class="form-select" required>
+                            <select name="juz" id="input-juz" class="form-select" required>
                                 <option value="" disabled selected>-- Pilih Juz --</option>
                                 <?php for ($i = 1; $i <= 30; $i++): ?>
                                     <option value="<?= $i; ?>">Juz <?= $i; ?></option>
@@ -215,24 +217,26 @@
                         </div>
                     </div>
 
-                    <!-- Surah -->
+                    <!-- Surah (Dibuat Dinamis Berdasarkan Juz) -->
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Surah</label>
-                        <input type="text" name="surah" class="form-control" placeholder="Contoh: Al-Baqarah" required>
+                        <select name="surah" id="input-surah" class="form-select" required>
+                            <option value="" disabled selected>-- Pilih Juz Terlebih Dahulu --</option>
+                        </select>
                     </div>
 
                     <div class="row">
                         <!-- Ayat Mulai -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-medium small text-muted">Dari Ayat</label>
-                            <input type="number" name="ayat_mulai" class="form-control" placeholder="Contoh: 1" min="1" required>
+                            <input type="number" name="ayat_mulai" id="input-ayat-mulai" class="form-control" placeholder="Contoh: 1" min="1" required>
                         </div>
 
                         <!-- Ayat Selesai -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-medium small text-muted">Sampai Ayat</label>
-                            <input type="number" name="ayat_selesai" class="form-control" placeholder="Contoh: 10" min="1" required>
-                        </div>
+                            <input type="number" name="ayat_selesai" id="input-ayat-selesai" class="form-control" placeholder="Contoh: 10" min="1" required>
+                            </div>
                     </div>
 
                     <!-- Predikat / Nilai -->
@@ -336,7 +340,7 @@
                         <label class="form-label small fw-medium text-muted">Jenis Setoran</label>
                         <select name="jenis" id="edit-jenis" class="form-select form-select-sm" required>
                             <option value="ZIYADAH">ZIYADAH (Hafalan Baru)</option>
-                            <option value="MURABAHAH">MURABAHAH / Murojaah</option>
+                            <option value="MUROJAAH">MUROJAAH (Ulang Hafalan)</option>
                         </select>
                     </div>
 
@@ -344,11 +348,18 @@
                     <div class="row g-2 mb-3">
                         <div class="col-md-4">
                             <label class="form-label small fw-medium text-muted">Juz</label>
-                            <input type="number" name="juz" id="edit-juz" class="form-control form-control-sm" required>
+                            <select name="juz" id="edit-juz" class="form-select form-select-sm" required>
+                                <option value="" disabled>-- Pilih Juz --</option>
+                                <?php for ($i = 1; $i <= 30; $i++): ?>
+                                    <option value="<?= $i; ?>">Juz <?= $i; ?></option>
+                                <?php endfor; ?>
+                            </select>
                         </div>
                         <div class="col-md-8">
                             <label class="form-label small fw-medium text-muted">Surah</label>
-                            <input type="text" name="surah" id="edit-surah" class="form-control form-control-sm" required>
+                            <select name="surah" id="edit-surah" class="form-select form-select-sm" required>
+                                <option value="" disabled selected>-- Pilih Surah --</option>
+                            </select>
                         </div>
                     </div>
 
@@ -369,6 +380,7 @@
                         <label class="form-label small fw-medium text-muted">Predikat</label>
                         <select name="predikat" id="edit-predikat" class="form-select form-select-sm" required>
                             <option value="Mumtaz">Mumtaz (Sangat Baik)</option>
+                            <option value="Jayyid Jiddan">Jayyid Jiddan (Baik Sekali)</option>
                             <option value="Jayyid">Jayyid (Baik)</option>
                             <option value="Maqbul">Maqbul (Cukup)</option>
                         </select>
@@ -389,81 +401,140 @@
     </div>
 </div>
 
-<!-- SCRIPT JAVASCRIPT UNTUK MENGISI MODAL OTOMATIS -->
+<!-- SCRIPT JAVASCRIPT UNTUK AJAX & FILTER -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const modalDetail = document.getElementById('modalDetail');
-        modalDetail.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
+        // Fungsi reusable untuk mengambil data surah berdasarkan juz via AJAX
+        function loadSurahByJuz(juz, targetSelectId, selectedSurah = '', inputMulaiId = '', inputSelesaiId = '', valMulai = '', valSelesai = '') {
+            const surahSelect = document.getElementById(targetSelectId);
+            if (!surahSelect) return;
 
-            document.getElementById('det-nama').innerText = ': ' + button.getAttribute('data-nama');
-            document.getElementById('det-tanggal').innerText = ': ' + button.getAttribute('data-tanggal');
-            document.getElementById('det-jenis').innerText = ': ' + button.getAttribute('data-jenis');
-            document.getElementById('det-capaian').innerText = ': Juz ' + button.getAttribute('data-juz') + ' (' + button.getAttribute('data-surah') + ' ayat ' + button.getAttribute('data-ayatmulai') + '-' + button.getAttribute('data-ayatselesai') + ')';
-            document.getElementById('det-predikat').innerText = button.getAttribute('data-predikat');
-            document.getElementById('det-keterangan').innerText = ': ' + button.getAttribute('data-keterangan');
-        });
-    });
+            surahSelect.innerHTML = '<option value="" disabled selected>Memuat data...</option>';
 
-    // Modal tambah setoran
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('searchInput');
-        const juzFilter = document.getElementById('juzFilter');
-        const predikatFilter = document.getElementById('predikatFilter');
-        const rows = document.querySelectorAll('#tableBodyHafalan .hafalan-row');
-        const totalDataText = document.getElementById('totalDataTextHafalan');
-        const emptyRow = document.getElementById('emptyRowHafalan');
-
-        function filterHafalan() {
-            const keyword = searchInput ? searchInput.value.toLowerCase() : '';
-            const juzVal = juzFilter ? juzFilter.value.toLowerCase() : 'semua';
-            const predikatVal = predikatFilter ? predikatFilter.value.toLowerCase() : 'semua';
-
-            let visibleCount = 0;
-
-            rows.forEach(row => {
-                const rowText = row.textContent.toLowerCase();
-                const rowJuz = row.getAttribute('data-juz');
-                const rowPredikat = row.getAttribute('data-predikat');
-
-                const matchesKeyword = rowText.includes(keyword);
-                const matchesJuz = (juzVal === 'semua' || rowJuz === juzVal);
-                const matchesPredikat = (predikatVal === 'semua' || rowPredikat === predikatVal);
-
-                if (matchesKeyword && matchesJuz && matchesPredikat) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            if (emptyRow) {
-                if (visibleCount === 0) {
-                    emptyRow.classList.remove('d-none');
-                } else {
-                    emptyRow.classList.add('d-none');
-                }
+            if (!juz) {
+                surahSelect.innerHTML = '<option value="" disabled selected>-- Pilih Juz Terlebih Dahulu --</option>';
+                return;
             }
 
-            if (totalDataText) {
-                totalDataText.textContent = `Menampilkan total ${visibleCount} data setoran hafalan`;
+            fetch("<?= base_url('guru/hafalan/getSurahByJuz/'); ?>" + juz)
+                .then(response => response.json())
+                .then(data => {
+                    surahSelect.innerHTML = '<option value="" disabled selected>-- Pilih Surah --</option>';
+                    if (data && data.length > 0) {
+                        data.forEach(item => {
+                            let suratName = item.surah || item.nama_surah || item.surat || item.name || Object.values(item)[0];
+                            let maxAyat = item.jumlah_ayat || item.total_ayat || item.verses_count || item.ayat || 300;
+                            let defaultMulai = item.ayat_mulai_default || 1;
+                            let defaultSelesai = item.ayat_selesai_default || maxAyat;
+
+                            let isSelected = (suratName === selectedSurah) ? 'selected' : '';
+
+                            surahSelect.innerHTML += `<option value="${suratName}" data-max-ayat="${maxAyat}" data-default-mulai="${defaultMulai}" data-default-selesai="${defaultSelesai}" ${isSelected}>${suratName}</option>`;
+                        });
+
+                        if (selectedSurah && inputMulaiId && inputSelesaiId) {
+                            updateMaxAyat(surahSelect, inputMulaiId, inputSelesaiId, valMulai, valSelesai);
+                        }
+                    } else {
+                        surahSelect.innerHTML = '<option value="" disabled selected>Tidak ada surah ditemukan</option>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    surahSelect.innerHTML = '<option value="" disabled selected>Gagal memuat surah</option>';
+                });
+        }
+
+        // Fungsi untuk memperbarui nilai dan atribut max pada input ayat
+        function updateMaxAyat(surahSelectElement, inputMulaiId, inputSelesaiId, valMulai = '', valSelesai = '') {
+            const selectedOption = surahSelectElement.options[surahSelectElement.selectedIndex];
+            if (!selectedOption) return;
+
+            const maxAyat = selectedOption.getAttribute('data-max-ayat') || 300;
+            const defaultMulai = selectedOption.getAttribute('data-default-mulai') || 1;
+            const defaultSelesai = selectedOption.getAttribute('data-default-selesai') || maxAyat;
+
+            const inputMulai = document.getElementById(inputMulaiId);
+            const inputSelesai = document.getElementById(inputSelesaiId);
+
+            if (inputMulai) {
+                inputMulai.max = maxAyat;
+                inputMulai.value = (valMulai !== '') ? valMulai : defaultMulai;
+            }
+            if (inputSelesai) {
+                inputSelesai.max = maxAyat;
+                inputSelesai.value = (valSelesai !== '') ? valSelesai : defaultSelesai;
             }
         }
 
-        if (searchInput) searchInput.addEventListener('keyup', filterHafalan);
-        if (juzFilter) juzFilter.addEventListener('change', filterHafalan);
-        if (predikatFilter) predikatFilter.addEventListener('change', filterHafalan);
-    });
+        // 1. Event listener Modal Input Hafalan Baru
+        const inputJuz = document.getElementById('input-juz');
+        const inputSurah = document.getElementById('input-surah');
 
-    // Modal edit setoran
-    document.addEventListener("DOMContentLoaded", function() {
+        if (inputJuz) {
+            inputJuz.addEventListener('change', function () {
+                // Panggil AJAX load surah, set target ke input-surah, dan otomatis update input ayat mulai/selesai
+                loadSurahByJuz(this.value, 'input-surah', '', 'input-ayat-mulai', 'input-ayat-selesai');
+            });
+        }
+
+        if (inputSurah) {
+            inputSurah.addEventListener('change', function () {
+                updateMaxAyat(this, 'input-ayat-mulai', 'input-ayat-selesai');
+            });
+        }
+
+        // 2. Event listener Modal Edit Hafalan
+        const editJuz = document.getElementById('edit-juz');
+        const editSurah = document.getElementById('edit-surah');
+
+        if (editJuz) {
+            editJuz.addEventListener('change', function () {
+                loadSurahByJuz(this.value, 'edit-surah', '', 'edit-ayat-mulai', 'edit-ayat-selesai');
+            });
+        }
+
+        if (editSurah) {
+            editSurah.addEventListener('change', function () {
+                updateMaxAyat(this, 'edit-ayat-mulai', 'edit-ayat-selesai');
+            });
+        }
+
+        // Pengaman tambahan: cegah ketik manual melebihi max ayat
+        ['input-ayat-mulai', 'input-ayat-selesai', 'edit-ayat-mulai', 'edit-ayat-selesai'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', function () {
+                    const max = parseInt(this.max) || 0;
+                    if (max > 0 && parseInt(this.value) > max) {
+                        this.value = max;
+                    }
+                });
+            }
+        });
+
+        // Modal Detail
+        const modalDetail = document.getElementById('modalDetail');
+        if (modalDetail) {
+            modalDetail.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                if (!button) return;
+                document.getElementById('det-nama').innerText = ': ' + button.getAttribute('data-nama');
+                document.getElementById('det-tanggal').innerText = ': ' + button.getAttribute('data-tanggal');
+                document.getElementById('det-jenis').innerText = ': ' + button.getAttribute('data-jenis');
+                document.getElementById('det-capaian').innerText = ': Juz ' + button.getAttribute('data-juz') + ' (' + button.getAttribute('data-surah') + ' ayat ' + button.getAttribute('data-ayatmulai') + '-' + button.getAttribute('data-ayatselesai') + ')';
+                document.getElementById('det-predikat').innerText = button.getAttribute('data-predikat');
+                document.getElementById('det-keterangan').innerText = ': ' + button.getAttribute('data-keterangan');
+            });
+        }
+
+        // Modal Edit Setoran & load surah lama
         const modalEdit = document.getElementById('modalEdit');
         if (modalEdit) {
-            modalEdit.addEventListener('show.bs.modal', function(event) {
+            modalEdit.addEventListener('show.bs.modal', function (event) {
                 const button = event.relatedTarget;
+                if (!button) return;
 
-                // Ambil data dari tombol
                 const id = button.getAttribute('data-id');
                 const idSantri = button.getAttribute('data-idsantri');
                 const jenis = button.getAttribute('data-jenis');
@@ -476,17 +547,22 @@
 
                 // Set URL form action
                 const form = document.getElementById('formEditHafalan');
-                form.action = "<?= base_url('guru/hafalan/update/'); ?>" + id;
+                if (form) form.action = "<?= base_url('guru/hafalan/update/'); ?>" + id;
 
                 // Masukkan nilai ke input form modal
-                document.getElementById('edit-id-santri').value = idSantri;
-                document.getElementById('edit-jenis').value = jenis;
-                document.getElementById('edit-juz').value = juz;
-                document.getElementById('edit-surah').value = surah;
-                document.getElementById('edit-ayat-mulai').value = ayatMulai;
-                document.getElementById('edit-ayat-selesai').value = ayatSelesai;
-                document.getElementById('edit-predikat').value = predikat;
-                document.getElementById('edit-keterangan').value = (keterangan === 'null' || keterangan === null) ? '' : keterangan;
+                const setVal = (elId, val) => {
+                    const el = document.getElementById(elId);
+                    if (el) el.value = (val !== null && val !== 'null') ? val : '';
+                };
+
+                setVal('edit-id-santri', idSantri);
+                setVal('edit-jenis', jenis);
+                setVal('edit-juz', juz);
+                setVal('edit-predikat', predikat);
+                setVal('edit-keterangan', keterangan);
+
+                // Load surah secara dinamis berdasarkan juz, pilih surah lama, dan set max/nilai ayatnya
+                loadSurahByJuz(juz, 'edit-surah', surah, 'edit-ayat-mulai', 'edit-ayat-selesai', ayatMulai, ayatSelesai);
             });
         }
     });
