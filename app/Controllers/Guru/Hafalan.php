@@ -36,7 +36,7 @@ class Hafalan extends BaseController
             'title' => 'Data Hafalan',
             'icon' => 'fa-solid fa-book-quran',
             'nama_kelas' => $kelas['nama_kelas'] ?? '-',
-            'hafalan' => $this->hafalanModel->getHafalanByGuru($idGuru)->paginate(10, 'hafalan'),
+            'hafalan' => $this->hafalanModel->getHafalanByGuru($idGuru)->paginate(6, 'hafalan'),
             'pager' => $this->hafalanModel->pager,
             'santri' => $this->santriModel->getSantriByKelas($id_kelas_diampu),
             'guru' => $this->guruModel->findAll()

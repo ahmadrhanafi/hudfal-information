@@ -128,8 +128,8 @@
             </div>
         </div>
         <!-- Card Footer / Pagination -->
-        <div class="card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <span class="text-muted small">
+        <div class="card card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <span class="text-secondary small">
                 <?php
                 // Ambil informasi detail pagination
                 $details = $pager->getDetails('hafalan'); // Pastikan grup name sesuai
