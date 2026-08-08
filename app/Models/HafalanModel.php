@@ -404,29 +404,24 @@ class HafalanModel extends Model
 
     public function getJuzDominanGlobal($periode = 'tahun_ini')
     {
-        $builder = $this->db->table('hafalan');
-        $this->applyPeriodeFilter($builder, $periode);
+        // Panggil progress juz yang sudah akurat berdasarkan total ayat
+        $progressJuz = $this->getProgressJuzGlobal($periode);
 
-        $result = $builder->select('juz, COUNT(juz) as total')
-            ->groupBy('juz')
-            ->orderBy('total', 'DESC')
-            ->get()
-            ->getRowArray();
-
-        if ($result) {
-            $builderTotal = $this->db->table('hafalan');
-            $this->applyPeriodeFilter($builderTotal, $periode);
-            $allTotal = $builderTotal->countAllResults();
-
-            $persen = $allTotal > 0 ? round(($result['total'] / $allTotal) * 100) : 0;
-
-            return [
-                'juz' => $result['juz'],
-                'persen' => $persen
-            ];
+        // Jika data kosong atau belum ada setoran
+        if (empty($progressJuz) || $progressJuz[0]['nama'] === 'Belum ada data setoran') {
+            return ['juz' => '-', 'persen' => 0];
         }
 
-        return ['juz' => '-', 'persen' => 0];
+        // Ambil elemen teratas karena sudah diurutkan dari yang terbesar oleh getProgressJuzGlobal
+        $teratas = $progressJuz[0];
+
+        // Bersihkan string 'Juz ' agar yang dikembalikan hanya angkanya saja (misal: '2' atau '1')
+        $nomorJuz = str_replace('Juz ', '', $teratas['nama']);
+
+        return [
+            'juz' => $nomorJuz,
+            'persen' => $teratas['persen']
+        ];
     }
 
     public function getPredikatTerbanyakGlobal($periode = 'tahun_ini')
@@ -513,9 +508,15 @@ class HafalanModel extends Model
 
         // FILTER MINGGU INI -> Tampilkan per Hari dalam Minggu Ini (Senin - Minggu)
         if ($periode == 'minggu_ini') {
+            // Tentukan awal minggu (Senin) dan akhir minggu (Minggu) ini secara presisi
+            $startOfWeek = date('Y-m-d', strtotime('monday this week'));
+            $endOfWeek = date('Y-m-d', strtotime('sunday this week'));
+
             $builder = $this->db->table($this->table);
-            $builder->select("DATE(created_at) as tanggal, DAYNAME(created_at) as nama_hari_en, COUNT(DISTINCT id_santri) as total_santri");
-            $builder->where('YEARWEEK(created_at, 1)', 'YEARWEEK(NOW(), 1)');
+            $builder->select("DATE(created_at) as tanggal, COUNT(DISTINCT id_santri) as total_santri");
+            // Ganti YEARWEEK dengan rentang tanggal antara awal dan akhir minggu
+            $builder->where('DATE(created_at) >=', $startOfWeek);
+            $builder->where('DATE(created_at) <=', $endOfWeek);
             $builder->groupBy("DATE(created_at)");
             $result = $builder->get()->getResultArray();
 
@@ -531,7 +532,41 @@ class HafalanModel extends Model
             ];
 
             foreach ($result as $row) {
-                $hariInggris = $row['nama_hari_en'];
+                $hariInggris = date('l', strtotime($row['tanggal']));
+                $hariIndo = $translation[$hariInggris] ?? $hariInggris;
+                $dataPerHari[$hariIndo] = (int) $row['total_santri'];
+            }
+
+            $daftarHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+            foreach ($daftarHari as $hari) {
+                $labels[] = $hari;
+                $values[] = $dataPerHari[$hari] ?? 0;
+            }
+        } elseif ($periode == 'minggu_lalu') {
+            // Tentukan awal dan akhir minggu lalu secara presisi
+            $startOfWeek = date('Y-m-d', strtotime('monday last week'));
+            $endOfWeek = date('Y-m-d', strtotime('sunday last week'));
+
+            $builder = $this->db->table($this->table);
+            $builder->select("DATE(created_at) as tanggal, COUNT(DISTINCT id_santri) as total_santri");
+            $builder->where('DATE(created_at) >=', $startOfWeek);
+            $builder->where('DATE(created_at) <=', $endOfWeek);
+            $builder->groupBy("DATE(created_at)");
+            $result = $builder->get()->getResultArray();
+
+            $dataPerHari = [];
+            $translation = [
+                'Monday' => 'Senin',
+                'Tuesday' => 'Selasa',
+                'Wednesday' => 'Rabu',
+                'Thursday' => 'Kamis',
+                'Friday' => 'Jumat',
+                'Saturday' => 'Sabtu',
+                'Sunday' => 'Minggu'
+            ];
+
+            foreach ($result as $row) {
+                $hariInggris = date('l', strtotime($row['tanggal']));
                 $hariIndo = $translation[$hariInggris] ?? $hariInggris;
                 $dataPerHari[$hariIndo] = (int) $row['total_santri'];
             }

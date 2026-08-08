@@ -16,29 +16,29 @@ class Santri extends BaseController
     public function __construct()
     {
         $this->santriModel = new SantriModel();
-        $this->kelasModel  = new KelasModel();
-        $this->waliModel   = new WaliModel();
+        $this->kelasModel = new KelasModel();
+        $this->waliModel = new WaliModel();
     }
 
     public function index()
     {
-        $keyword       = $this->request->getGet('keyword');
+        $keyword = $this->request->getGet('keyword');
         $selectedKelas = $this->request->getGet('id_kelas');
         $selectedStatus = $this->request->getGet('status');
 
         $kelasModel = new \App\Models\KelasModel();
-        $waliModel  = new \App\Models\WaliModel();
+        $waliModel = new \App\Models\WaliModel();
 
         $data = [
-            'title'          => 'Data Santri',
-            'icon'           => 'fa-solid fa-user-graduate',
-            'santri'         => $this->santriModel->searchSantri($keyword, $selectedKelas, $selectedStatus),
-            'kelas'          => $kelasModel->findAll(),
-            'wali'           => $waliModel->findAll(),
-            'keyword'        => $keyword,
-            'selectedKelas'  => $selectedKelas,
+            'title' => 'Data Santri',
+            'icon' => 'fa-solid fa-user-graduate',
+            'santri' => $this->santriModel->searchSantri($keyword, $selectedKelas, $selectedStatus),
+            'kelas' => $kelasModel->findAll(),
+            'wali' => $waliModel->findAll(),
+            'keyword' => $keyword,
+            'selectedKelas' => $selectedKelas,
             'selectedStatus' => $selectedStatus,
-            'role'           => session()->get('role') ?? 'admin'
+            'role' => session()->get('role') ?? 'admin'
         ];
 
         return view('admin/data_santri', $data);
@@ -46,40 +46,55 @@ class Santri extends BaseController
 
     public function store()
     {
-        if (!$this->validate([
-            'nis'           => 'required|numeric|is_unique[santri.nis]',
-            'nama_santri'   => 'required|min_length[3]',
-            'jenis_kelamin' => 'required|in_list[L,P]',
-            'id_kelas'      => 'required|numeric',
-            'id_wali'       => 'required|numeric',
-        ])) {
-            $validation = \Config\Services::validation();
-            return redirect()->back()->withInput()->with('error', $validation->listErrors());
-
-            // return redirect()->back()->withInput()->with('error', 'Gagal validasi data santri. Pastikan NIS unik.');
+        if (
+            !$this->validate([
+                'nama_santri' => 'required|min_length[3]',
+                'jenis_kelamin' => 'required|in_list[L,P]',
+                'id_kelas' => 'required|numeric',
+                'id_wali' => 'required|numeric',
+            ])
+        ) {
+            return redirect()->back()->withInput()->with('error', 'Gagal validasi data santri.');
         }
 
+        // Format: Tahun(4 digit) + id_kelas(2 digit) + NoUrut(3 digit) -> Contoh: 202601001
+        $tahun = date('Y');
+        $idKelas = str_pad($this->request->getVar('id_kelas'), 2, '0', STR_PAD_LEFT);
+
+        $lastSantri = $this->santriModel
+            ->like('nis', $tahun . $idKelas, 'after')
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        if ($lastSantri) {
+            $noUrut = (int) substr($lastSantri['nis'], -3) + 1;
+        } else {
+            $noUrut = 1;
+        }
+
+        $nis = $tahun . $idKelas . str_pad($noUrut, 3, '0', STR_PAD_LEFT);
+
         $this->santriModel->save([
-            'nis'           => $this->request->getVar('nis'),
-            'nama_santri'   => $this->request->getVar('nama_santri'),
+            'nis' => $nis,
+            'nama_santri' => $this->request->getVar('nama_santri'),
             'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
-            'id_kelas'      => $this->request->getVar('id_kelas'),
-            'id_wali'       => $this->request->getVar('id_wali'),
-            'status_aktif'  => 'Aktif',
+            'id_kelas' => $this->request->getVar('id_kelas'),
+            'id_wali' => $this->request->getVar('id_wali'),
+            'status_aktif' => 'Aktif',
         ]);
 
-        return redirect()->to(base_url('admin/santri'))->with('success', 'Data santri berhasil ditambahkan!');
+        return redirect()->to(base_url('admin/santri'))->with('success', 'Data santri berhasil ditambahkan! NIS: ' . $nis);
     }
 
     public function update($id)
     {
         $this->santriModel->update($id, [
-            'nis'           => $this->request->getVar('nis'),
-            'nama_santri'   => $this->request->getVar('nama_santri'),
+            'nis' => $this->request->getVar('nis'),
+            'nama_santri' => $this->request->getVar('nama_santri'),
             'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
-            'id_kelas'      => $this->request->getVar('id_kelas'),
-            'id_wali'       => $this->request->getVar('id_wali'),
-            'status_aktif'  => $this->request->getVar('status_aktif'),
+            'id_kelas' => $this->request->getVar('id_kelas'),
+            'id_wali' => $this->request->getVar('id_wali'),
+            'status_aktif' => $this->request->getVar('status_aktif'),
         ]);
 
         return redirect()->to(base_url('admin/santri'))->with('success', 'Data santri berhasil diperbarui!');
@@ -103,7 +118,7 @@ class Santri extends BaseController
         }
 
         $data = [
-            'title'  => 'Detail Santri',
+            'title' => 'Detail Santri',
             'santri' => $santri
         ];
 

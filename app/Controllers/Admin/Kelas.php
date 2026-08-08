@@ -22,18 +22,20 @@ class Kelas extends BaseController
         $db = \Config\Database::connect();
 
         $builder = $db->table('kelas');
-        $builder->select('kelas.*, guru.nama_guru, guru.nip, (SELECT COUNT(id) FROM santri WHERE santri.id_kelas = kelas.id) as total_santri');
+        $builder->select('kelas.*, guru.nama_guru, guru.nip, guru.status_aktif, (SELECT COUNT(id) FROM santri WHERE santri.id_kelas = kelas.id) as total_santri');
         $builder->join('guru', 'guru.id_kelas_diampu = kelas.id', 'left');
 
         $kelasWithTotal = $builder->get()->getResultArray();
-        $guruList = $this->guruModel->findAll();
+        $guruList = $this->guruModel->where('id_kelas_diampu IS NULL', null, false)
+            ->orWhere('id_kelas_diampu', '')
+            ->findAll();
 
         $data = [
-            'title'    => 'Data Kelas',
-            'icon'     => 'fa-solid fa-school',
-            'kelas'    => $kelasWithTotal,
+            'title' => 'Data Kelas',
+            'icon' => 'fa-solid fa-school',
+            'kelas' => $kelasWithTotal,
             'guruList' => $guruList,
-            'role'     => session()->get('role') ?? 'admin'
+            'role' => session()->get('role') ?? 'admin'
         ];
 
         return view('admin/kelas', $data);
@@ -43,7 +45,7 @@ class Kelas extends BaseController
     {
         $data = [
             'title' => 'Tambah Kelas',
-            'role'  => session()->get('role') ?? 'admin'
+            'role' => session()->get('role') ?? 'admin'
         ];
 
         return view('kelas/create', $data);
@@ -52,9 +54,11 @@ class Kelas extends BaseController
     public function store()
     {
         // Validasi sederhana
-        if (!$this->validate([
-            'nama_kelas' => 'required|min_length[3]|is_unique[kelas.nama_kelas]'
-        ])) {
+        if (
+            !$this->validate([
+                'nama_kelas' => 'required|min_length[3]|is_unique[kelas.nama_kelas]'
+            ])
+        ) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
@@ -70,7 +74,7 @@ class Kelas extends BaseController
         $data = [
             'title' => 'Edit Kelas',
             'kelas' => $this->kelasModel->find($id),
-            'role'  => session()->get('role') ?? 'admin'
+            'role' => session()->get('role') ?? 'admin'
         ];
 
         if (empty($data['kelas'])) {

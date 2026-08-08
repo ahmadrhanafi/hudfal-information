@@ -198,16 +198,21 @@ $wali = $wali ?? [];
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">Tambah Data Santri</h5>
+                <h5 class="modal-title fw-bold text-dark">Tambah Santri</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?= base_url('admin/santri/store'); ?>" method="post">
                 <?= csrf_field(); ?>
                 <div class="modal-body py-4">
-                    <div class="mb-3">
-                        <label class="form-label fw-medium small text-muted">NIS (Nomor Induk Santri)</label>
-                        <input type="text" name="nis" class="form-control" placeholder="Contoh: 2026001" required>
+
+                    <!-- Informasi NIS Otomatis -->
+                    <div class="mb-3 p-2 bg-light rounded-3">
+                        <small class="text-muted">
+                            <i class="fa-solid fa-circle-info me-1"></i> NIS akan dibuat otomatis oleh sistem setelah
+                            data disimpan.
+                        </small>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Lengkap Santri</label>
                         <input type="text" name="nama_santri" class="form-control"
@@ -254,7 +259,7 @@ $wali = $wali ?? [];
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">Edit Data Santri</h5>
+                <h5 class="modal-title fw-bold text-dark">Edit Data Santri</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- PERBAIKAN: Berikan nilai default action agar tidak kosong jika JS gagal -->
@@ -263,7 +268,7 @@ $wali = $wali ?? [];
                 <div class="modal-body py-4">
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">NIS</label>
-                        <input type="text" name="nis" id="editNis" class="form-control" required>
+                        <input type="text" name="nis" id="editNis" class="form-control bg-light" readonly disabled>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Lengkap Santri</label>

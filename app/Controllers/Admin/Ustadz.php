@@ -15,9 +15,9 @@ class Ustadz extends BaseController
 
     public function __construct()
     {
-        $this->guruModel  = new GuruModel();
+        $this->guruModel = new GuruModel();
         $this->kelasModel = new KelasModel();
-        $this->userModel  = new UserModel();
+        $this->userModel = new UserModel();
     }
 
     public function index()
@@ -27,9 +27,9 @@ class Ustadz extends BaseController
         $data = [
             'title' => 'Data Ustadz',
             'icon' => 'fa-solid fa-chalkboard-user',
-            'guru'  => $this->guruModel->getGuruWithKelas(),
+            'guru' => $this->guruModel->getGuruWithKelas(),
             'kelas' => $this->kelasModel->findAll(),
-            'role'  => session()->get('role') ?? 'admin'
+            'role' => session()->get('role') ?? 'admin'
         ];
 
         if ($role == 'admin') {
@@ -41,66 +41,78 @@ class Ustadz extends BaseController
 
     public function store()
     {
-        if (!$this->validate([
-            'nip'             => 'required|numeric|is_unique[guru.nip]',
-            'nama_guru'       => 'required|min_length[3]',
-            'no_hp'     => 'required|numeric|min_length[10]',
-            'jenis_kelamin'   => 'required|in_list[L,P]',
-            'id_kelas_diampu' => 'required|numeric'
-        ])) {
-            return redirect()->back()->withInput()->with('error', 'Gagal validasi data guru.');
+        if (
+            !$this->validate([
+                'nama_guru' => 'required|min_length[3]',
+                'no_hp' => 'required|numeric|min_length[10]',
+                'jenis_kelamin' => 'required|in_list[L,P]',
+                'id_kelas_diampu' => 'required|numeric'
+            ])
+        ) {
+            return redirect()->back()->withInput()->with('error', 'Gagal validasi data pengajar.');
         }
 
-        $nip      = $this->request->getVar('nip');
+        $tahun = date('Y');
+        $lastGuru = $this->guruModel->orderBy('id', 'DESC')->first();
+
+        if ($lastGuru && !empty($lastGuru['nip'])) {
+            $lastNoUrut = (int) substr($lastGuru['nip'], -3);
+            $noUrut = $lastNoUrut + 1;
+        } else {
+            $noUrut = 1;
+        }
+
+        $nip = $tahun . str_pad($noUrut, 3, '0', STR_PAD_LEFT);
+
         $namaGuru = $this->request->getVar('nama_guru');
-        $noHp     = $this->request->getVar('no_hp');
+        $noHp = $this->request->getVar('no_hp');
 
         $this->guruModel->save([
-            'nip'             => $nip,
-            'nama_guru'       => $namaGuru,
-            'no_hp'           => $noHp,
-            'jenis_kelamin'   => $this->request->getVar('jenis_kelamin'),
+            'nip' => $nip,
+            'nama_guru' => $namaGuru,
+            'no_hp' => $noHp,
+            'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
             'id_kelas_diampu' => $this->request->getVar('id_kelas_diampu'),
-            'status_aktif'    => 'Aktif',
+            'status_aktif' => 'Aktif',
         ]);
 
         $guruId = $this->guruModel->insertID();
 
         $this->userModel->save([
-            'name'     => $namaGuru,
+            'name' => $namaGuru,
             'username' => $nip,
             'password' => password_hash($nip, PASSWORD_DEFAULT),
-            'role'     => 'guru',
-            'ref_id'   => $guruId
+            'role' => 'guru',
+            'ref_id' => $guruId
         ]);
 
-        return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data ustadz dan akun login berhasil ditambahkan!');
+        return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data pengajar dan akun login berhasil ditambahkan! NIP: ' . $nip);
     }
 
     public function update($id)
     {
-        $nip      = $this->request->getVar('nip');
+        $nip = $this->request->getVar('nip');
         $namaGuru = $this->request->getVar('nama_guru');
-        $noHp     = $this->request->getVar('no_hp');
+        $noHp = $this->request->getVar('no_hp');
 
         $this->guruModel->update($id, [
-            'nip'               => $nip,
-            'nama_guru'         => $namaGuru,
-            'no_hp'             => $noHp,
-            'jenis_kelamin'     => $this->request->getVar('jenis_kelamin'),
-            'id_kelas_diampu'   => $this->request->getVar('id_kelas_diampu'),
-            'status_aktif'      => $this->request->getVar('status_aktif'),
+            'nip' => $nip,
+            'nama_guru' => $namaGuru,
+            'no_hp' => $noHp,
+            'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+            'id_kelas_diampu' => $this->request->getVar('id_kelas_diampu'),
+            'status_aktif' => $this->request->getVar('status_aktif'),
         ]);
 
         $user = $this->userModel->where('ref_id', $id)->where('role', 'guru')->first();
         if ($user) {
             $this->userModel->update($user['id'], [
-                'name'     => $namaGuru,
+                'name' => $namaGuru,
                 'username' => $nip
             ]);
         }
 
-        return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data ustadz berhasil diperbarui!');
+        return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data pengajar berhasil diperbarui!');
     }
 
     public function delete($id)
@@ -108,6 +120,6 @@ class Ustadz extends BaseController
         $this->userModel->where('ref_id', $id)->where('role', 'guru')->delete();
         $this->guruModel->delete($id);
 
-        return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data ustadz dan akun login berhasil dihapus!');
+        return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data pengajar dan akun login berhasil dihapus!');
     }
 }

@@ -4,6 +4,7 @@
 
 <?php
 /** @var array $kelas */
+/** @var array $guruList */
 ?>
 
 <div class="container-fluid px-0">
@@ -12,10 +13,12 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
             <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Manajemen Kelas</h3>
-            <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola penambahan dan update data kelas.</p>
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola penambahan dan update
+                data kelas.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambah">
+            <button type="button" class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal"
+                data-bs-target="#modalTambah">
                 <i class="fa-solid fa-plus me-1"></i> Tambah Kelas
             </button>
         </div>
@@ -38,7 +41,8 @@
                         <span class="input-group-text bg-light border-0 ps-3 text-muted">
                             <i class="fa-solid fa-search"></i>
                         </span>
-                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2" placeholder="Cari berdasarkan nama kelas...">
+                        <input type="text" id="searchInput" class="form-control bg-light border-0 py-2"
+                            placeholder="Cari berdasarkan nama kelas...">
                     </div>
                 </div>
             </div>
@@ -50,7 +54,8 @@
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light text-muted small text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                    <thead class="bg-light text-muted small text-uppercase"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px;">
                         <tr>
                             <th class="py-3 ps-4">No</th>
                             <th class="py-3">Nama Kelas</th>
@@ -69,17 +74,33 @@
                                     <td class="fw-semibold text-secondary small">
                                         <div>
                                             <h6 class="mb-0 text-secondary small" style="font-size: 0.65rem;">Kelas:</h6>
-                                            <small class="fw-semibold text-dark-mode" style="font-size: 0.9rem;"><i class=" fa-solid fa-school text-secondary me-1"></i><?= esc($k['nama_kelas']); ?></small>
+                                            <small class="fw-semibold text-dark-mode" style="font-size: 0.9rem;"><i
+                                                    class=" fa-solid fa-school text-secondary me-1"></i><?= esc($k['nama_kelas']); ?></small>
                                         </div>
                                     </td>
                                     <td class="text-secondary small">
                                         <?php if (!empty($k['nama_guru'])): ?>
+                                            <?php
+                                            $isNonAktif = ($k['status_aktif'] === 'Non-Aktif');
+                                            ?>
                                             <div>
-                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($k['nama_guru']); ?></h6>
-                                                <small class="text-secondary"><i class="fa-solid fa-id-card text-secondary me-1"></i> NIP: <?= esc($k['nip']); ?></small>
+                                                <h6 class="mb-0 fw-bold <?= $isNonAktif ? 'text-danger' : 'text-success'; ?>"
+                                                    style="font-size: 0.9rem;">
+                                                    <?= esc($k['nama_guru']); ?>
+                                                    <?php if ($isNonAktif): ?>
+                                                        <span class="small ms-1 fw-normal">(Non-Aktif)</span>
+                                                    <?php endif; ?>
+                                                </h6>
+                                                <small class="text-secondary">
+                                                    <i class="fa-solid fa-id-card text-secondary me-1"></i> NIP:
+                                                    <?= esc($k['nip']); ?>
+                                                </small>
                                             </div>
                                         <?php else: ?>
-                                            <span class="text-warning small">Belum ada guru pengampu</span>
+                                            <span class="text-warning small fw-bold p-1">
+                                                <i class="fa fa-exclamation-triangle me-2"></i>Belum
+                                                ada
+                                                guru pengampu</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-center">
@@ -90,14 +111,15 @@
                                     <td class="text-muted small"><?= esc($k['created_at']); ?></td>
                                     <td class="text-center pe-4">
                                         <!-- Tombol Trigger Modal Edit -->
-                                        <button type="button" class="btn btn-sm btn-light text-warning border-0 rounded-2 btn-edit" title="Edit"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalEdit"
-                                            data-id="<?= $k['id']; ?>"
+                                        <button type="button"
+                                            class="btn btn-sm btn-light text-warning border-0 rounded-2 btn-edit" title="Edit"
+                                            data-bs-toggle="modal" data-bs-target="#modalEdit" data-id="<?= $k['id']; ?>"
                                             data-namakelas="<?= esc($k['nama_kelas']); ?>">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
-                                        <a href="<?= base_url('admin/kelas/delete/' . $k['id']); ?>" onclick="return confirm('Yakin ingin menghapus kelas ini?')" class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus">
+                                        <a href="<?= base_url('admin/kelas/delete/' . $k['id']); ?>"
+                                            onclick="return confirm('Yakin ingin menghapus kelas ini?')"
+                                            class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>
@@ -113,7 +135,8 @@
             </div>
         </div>
         <!-- Card Footer / Total Data -->
-        <div id="totalDataText" class="card card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <div id="totalDataText"
+            class="card card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
             <span class="text-secondary small">Menampilkan total <?= count($kelas); ?> data kelas</span>
         </div>
     </div>
@@ -124,7 +147,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">Tambah Data Kelas</h5>
+                <h5 class="modal-title fw-bold text-dark">Tambah Data Kelas</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?= base_url('admin/kelas/store'); ?>" method="post">
@@ -132,7 +155,8 @@
                 <div class="modal-body py-4">
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Kelas</label>
-                        <input type="text" name="nama_kelas" class="form-control" placeholder="Contoh: Kelas 1 Ula" required>
+                        <input type="text" name="nama_kelas" class="form-control" placeholder="Contoh: Kelas 1 Ula"
+                            required>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
@@ -149,7 +173,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">Edit Data Kelas</h5>
+                <h5 class="modal-title fw-bold text-dark">Edit Data Kelas</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="formEdit" action="" method="post">
@@ -171,11 +195,11 @@
 
 <!-- ================= JAVASCRIPT ================= -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Script untuk lempar data ke Modal Edit
         const modalEdit = document.getElementById('modalEdit');
         if (modalEdit) {
-            modalEdit.addEventListener('show.bs.modal', function(event) {
+            modalEdit.addEventListener('show.bs.modal', function (event) {
                 const button = event.relatedTarget;
                 const id = button.getAttribute('data-id');
                 const namaKelas = button.getAttribute('data-namakelas');
@@ -193,7 +217,7 @@
         const tableRows = document.querySelectorAll('#tableBodyKelas .kelas-row');
 
         if (searchInput) {
-            searchInput.addEventListener('keyup', function() {
+            searchInput.addEventListener('keyup', function () {
                 const searchTerm = searchInput.value.toLowerCase();
 
                 tableRows.forEach(row => {

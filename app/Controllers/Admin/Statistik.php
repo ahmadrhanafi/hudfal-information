@@ -19,14 +19,14 @@ class Statistik extends BaseController
         $periode = $this->request->getGet('periode') ?? 'tahun_ini';
 
         $data = [
-            'title'           => 'Statistik Hafalan',
-            'icon'            => 'fa-solid fa-chart-line',
-            'periode'         => $periode,
-            'rata_setoran'    => $this->hafalanModel->getRataRataGlobal($periode),
-            'juz_dominan'     => $this->hafalanModel->getJuzDominanGlobal($periode),
-            'predikat_umum'   => $this->hafalanModel->getPredikatTerbanyakGlobal($periode),
-            'capaian_juz'     => $this->hafalanModel->getProgressJuzGlobal($periode),
-            'grafik_setoran'  => $this->hafalanModel->getGrafikSetoranGlobal($periode),
+            'title' => 'Statistik Hafalan',
+            'icon' => 'fa-solid fa-chart-line',
+            'periode' => $periode,
+            'rata_setoran' => $this->hafalanModel->getRataRataGlobal($periode),
+            'juz_dominan' => $this->hafalanModel->getJuzDominanGlobal($periode),
+            'predikat_umum' => $this->hafalanModel->getPredikatTerbanyakGlobal($periode),
+            'capaian_juz' => $this->hafalanModel->getProgressJuzGlobal($periode),
+            'grafik_setoran' => $this->hafalanModel->getGrafikSetoranGlobal($periode),
         ];
 
         return view('admin/statistik_hafalan', $data);
@@ -37,12 +37,12 @@ class Statistik extends BaseController
         $periode = $this->request->getGet('periode') ?? 'tahun_ini';
 
         $data = [
-            'periode'         => $periode,
-            'rata_setoran'    => $this->hafalanModel->getRataRataGlobal($periode),
-            'juz_dominan'     => $this->hafalanModel->getJuzDominanGlobal($periode),
-            'predikat_umum'   => $this->hafalanModel->getPredikatTerbanyakGlobal($periode),
-            'capaian_juz'     => $this->hafalanModel->getProgressJuzGlobal($periode),
-            'grafik_setoran'  => $this->hafalanModel->getGrafikSetoranGlobal($periode),
+            'periode' => $periode,
+            'rata_setoran' => $this->hafalanModel->getRataRataGlobal($periode),
+            'juz_dominan' => $this->hafalanModel->getJuzDominanGlobal($periode),
+            'predikat_umum' => $this->hafalanModel->getPredikatTerbanyakGlobal($periode),
+            'capaian_juz' => $this->hafalanModel->getProgressJuzGlobal($periode),
+            'grafik_setoran' => $this->hafalanModel->getGrafikSetoranGlobal($periode),
         ];
 
         $html = view('admin/cetak_statistik_hafalan', $data);

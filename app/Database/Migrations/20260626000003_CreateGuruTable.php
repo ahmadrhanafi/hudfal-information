@@ -35,7 +35,7 @@ class CreateGuruTable extends Migration
             'id_kelas_diampu' => [
                 'type' => 'INT',
                 'constraint' => 11,
-                'unsigned' => true
+                'unsigned' => true,
             ],
             'status_aktif' => [
                 'type' => 'ENUM',
