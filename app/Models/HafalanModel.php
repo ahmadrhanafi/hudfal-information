@@ -697,7 +697,8 @@ class HafalanModel extends Model
         $tahunLalu = $tahunIni - 1;
 
         if ($periode == 'minggu_ini') {
-            $builder->where('hafalan.created_at >=', date('Y-m-d', strtotime('-7 days')));
+            $builder->where('hafalan.created_at >=', date('Y-m-d', strtotime('monday this week')))
+                ->where('hafalan.created_at <=', date('Y-m-d 23:59:59'));
         } elseif ($periode == 'bulan_ini') {
             $builder->where('MONTH(hafalan.created_at)', date('m'))
                 ->where('YEAR(hafalan.created_at)', $tahunIni);
@@ -734,35 +735,27 @@ class HafalanModel extends Model
         $this->applyPeriodeFilter($builder, $periode);
         $result = $builder->first();
 
-        return round($result['rata_rata'] ?? 0, 1);
+        return round($result['rata_rata'] ?? 0);
     }
 
     public function getJuzDominanKelas($id_guru, $periode = 'bulan_ini')
     {
-        if (!$id_guru)
+        if (!$id_guru) {
             return ['nama' => 'Juz 30', 'persentase' => 0];
+        }
 
-        $builder = $this->select('juz, COUNT(*) as total')
-            ->where('id_guru', $id_guru);
+        $progressJuz = $this->getProgressJuzKelas($id_guru, $periode);
 
-        $this->applyPeriodeFilter($builder, $periode);
-        $query = $builder->groupBy('juz')
-            ->orderBy('total', 'DESC')
-            ->first();
+        if (empty($progressJuz) || (isset($progressJuz[0]['nama']) && $progressJuz[0]['nama'] === 'Belum ada data setoran')) {
+            return ['nama' => '-', 'persentase' => 0];
+        }
 
-        if (!$query)
-            return ['nama' => 'Juz 30', 'persentase' => 0];
-
-        // Hitung total keseluruhan pada periode yang sama
-        $builderTotal = $this->where('id_guru', $id_guru);
-        $this->applyPeriodeFilter($builderTotal, $periode);
-        $totalSemua = $builderTotal->countAllResults(false);
-
-        $persentase = $totalSemua > 0 ? round(($query['total'] / $totalSemua) * 100) : 0;
+        // Ambil data teratas dari progress bar (yang paling tinggi persentasenya)
+        $teratas = $progressJuz[0];
 
         return [
-            'nama' => 'Juz ' . $query['juz'],
-            'persentase' => $persentase
+            'nama' => $teratas['nama'] ?? ('Juz ' . ($teratas['juz'] ?? '30')),
+            'persentase' => $teratas['persen'] ?? $teratas['persentase'] ?? 0
         ];
     }
 
@@ -795,11 +788,26 @@ class HafalanModel extends Model
         if (!$id_guru)
             return [];
 
+        // Ambil data jumlah per juz
         $builder = $this->select('juz, COUNT(*) as jumlah')
             ->where('id_guru', $id_guru);
-
         $this->applyPeriodeFilter($builder, $periode);
-        return $builder->groupBy('juz')->findAll();
+        $result = $builder->groupBy('juz')->orderBy('jumlah', 'DESC')->findAll();
+
+        if (empty($result))
+            return [];
+
+        // Hitung total keseluruhan setoran pada periode tersebut
+        $builderTotal = $this->where('id_guru', $id_guru);
+        $this->applyPeriodeFilter($builderTotal, $periode);
+        $totalSemua = $builderTotal->countAllResults(false);
+
+        // Masukkan persentase proporsional ke dalam array
+        foreach ($result as &$row) {
+            $row['persen'] = $totalSemua > 0 ? round(($row['jumlah'] / $totalSemua) * 100) : 0;
+        }
+
+        return $result;
     }
 
     public function getGrafikSetoranKelas($id_guru, $periode = 'bulan_ini')

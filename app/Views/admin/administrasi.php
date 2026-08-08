@@ -44,14 +44,15 @@
     <div class="row g-4 mb-4">
         <!-- Kartu 1: Pembayaran Masuk Bulan Ini -->
         <div class="col-xl-4 col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+            <div class="card border-0 shadow-sm rounded-4 bg-white h-100 transition-hover">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-success bg-opacity-15 p-3 rounded-3 text-success">
-                        <i class="fa-solid fa-wallet fa-2x"></i>
+                    <div class="bg-success bg-opacity-10 p-3 rounded-4 text-success d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-wallet fa-lg"></i>
                     </div>
                     <div>
-                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">PEMBAYARAN
-                            MASUK</span>
+                        <span class="text-secondary small fw-normal tracking-wide text-uppercase">Pembayaran
+                            Masuk</span>
                         <h3 class="fw-bold text-dark-mode mb-0 mt-1">Rp
                             <?= number_format($totalBulanIni ?? 0, 0, ',', '.'); ?>
                         </h3>
@@ -62,16 +63,17 @@
 
         <!-- Kartu 2: Total Transaksi Lunas Bulan Ini -->
         <div class="col-xl-4 col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+            <div class="card border-0 shadow-sm rounded-4 bg-white h-100 transition-hover">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-primary bg-opacity-15 p-3 rounded-3 text-primary">
-                        <i class="fa-solid fa-circle-check fa-2x"></i>
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-4 text-primary d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-circle-check fa-lg"></i>
                     </div>
                     <div>
-                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">PEMBAYARAN
-                            LUNAS</span>
+                        <span class="text-secondary small fw-normal tracking-wide text-uppercase">Pembayaran
+                            Lunas</span>
                         <h3 class="fw-bold text-dark-mode mb-0 mt-1"><?= $countLunasBulanIni ?? 0; ?> <span
-                                class="fs-6 fw-semibold text-success">(Data Pembayaran)</span></h3>
+                                class="fs-6 fw-semibold text-success">Tagihan Dibayar</span></h3>
                     </div>
                 </div>
             </div>
@@ -79,16 +81,17 @@
 
         <!-- Kartu 3: Belum Lunas / Tertunda -->
         <div class="col-xl-4 col-md-12">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+            <div class="card border-0 shadow-sm rounded-4 bg-white h-100 transition-hover">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-warning bg-opacity-15 p-3 rounded-3 text-warning">
-                        <i class="fa-solid fa-clock-rotate-left fa-2x"></i>
+                    <div class="bg-warning bg-opacity-10 p-3 rounded-4 text-warning d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-clock-rotate-left fa-lg"></i>
                     </div>
                     <div>
-                        <span class="text-secondary small fw-medium" style="text-transform: none !important;">BELUM
-                            LUNAS / TERTUNDA</span>
+                        <span class="text-secondary small fw-normal tracking-wide text-uppercase">Belum Lunas /
+                            Tertunda</span>
                         <h3 class="fw-bold text-dark-mode mb-0 mt-1"><?= $countPending ?? 0; ?> <span
-                                class="fs-6 fw-semibold text-warning">(Pembayaran Pending)</span></h3>
+                                class="fs-6 fw-semibold text-warning">Pembayaran Pending</span></h3>
                     </div>
                 </div>
             </div>

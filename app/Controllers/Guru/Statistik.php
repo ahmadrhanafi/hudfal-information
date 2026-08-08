@@ -24,7 +24,7 @@ class Statistik extends BaseController
     public function index()
     {
         $userId = session()->get('id');
-        $user   = (new \App\Models\UserModel())->find($userId);
+        $user = (new \App\Models\UserModel())->find($userId);
 
         $id_guru = $user['ref_id'] ?? null;
         $guru = $this->guruModel->find($id_guru);
@@ -36,15 +36,15 @@ class Statistik extends BaseController
         $periode = $this->request->getGet('periode') ?? 'bulan_ini';
 
         $data = [
-            'title'          => 'Statistik Hafalan',
-            'icon'           => 'fa-solid fa-chart-line',
-            'nama_kelas'     => $nama_kelas,
-            'rata_setoran'   => $this->hafalanModel->getRataRataKelas($id_guru, $periode),
-            'juz_dominan'    => $this->hafalanModel->getJuzDominanKelas($id_guru, $periode),
-            'predikat_umum'  => $this->hafalanModel->getPredikatTerbanyakKelas($id_guru, $periode),
-            'capaian_juz'    => $this->hafalanModel->getProgressJuzKelas($id_guru, $periode),
+            'title' => 'Statistik Hafalan',
+            'icon' => 'fa-solid fa-chart-line',
+            'nama_kelas' => $nama_kelas,
+            'rata_setoran' => $this->hafalanModel->getRataRataKelas($id_guru, $periode),
+            'juz_dominan' => $this->hafalanModel->getJuzDominanKelas($id_guru, $periode),
+            'predikat_umum' => $this->hafalanModel->getPredikatTerbanyakKelas($id_guru, $periode),
+            'capaian_juz' => $this->hafalanModel->getProgressJuzKelas($id_guru, $periode),
             'grafik_setoran' => $this->hafalanModel->getGrafikSetoranKelas($id_guru, $periode),
-            'rekap_santri'    => $this->hafalanModel->getRekapSantriKelas($id_guru, $periode),
+            'rekap_santri' => $this->hafalanModel->getRekapSantriKelas($id_guru, $periode),
         ];
 
         return view('guru/statistik_hafalan', $data);
@@ -53,7 +53,7 @@ class Statistik extends BaseController
     public function export()
     {
         $userId = session()->get('id');
-        $user   = (new \App\Models\UserModel())->find($userId);
+        $user = (new \App\Models\UserModel())->find($userId);
         $id_guru = $user['ref_id'] ?? null;
 
         $guru = $this->guruModel->find($id_guru);
@@ -63,13 +63,13 @@ class Statistik extends BaseController
         $periode = $this->request->getGet('periode') ?? 'bulan_ini';
 
         $data = [
-            'nama_guru'      => $guru['nama_guru'] ?? '-',
-            'nama_kelas'     => $kelas['nama_kelas'] ?? '-',
-            'periode'        => $periode,
-            'rata_setoran'   => $this->hafalanModel->getRataRataKelas($id_guru, $periode),
-            'juz_dominan'    => $this->hafalanModel->getJuzDominanKelas($id_guru, $periode),
-            'predikat_umum'  => $this->hafalanModel->getPredikatTerbanyakKelas($id_guru, $periode),
-            'capaian_juz'    => $this->hafalanModel->getProgressJuzKelas($id_guru, $periode),
+            'nama_guru' => $guru['nama_guru'] ?? '-',
+            'nama_kelas' => $kelas['nama_kelas'] ?? '-',
+            'periode' => $periode,
+            'rata_setoran' => $this->hafalanModel->getRataRataKelas($id_guru, $periode),
+            'juz_dominan' => $this->hafalanModel->getJuzDominanKelas($id_guru, $periode),
+            'predikat_umum' => $this->hafalanModel->getPredikatTerbanyakKelas($id_guru, $periode),
+            'capaian_juz' => $this->hafalanModel->getProgressJuzKelas($id_guru, $periode),
             'detail_hafalan' => $this->hafalanModel->getDetailHafalanByPeriode($id_guru, $periode),
         ];
 

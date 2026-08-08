@@ -72,47 +72,55 @@
 
     <!-- Analitik Ringkasan Kartu -->
     <div class="row g-4 mb-4">
+        <!-- Card 1: Rata-Rata Setoran Harian -->
         <div class="col-xl-4 col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+            <div class="card border-0 shadow-sm rounded-4 bg-white h-100 transition-hover">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-success bg-opacity-15 p-3 rounded-3 text-success">
-                        <i class="fa-solid fa-chart-line fa-2x"></i>
+                    <div class="bg-success bg-opacity-10 p-3 rounded-4 text-success d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-book-open-reader fa-lg"></i>
                     </div>
                     <div>
-                        <span class="text-muted text-dark-mode small fw-medium"
-                            style="text-transform: none !important;">RATA-RATA SETORAN HARIAN</span>
+                        <span class="text-secondary fw-normal tracking-wide text-uppercase">Rata-Rata Setoran
+                            Harian</span>
                         <h3 class="fw-bold text-dark-mode mb-0 mt-1"><?= esc((string) $rata_setoran); ?> <span
-                                class="fs-6 fw-normal text-muted text-dark-mode">Ayat / Hari</span></h3>
+                                class="fs-6 fw-normal text-secondary">Ayat / Hari</span></h3>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Card 2: Juz Paling Banyak Disetor -->
         <div class="col-xl-4 col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+            <div class="card border-0 shadow-sm rounded-4 bg-white h-100 transition-hover">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-primary bg-opacity-15 p-3 rounded-3 text-primary">
-                        <i class="fa-solid fa-trophy fa-2x"></i>
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-4 text-primary d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-trophy fa-lg"></i>
                     </div>
                     <div>
-                        <span class="text-muted text-dark-mode small fw-medium"
-                            style="text-transform: none !important;">JUZ PALING BANYAK DISETOR</span>
+                        <span class="text-secondary fw-normal tracking-wide text-uppercase">Juz Paling Banyak
+                            Disetor</span>
                         <h3 class="fw-bold text-dark-mode mb-0 mt-1">Juz
                             <?= esc((string) ($juz_dominan['juz'] ?? '-')); ?> <span
-                                class="fs-6 fw-normal text-success">(<?= esc((string) ($juz_dominan['persen'] ?? 0)); ?>%)</span>
+                                class="fs-6 fw-normal text-success fw-semibold">(<?= esc((string) ($juz_dominan['persen'] ?? 0)); ?>%)</span>
                         </h3>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Card 3: Predikat Terdominasi -->
         <div class="col-xl-4 col-md-12">
-            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+            <div class="card border-0 shadow-sm rounded-4 bg-white h-100 transition-hover">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-warning bg-opacity-15 p-3 rounded-3 text-warning">
-                        <i class="fa-solid fa-star fa-2x"></i>
+                    <div class="bg-warning bg-opacity-10 p-3 rounded-4 text-warning d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-award fa-lg"></i>
                     </div>
                     <div>
-                        <span class="text-muted text-dark-mode small fw-medium"
-                            style="text-transform: none !important;">PREDIKAT TERDOMINASI</span>
+                        <span class="text-secondary fw-normal tracking-wide text-uppercase">Predikat Paling
+                            Dominan</span>
                         <h3 class="fw-bold text-dark-mode mb-0 mt-1"><?= esc((string) $predikat_umum); ?></h3>
                     </div>
                 </div>
@@ -129,7 +137,7 @@
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h5 class="fw-bold text-dark-mode m-0"
                             style="text-transform: none !important; font-size: 16px;">
-                            <i class="fa-solid fa-chart-area text-success me-2"></i> Grafik Tren Santri Menyetor Hafalan
+                            <i class="fa-solid fa-chart-line text-success me-2"></i> Grafik Tren Santri Menyetor Hafalan
                             (<?= ucwords(str_replace('_', ' ', $periode)); ?>)
                         </h5>
                         <span class="badge bg-light text-secondary border" style="font-size: 10px !important;">Real-time

@@ -92,7 +92,7 @@ $detailJuz = is_array($detail_juz ?? null) ? $detail_juz : [];
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-success bg-opacity-15 p-3 rounded-3 text-success">
+                    <div class="bg-success bg-opacity-25 p-3 rounded-3 text-success">
                         <i class="fa-solid fa-book-quran fa-2x"></i>
                     </div>
                     <div>
@@ -110,7 +110,7 @@ $detailJuz = is_array($detail_juz ?? null) ? $detail_juz : [];
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-warning bg-opacity-15 p-3 rounded-3 text-warning">
+                    <div class="bg-warning bg-opacity-25 p-3 rounded-3 text-warning">
                         <i class="fa-solid fa-fire fa-2x"></i>
                     </div>
                     <div>
@@ -128,7 +128,7 @@ $detailJuz = is_array($detail_juz ?? null) ? $detail_juz : [];
         <div class="col-xl-4 col-md-12">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-primary bg-opacity-15 p-3 rounded-3 text-primary">
+                    <div class="bg-primary bg-opacity-25 p-3 rounded-3 text-primary">
                         <i class="fa-solid fa-award fa-2x"></i>
                     </div>
                     <div>

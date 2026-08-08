@@ -22,7 +22,8 @@ $guru = $guru ?? [];
                         <i class="fa-solid fa-chalkboard-user me-1"></i> Portal Pengajar Pesantren
                     </span>
                     <h2 class="fw-bold text-dark-mode mb-2" style="text-transform: none !important;">Ahlan wa Sahlan,
-                        <?= session()->get('name') ?>!</h2>
+                        <?= session()->get('name') ?>!
+                    </h2>
                     <p class="text-secondary mb-3 small" style="text-transform: none !important;">
                         Ringkasan rekap setoran hafalan santri kelas <?= esc($guru['nama_kelas']) ?>, dan tugas
                         pengarsipan nilai.
@@ -49,8 +50,8 @@ $guru = $guru ?? [];
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-success bg-opacity-15 p-3 rounded-3 text-success">
-                        <i class="fa-solid fa-users fa-2x"></i>
+                    <div class="bg-success bg-opacity-25 p-3 rounded-3 text-success">
+                        <i class="fa-solid fa-people-group fa-2x"></i>
                     </div>
                     <div>
                         <span class="text-secondary small fw-medium" style="text-transform: none !important;">SANTRI
@@ -66,7 +67,7 @@ $guru = $guru ?? [];
         <div class="col-xl-4 col-md-6">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-primary bg-opacity-15 p-3 rounded-3 text-primary">
+                    <div class="bg-primary bg-opacity-25 p-3 rounded-3 text-primary">
                         <i class="fa-solid fa-book-quran fa-2x"></i>
                     </div>
                     <div>
@@ -83,14 +84,17 @@ $guru = $guru ?? [];
         <div class="col-xl-4 col-md-12">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
-                    <div class="bg-warning bg-opacity-15 p-3 rounded-3 text-warning">
+                    <div class="bg-warning bg-opacity-25 p-3 rounded-3 text-warning">
                         <i class="fa-solid fa-user-shield fa-2x"></i>
                     </div>
                     <div>
                         <span class="text-secondary small fw-medium" style="text-transform: none !important;">STATUS
                             KEPEGAWAIAN</span>
-                        <h3 class="fw-bold text-dark-mode mb-0 mt-1">
-                            <?= !empty($guru['status_aktif']) ? esc($guru['status_aktif']) : 'Aktif'; ?>
+                        <h3 class="fw-bold text-dark-mode font-mono mb-0 mt-1 d-flex align-items-center gap-2"
+                            style="font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                            <span><?= !empty($guru['status_aktif']) ? esc($guru['status_aktif']) : 'Aktif'; ?></span>
+                            <i class="fas fa-check-circle text-success mt-2" style="font-size: 16px;"
+                                title="Status Terverifikasi"></i>
                         </h3>
                     </div>
                 </div>
