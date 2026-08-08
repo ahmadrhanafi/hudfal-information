@@ -31,6 +31,346 @@ class HafalanModel extends Model
     protected $updatedField = 'updated_at';
 
     // ==========================================
+    // MASTER DATA JUZ DAN SURAH
+    // ==========================================
+// Endpoint AJAX untuk mengambil data surah berdasarkan Juz
+    public function getSurahByJuz($juz)
+    {
+        $mappingJuz = [
+            1 => [
+                ['nama' => 'Al-Fatihah', 'min' => 1, 'max' => 7],
+                ['nama' => 'Al-Baqarah', 'min' => 1, 'max' => 141]
+            ],
+            2 => [
+                ['nama' => 'Al-Baqarah', 'min' => 142, 'max' => 252]
+            ],
+            3 => [
+                ['nama' => 'Al-Baqarah', 'min' => 253, 'max' => 286],
+                ['nama' => 'Ali \'Imran', 'min' => 1, 'max' => 92]
+            ],
+            4 => [
+                ['nama' => 'Ali \'Imran', 'min' => 93, 'max' => 200],
+                ['nama' => 'An-Nisa\'', 'min' => 1, 'max' => 23]
+            ],
+            5 => [
+                ['nama' => 'An-Nisa\'', 'min' => 24, 'max' => 147]
+            ],
+            6 => [
+                ['nama' => 'An-Nisa\'', 'min' => 148, 'max' => 176],
+                ['nama' => 'Al-Ma\'idah', 'min' => 1, 'max' => 81]
+            ],
+            7 => [
+                ['nama' => 'Al-Ma\'idah', 'min' => 82, 'max' => 120],
+                ['nama' => 'Al-An\'am', 'min' => 1, 'max' => 110]
+            ],
+            8 => [
+                ['nama' => 'Al-An\'am', 'min' => 111, 'max' => 165],
+                ['nama' => 'Al-A\'raf', 'min' => 1, 'max' => 87]
+            ],
+            9 => [
+                ['nama' => 'Al-A\'raf', 'min' => 88, 'max' => 206],
+                ['nama' => 'Al-Anfal', 'min' => 1, 'max' => 40]
+            ],
+            10 => [
+                ['nama' => 'Al-Anfal', 'min' => 41, 'max' => 75],
+                ['nama' => 'At-Taubah', 'min' => 1, 'max' => 92]
+            ],
+            11 => [
+                ['nama' => 'At-Taubah', 'min' => 93, 'max' => 129],
+                ['nama' => 'Yunus', 'min' => 1, 'max' => 109],
+                ['nama' => 'Hud', 'min' => 1, 'max' => 5]
+            ],
+            12 => [
+                ['nama' => 'Hud', 'min' => 6, 'max' => 123],
+                ['nama' => 'Yusuf', 'min' => 1, 'max' => 52]
+            ],
+            13 => [
+                ['nama' => 'Yusuf', 'min' => 53, 'max' => 111],
+                ['nama' => 'Ar-Ra\'d', 'min' => 1, 'max' => 43],
+                ['nama' => 'Ibrahim', 'min' => 1, 'max' => 52]
+            ],
+            14 => [
+                ['nama' => 'Al-Hijr', 'min' => 1, 'max' => 99],
+                ['nama' => 'An-Nahl', 'min' => 1, 'max' => 128]
+            ],
+            15 => [
+                ['nama' => 'Al-Isra\'', 'min' => 1, 'max' => 111],
+                ['nama' => 'Al-Kahf', 'min' => 1, 'max' => 74]
+            ],
+            16 => [
+                ['nama' => 'Al-Kahf', 'min' => 75, 'max' => 110],
+                ['nama' => 'Maryam', 'min' => 1, 'max' => 98],
+                ['nama' => 'Taha', 'min' => 1, 'max' => 135]
+            ],
+            17 => [
+                ['nama' => 'Al-Anbiya\'', 'min' => 1, 'max' => 112],
+                ['nama' => 'Al-Hajj', 'min' => 1, 'max' => 78]
+            ],
+            18 => [
+                ['nama' => 'Al-Mu\'minun', 'min' => 1, 'max' => 118],
+                ['nama' => 'An-Nur', 'min' => 1, 'max' => 64],
+                ['nama' => 'Al-Furqan', 'min' => 1, 'max' => 20]
+            ],
+            19 => [
+                ['nama' => 'Al-Furqan', 'min' => 21, 'max' => 77],
+                ['nama' => 'Ash-Shu\'ara\'', 'min' => 1, 'max' => 227],
+                ['nama' => 'An-Naml', 'min' => 1, 'max' => 55]
+            ],
+            20 => [
+                ['nama' => 'An-Naml', 'min' => 56, 'max' => 93],
+                ['nama' => 'Al-Qasas', 'min' => 1, 'max' => 88],
+                ['nama' => 'Al-Ankabut', 'min' => 1, 'max' => 45]
+            ],
+            21 => [
+                ['nama' => 'Al-Ankabut', 'min' => 46, 'max' => 69],
+                ['nama' => 'Ar-Rum', 'min' => 1, 'max' => 60],
+                ['nama' => 'Luqman', 'min' => 1, 'max' => 34],
+                ['nama' => 'As-Sajdah', 'min' => 1, 'max' => 30],
+                ['nama' => 'Al-Ahzab', 'min' => 1, 'max' => 30]
+            ],
+            22 => [
+                ['nama' => 'Al-Ahzab', 'min' => 31, 'max' => 73],
+                ['nama' => 'Saba\'', 'min' => 1, 'max' => 54],
+                ['nama' => 'Fatir', 'min' => 1, 'max' => 45],
+                ['nama' => 'Ya-Sin', 'min' => 1, 'max' => 27]
+            ],
+            23 => [
+                ['nama' => 'Ya-Sin', 'min' => 28, 'max' => 83],
+                ['nama' => 'As-Saffat', 'min' => 1, 'max' => 182],
+                ['nama' => 'Sad', 'min' => 1, 'max' => 88]
+            ],
+            24 => [
+                ['nama' => 'Az-Zumar', 'min' => 1, 'max' => 75],
+                ['nama' => 'Gafir', 'min' => 1, 'max' => 85],
+                ['nama' => 'Fussilat', 'min' => 1, 'max' => 46]
+            ],
+            25 => [
+                ['nama' => 'Fussilat', 'min' => 47, 'max' => 54],
+                ['nama' => 'Ash-Shura', 'min' => 1, 'max' => 53],
+                ['nama' => 'Az-Zukhruf', 'min' => 1, 'max' => 89],
+                ['nama' => 'Ad-Dukhan', 'min' => 1, 'max' => 59],
+                ['nama' => 'Al-Jasiyah', 'min' => 1, 'max' => 37]
+            ],
+            26 => [
+                ['nama' => 'Al-Ahqaf', 'min' => 1, 'max' => 35],
+                ['nama' => 'Muhammad', 'min' => 1, 'max' => 38],
+                ['nama' => 'Al-Fath', 'min' => 1, 'max' => 29],
+                ['nama' => 'Al-Hujurat', 'min' => 1, 'max' => 18],
+                ['nama' => 'Qaf', 'min' => 1, 'max' => 45],
+                ['nama' => 'Ad-Zariyat', 'min' => 1, 'max' => 30]
+            ],
+            27 => [
+                ['nama' => 'Ad-Zariyat', 'min' => 31, 'max' => 60],
+                ['nama' => 'At-Tur', 'min' => 1, 'max' => 49],
+                ['nama' => 'An-Najm', 'min' => 1, 'max' => 62],
+                ['nama' => 'Al-Qamar', 'min' => 1, 'max' => 55],
+                ['nama' => 'Ar-Rahman', 'min' => 1, 'max' => 78],
+                ['nama' => 'Al-Waqi\'ah', 'min' => 1, 'max' => 96],
+                ['nama' => 'Al-Hadid', 'min' => 1, 'max' => 29]
+            ],
+            28 => [
+                ['nama' => 'Al-Mujadilah', 'min' => 1, 'max' => 22],
+                ['nama' => 'Al-Hasyr', 'min' => 1, 'max' => 24],
+                ['nama' => 'Al-Mumtahanah', 'min' => 1, 'max' => 13],
+                ['nama' => 'As-Saff', 'min' => 1, 'max' => 14],
+                ['nama' => 'Al-Jumu\'ah', 'min' => 1, 'max' => 11],
+                ['nama' => 'Al-Munafiqun', 'min' => 1, 'max' => 11],
+                ['nama' => 'At-Tagabun', 'min' => 1, 'max' => 18],
+                ['nama' => 'At-Talaq', 'min' => 1, 'max' => 12],
+                ['nama' => 'At-Tahrim', 'min' => 1, 'max' => 12]
+            ],
+            29 => [
+                ['nama' => 'Al-Mulk', 'min' => 1, 'max' => 30],
+                ['nama' => 'Al-Qalam', 'min' => 1, 'max' => 52],
+                ['nama' => 'Al-Haqqah', 'min' => 1, 'max' => 52],
+                ['nama' => 'Al-Ma\'arij', 'min' => 1, 'max' => 44],
+                ['nama' => 'Nuh', 'min' => 1, 'max' => 28],
+                ['nama' => 'Al-Jinn', 'min' => 1, 'max' => 28],
+                ['nama' => 'Al-Muzzammil', 'min' => 1, 'max' => 20],
+                ['nama' => 'Al-Muddassir', 'min' => 1, 'max' => 56],
+                ['nama' => 'Al-Qiyamah', 'min' => 1, 'max' => 40],
+                ['nama' => 'Al-Insan', 'min' => 1, 'max' => 31],
+                ['nama' => 'Al-Mursalat', 'min' => 1, 'max' => 50]
+            ],
+            30 => [
+                ['nama' => 'An-Naba\'', 'min' => 1, 'max' => 40],
+                ['nama' => 'An-Nazi\'at', 'min' => 1, 'max' => 46],
+                ['nama' => 'Abasa', 'min' => 1, 'max' => 42],
+                ['nama' => 'At-Takwir', 'min' => 1, 'max' => 29],
+                ['nama' => 'Al-Infitar', 'min' => 1, 'max' => 19],
+                ['nama' => 'Al-Mutaffifin', 'min' => 1, 'max' => 36],
+                ['nama' => 'Al-Inshiqaq', 'min' => 1, 'max' => 25],
+                ['nama' => 'Al-Buruj', 'min' => 1, 'max' => 22],
+                ['nama' => 'At-Tariq', 'min' => 1, 'max' => 17],
+                ['nama' => 'Al-A\'la', 'min' => 1, 'max' => 19],
+                ['nama' => 'Al-Gasiyah', 'min' => 1, 'max' => 26],
+                ['nama' => 'Al-Fajr', 'min' => 1, 'max' => 30],
+                ['nama' => 'Al-Balad', 'min' => 1, 'max' => 20],
+                ['nama' => 'Ash-Shams', 'min' => 1, 'max' => 15],
+                ['nama' => 'Al-Lail', 'min' => 1, 'max' => 21],
+                ['nama' => 'Ad-Duha', 'min' => 1, 'max' => 11],
+                ['nama' => 'Al-Inshirah', 'min' => 1, 'max' => 8],
+                ['nama' => 'At-Tin', 'min' => 1, 'max' => 8],
+                ['nama' => 'Al-Alaq', 'min' => 1, 'max' => 19],
+                ['nama' => 'Al-Qadr', 'min' => 1, 'max' => 5],
+                ['nama' => 'Al-Bayyinah', 'min' => 1, 'max' => 8],
+                ['nama' => 'Az-Zazalah', 'min' => 1, 'max' => 8],
+                ['nama' => 'Al-Adiyat', 'min' => 1, 'max' => 11],
+                ['nama' => 'Al-Qari\'ah', 'min' => 1, 'max' => 11],
+                ['nama' => 'At-Takasur', 'min' => 1, 'max' => 8],
+                ['nama' => 'Al-Asr', 'min' => 1, 'max' => 3],
+                ['nama' => 'Al-Humazah', 'min' => 1, 'max' => 9],
+                ['nama' => 'Al-Fil', 'min' => 1, 'max' => 5],
+                ['nama' => 'Quraisy', 'min' => 1, 'max' => 4],
+                ['nama' => 'Al-Ma\'un', 'min' => 1, 'max' => 7],
+                ['nama' => 'Al-Kautsar', 'min' => 1, 'max' => 3],
+                ['nama' => 'Al-Kafirun', 'min' => 1, 'max' => 6],
+                ['nama' => 'An-Nasr', 'min' => 1, 'max' => 3],
+                ['nama' => 'Al-Lahab', 'min' => 1, 'max' => 5],
+                ['nama' => 'Al-Ikhlas', 'min' => 1, 'max' => 4],
+                ['nama' => 'Al-Falaq', 'min' => 1, 'max' => 5],
+                ['nama' => 'An-Nas', 'min' => 1, 'max' => 6]
+            ]
+        ];
+
+        $surahList = $mappingJuz[$juz] ?? [];
+
+        $result = [];
+        foreach ($surahList as $s) {
+            $result[] = [
+                'nama_surah' => $s['nama'],
+                'ayat_mulai_default' => $s['min'],
+                'ayat_selesai_default' => $s['max'],
+                'jumlah_ayat' => $s['max']
+            ];
+        }
+
+        return $result;
+    }
+
+    // Helper data master 114 Surah lengkap dengan informasi Juz dan jumlah ayatnya
+    private function getMasterSurahAlquran()
+    {
+        return [
+            ['nama' => 'Al-Fatihah', 'jumlah_ayat' => 7, 'juz_mulai' => 1, 'juz_selesai' => 1, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 7],
+            ['nama' => 'Al-Baqarah', 'jumlah_ayat' => 286, 'juz_mulai' => 1, 'juz_selesai' => 3, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 286],
+            ['nama' => 'Ali \'Imran', 'jumlah_ayat' => 200, 'juz_mulai' => 3, 'juz_selesai' => 4, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 200],
+            ['nama' => 'An-Nisa\'', 'jumlah_ayat' => 176, 'juz_mulai' => 4, 'juz_selesai' => 6, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 176],
+            ['nama' => 'Al-Ma\'idah', 'jumlah_ayat' => 120, 'juz_mulai' => 6, 'juz_selesai' => 7, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 120],
+            ['nama' => 'Al-An\'am', 'jumlah_ayat' => 165, 'juz_mulai' => 7, 'juz_selesai' => 8, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 165],
+            ['nama' => 'Al-A\'raf', 'jumlah_ayat' => 206, 'juz_mulai' => 8, 'juz_selesai' => 9, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 206],
+            ['nama' => 'Al-Anfal', 'jumlah_ayat' => 75, 'juz_mulai' => 9, 'juz_selesai' => 10, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 75],
+            ['nama' => 'At-Taubah', 'jumlah_ayat' => 129, 'juz_mulai' => 10, 'juz_selesai' => 11, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 129],
+            ['nama' => 'Yunus', 'jumlah_ayat' => 109, 'juz_mulai' => 11, 'juz_selesai' => 11, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 109],
+            ['nama' => 'Hud', 'jumlah_ayat' => 123, 'juz_mulai' => 11, 'juz_selesai' => 12, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 123],
+            ['nama' => 'Yusuf', 'jumlah_ayat' => 111, 'juz_mulai' => 12, 'juz_selesai' => 13, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 111],
+            ['nama' => 'Ar-Ra\'d', 'jumlah_ayat' => 43, 'juz_mulai' => 13, 'juz_selesai' => 13, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 43],
+            ['nama' => 'Ibrahim', 'jumlah_ayat' => 52, 'juz_mulai' => 13, 'juz_selesai' => 13, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 52],
+            ['nama' => 'Al-Hijr', 'jumlah_ayat' => 99, 'juz_mulai' => 14, 'juz_selesai' => 14, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 99],
+            ['nama' => 'An-Nahl', 'jumlah_ayat' => 128, 'juz_mulai' => 14, 'juz_selesai' => 14, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 128],
+            ['nama' => 'Al-Isra\'', 'jumlah_ayat' => 111, 'juz_mulai' => 15, 'juz_selesai' => 15, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 111],
+            ['nama' => 'Al-Kahf', 'jumlah_ayat' => 110, 'juz_mulai' => 15, 'juz_selesai' => 16, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 110],
+            ['nama' => 'Maryam', 'jumlah_ayat' => 98, 'juz_mulai' => 16, 'juz_selesai' => 16, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 98],
+            ['nama' => 'Taha', 'jumlah_ayat' => 135, 'juz_mulai' => 16, 'juz_selesai' => 16, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 135],
+            ['nama' => 'Al-Anbiya\'', 'jumlah_ayat' => 112, 'juz_mulai' => 17, 'juz_selesai' => 17, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 112],
+            ['nama' => 'Al-Hajj', 'jumlah_ayat' => 78, 'juz_mulai' => 17, 'juz_selesai' => 17, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 78],
+            ['nama' => 'Al-Mu\'minun', 'jumlah_ayat' => 118, 'juz_mulai' => 18, 'juz_selesai' => 18, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 118],
+            ['nama' => 'An-Nur', 'jumlah_ayat' => 64, 'juz_mulai' => 18, 'juz_selesai' => 18, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 64],
+            ['nama' => 'Al-Furqan', 'jumlah_ayat' => 77, 'juz_mulai' => 18, 'juz_selesai' => 19, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 77],
+            ['nama' => 'Ash-Shu\'ara\'', 'jumlah_ayat' => 227, 'juz_mulai' => 19, 'juz_selesai' => 19, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 227],
+            ['nama' => 'An-Naml', 'jumlah_ayat' => 93, 'juz_mulai' => 19, 'juz_selesai' => 20, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 93],
+            ['nama' => 'Al-Qasas', 'jumlah_ayat' => 88, 'juz_mulai' => 20, 'juz_selesai' => 20, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 88],
+            ['nama' => 'Al-Ankabut', 'jumlah_ayat' => 69, 'juz_mulai' => 20, 'juz_selesai' => 21, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 69],
+            ['nama' => 'Ar-Rum', 'jumlah_ayat' => 60, 'juz_mulai' => 21, 'juz_selesai' => 21, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 60],
+            ['nama' => 'Luqman', 'jumlah_ayat' => 34, 'juz_mulai' => 21, 'juz_selesai' => 21, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 34],
+            ['nama' => 'As-Sajdah', 'jumlah_ayat' => 30, 'juz_mulai' => 21, 'juz_selesai' => 21, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 30],
+            ['nama' => 'Al-Ahzab', 'jumlah_ayat' => 73, 'juz_mulai' => 21, 'juz_selesai' => 22, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 73],
+            ['nama' => 'Saba\'', 'jumlah_ayat' => 54, 'juz_mulai' => 22, 'juz_selesai' => 22, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 54],
+            ['nama' => 'Fatir', 'jumlah_ayat' => 45, 'juz_mulai' => 22, 'juz_selesai' => 22, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 45],
+            ['nama' => 'Ya-Sin', 'jumlah_ayat' => 83, 'juz_mulai' => 22, 'juz_selesai' => 23, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 83],
+            ['nama' => 'As-Saffat', 'jumlah_ayat' => 182, 'juz_mulai' => 23, 'juz_selesai' => 23, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 182],
+            ['nama' => 'Sad', 'jumlah_ayat' => 88, 'juz_mulai' => 23, 'juz_selesai' => 23, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 88],
+            ['nama' => 'Az-Zumar', 'jumlah_ayat' => 75, 'juz_mulai' => 23, 'juz_selesai' => 24, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 75],
+            ['nama' => 'Gafir', 'jumlah_ayat' => 85, 'juz_mulai' => 24, 'juz_selesai' => 24, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 85],
+            ['nama' => 'Fussilat', 'jumlah_ayat' => 54, 'juz_mulai' => 24, 'juz_selesai' => 25, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 54],
+            ['nama' => 'Ash-Shura', 'jumlah_ayat' => 53, 'juz_mulai' => 25, 'juz_selesai' => 25, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 53],
+            ['nama' => 'Az-Zukhruf', 'jumlah_ayat' => 89, 'juz_mulai' => 25, 'juz_selesai' => 25, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 89],
+            ['nama' => 'Ad-Dukhan', 'jumlah_ayat' => 59, 'juz_mulai' => 25, 'juz_selesai' => 25, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 59],
+            ['nama' => 'Al-Jasiyah', 'jumlah_ayat' => 37, 'juz_mulai' => 25, 'juz_selesai' => 25, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 37],
+            ['nama' => 'Al-Ahqaf', 'jumlah_ayat' => 35, 'juz_mulai' => 26, 'juz_selesai' => 26, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 35],
+            ['nama' => 'Muhammad', 'jumlah_ayat' => 38, 'juz_mulai' => 26, 'juz_selesai' => 26, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 38],
+            ['nama' => 'Al-Fath', 'jumlah_ayat' => 29, 'juz_mulai' => 26, 'juz_selesai' => 26, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 29],
+            ['nama' => 'Al-Hujurat', 'jumlah_ayat' => 18, 'juz_mulai' => 26, 'juz_selesai' => 26, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 18],
+            ['nama' => 'Qaf', 'jumlah_ayat' => 45, 'juz_mulai' => 26, 'juz_selesai' => 26, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 45],
+            ['nama' => 'Ad-Zariyat', 'jumlah_ayat' => 60, 'juz_mulai' => 26, 'juz_selesai' => 27, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 60],
+            ['nama' => 'At-Tur', 'jumlah_ayat' => 49, 'juz_mulai' => 27, 'juz_selesai' => 27, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 49],
+            ['nama' => 'An-Najm', 'jumlah_ayat' => 62, 'juz_mulai' => 27, 'juz_selesai' => 27, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 62],
+            ['nama' => 'Al-Qamar', 'jumlah_ayat' => 55, 'juz_mulai' => 27, 'juz_selesai' => 27, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 55],
+            ['nama' => 'Ar-Rahman', 'jumlah_ayat' => 78, 'juz_mulai' => 27, 'juz_selesai' => 27, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 78],
+            ['nama' => 'Al-Waqi\'ah', 'jumlah_ayat' => 96, 'juz_mulai' => 27, 'juz_selesai' => 27, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 96],
+            ['nama' => 'Al-Hadid', 'jumlah_ayat' => 29, 'juz_mulai' => 27, 'juz_selesai' => 27, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 29],
+            ['nama' => 'Al-Mujadilah', 'jumlah_ayat' => 22, 'juz_mulai' => 28, 'juz_selesai' => 28, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 22],
+            ['nama' => 'Al-Hasyr', 'jumlah_ayat' => 24, 'juz_mulai' => 28, 'juz_selesai' => 28, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 24],
+            ['nama' => 'Al-Mumtahanah', 'jumlah_ayat' => 13, 'juz_mulai' => 28, 'juz_selesai' => 28, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 13],
+            ['nama' => 'As-Saff', 'jumlah_ayat' => 14, 'juz_mulai' => 28, 'juz_selesai' => 28, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 14],
+            ['nama' => 'Al-Jumu\'ah', 'jumlah_ayat' => 11, 'juz_mulai' => 28, 'juz_selesai' => 28, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 11],
+            ['nama' => 'Al-Munafiqun', 'jumlah_ayat' => 11, 'juz_mulai' => 28, 'juz_selesai' => 28, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 11],
+            ['nama' => 'At-Tagabun', 'jumlah_ayat' => 18, 'juz_mulai' => 28, 'juz_selesai' => 28, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 18],
+            ['nama' => 'At-Talaq', 'jumlah_ayat' => 12, 'juz_mulai' => 28, 'juz_selesai' => 28, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 12],
+            ['nama' => 'At-Tahrim', 'jumlah_ayat' => 12, 'juz_mulai' => 28, 'juz_selesai' => 28, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 12],
+            ['nama' => 'Al-Mulk', 'jumlah_ayat' => 30, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 30],
+            ['nama' => 'Al-Qalam', 'jumlah_ayat' => 52, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 52],
+            ['nama' => 'Al-Haqqah', 'jumlah_ayat' => 52, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 52],
+            ['nama' => 'Al-Ma\'arij', 'jumlah_ayat' => 44, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 44],
+            ['nama' => 'Nuh', 'jumlah_ayat' => 28, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 28],
+            ['nama' => 'Al-Jinn', 'jumlah_ayat' => 28, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 28],
+            ['nama' => 'Al-Muzzammil', 'jumlah_ayat' => 20, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 20],
+            ['nama' => 'Al-Muddassir', 'jumlah_ayat' => 56, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 56],
+            ['nama' => 'Al-Qiyamah', 'jumlah_ayat' => 40, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 40],
+            ['nama' => 'Al-Insan', 'jumlah_ayat' => 31, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 31],
+            ['nama' => 'Al-Mursalat', 'jumlah_ayat' => 50, 'juz_mulai' => 29, 'juz_selesai' => 29, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 50],
+            ['nama' => 'An-Naba\'', 'jumlah_ayat' => 40, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 40],
+            ['nama' => 'An-Nazi\'at', 'jumlah_ayat' => 46, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 46],
+            ['nama' => 'Abasa', 'jumlah_ayat' => 42, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 42],
+            ['nama' => 'At-Takwir', 'jumlah_ayat' => 29, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 29],
+            ['nama' => 'Al-Infitar', 'jumlah_ayat' => 19, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 19],
+            ['nama' => 'Al-Mutaffifin', 'jumlah_ayat' => 36, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 36],
+            ['nama' => 'Al-Inshiqaq', 'jumlah_ayat' => 25, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 25],
+            ['nama' => 'Al-Buruj', 'jumlah_ayat' => 22, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 22],
+            ['nama' => 'At-Tariq', 'jumlah_ayat' => 17, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 17],
+            ['nama' => 'Al-A\'la', 'jumlah_ayat' => 19, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 19],
+            ['nama' => 'Al-Gasiyah', 'jumlah_ayat' => 26, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 26],
+            ['nama' => 'Al-Fajr', 'jumlah_ayat' => 30, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 30],
+            ['nama' => 'Al-Balad', 'jumlah_ayat' => 20, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 20],
+            ['nama' => 'Ash-Shams', 'jumlah_ayat' => 15, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 15],
+            ['nama' => 'Al-Lail', 'jumlah_ayat' => 21, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 21],
+            ['nama' => 'Ad-Duha', 'jumlah_ayat' => 11, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 11],
+            ['nama' => 'Al-Inshirah', 'jumlah_ayat' => 8, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 8],
+            ['nama' => 'At-Tin', 'jumlah_ayat' => 8, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 8],
+            ['nama' => 'Al-Alaq', 'jumlah_ayat' => 19, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 19],
+            ['nama' => 'Al-Qadr', 'jumlah_ayat' => 5, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 5],
+            ['nama' => 'Al-Bayyinah', 'jumlah_ayat' => 8, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 8],
+            ['nama' => 'Az-Zazalah', 'jumlah_ayat' => 8, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 8],
+            ['nama' => 'Al-Adiyat', 'jumlah_ayat' => 11, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 11],
+            ['nama' => 'Al-Qari\'ah', 'jumlah_ayat' => 11, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 11],
+            ['nama' => 'At-Takasur', 'jumlah_ayat' => 8, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 8],
+            ['nama' => 'Al-Asr', 'jumlah_ayat' => 3, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 3],
+            ['nama' => 'Al-Humazah', 'jumlah_ayat' => 9, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 9],
+            ['nama' => 'Al-Fil', 'jumlah_ayat' => 5, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 5],
+            ['nama' => 'Quraisy', 'jumlah_ayat' => 4, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 4],
+            ['nama' => 'Al-Ma\'un', 'jumlah_ayat' => 7, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 7],
+            ['nama' => 'Al-Kautsar', 'jumlah_ayat' => 3, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 3],
+            ['nama' => 'Al-Kafirun', 'jumlah_ayat' => 6, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 6],
+            ['nama' => 'An-Idr', 'jumlah_ayat' => 3, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 3], // An-Nasr
+            ['nama' => 'Al-Lahab', 'jumlah_ayat' => 5, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 5],
+            ['nama' => 'Al-Ikhlas', 'jumlah_ayat' => 4, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 4],
+            ['nama' => 'Al-Falaq', 'jumlah_ayat' => 5, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 5],
+            ['nama' => 'An-Nas', 'jumlah_ayat' => 6, 'juz_mulai' => 30, 'juz_selesai' => 30, 'ayat_mulai_asli' => 1, 'ayat_selesai_asli' => 6],
+        ];
+    }
+
+
+    // ==========================================
     // GLOBAL DI DASHBOARD ADMIN    
     // ==========================================
 

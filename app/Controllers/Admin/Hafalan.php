@@ -29,14 +29,14 @@ class Hafalan extends BaseController
 
         if ($role == 'admin') {
             $data = [
-                'title'   => 'Data Hafalan',
-                'icon'   => 'fa-solid fa-book-quran',
-                'hafalan' => $this->hafalanModel->getHafalanWithRelations()->paginate(5, 'hafalan'),
-                'pager'   => $this->hafalanModel->pager,
-                'santri'  => $this->santriModel->findAll(),
-                'guru'    => $this->guruModel->findAll(),
-                'kelas'   => $this->kelasModel->findAll(),
-                'role'    => $role,
+                'title' => 'Data Hafalan',
+                'icon' => 'fa-solid fa-book-quran',
+                'hafalan' => $this->hafalanModel->getHafalanWithRelations()->paginate(6, 'hafalan'),
+                'pager' => $this->hafalanModel->pager,
+                'santri' => $this->santriModel->findAll(),
+                'guru' => $this->guruModel->findAll(),
+                'kelas' => $this->kelasModel->findAll(),
+                'role' => $role,
             ];
 
             return view('admin/data_hafalan', $data);
@@ -47,6 +47,17 @@ class Hafalan extends BaseController
         }
     }
 
+    public function getSurahByJuz($juz)
+    {
+        if (CI_DEBUG) {
+            service('toolbar')->respond(); // matikan sementara
+        }
+
+        $model = new \App\Models\HafalanModel();
+        $data = $model->getSurahByJuz($juz);
+
+        return $this->response->setJSON($data);
+    }
     public function getSantriByGuru($idGuru)
     {
         $guru = $this->guruModel->find($idGuru);
@@ -65,29 +76,31 @@ class Hafalan extends BaseController
     public function store()
     {
         // Validasi input form
-        if (!$this->validate([
-            'id_santri'  => 'required|numeric',
-            'id_guru'      => 'required|numeric',
-            'jenis'      => 'required',
-            'juz'        => 'required|numeric',
-            'surah'      => 'required',
-            'ayat_mulai' => 'required|numeric',
-            'ayat_selesai' => 'required|numeric',
-            'predikat'   => 'required'
-        ])) {
+        if (
+            !$this->validate([
+                'id_santri' => 'required|numeric',
+                'id_guru' => 'required|numeric',
+                'jenis' => 'required',
+                'juz' => 'required|numeric',
+                'surah' => 'required',
+                'ayat_mulai' => 'required|numeric',
+                'ayat_selesai' => 'required|numeric',
+                'predikat' => 'required'
+            ])
+        ) {
             return redirect()->back()->withInput()->with('error', 'Gagal menyimpan! Mohon lengkapi data dengan benar.');
         }
 
         $this->hafalanModel->save([
-            'id_santri'    => $this->request->getVar('id_santri'),
-            'id_guru'      => $this->request->getVar('id_guru'),
-            'jenis'        => $this->request->getVar('jenis'),
-            'juz'          => $this->request->getVar('juz'),
-            'surah'        => $this->request->getVar('surah'),
-            'ayat_mulai'   => $this->request->getVar('ayat_mulai'),
+            'id_santri' => $this->request->getVar('id_santri'),
+            'id_guru' => $this->request->getVar('id_guru'),
+            'jenis' => $this->request->getVar('jenis'),
+            'juz' => $this->request->getVar('juz'),
+            'surah' => $this->request->getVar('surah'),
+            'ayat_mulai' => $this->request->getVar('ayat_mulai'),
             'ayat_selesai' => $this->request->getVar('ayat_selesai'),
-            'predikat'     => $this->request->getVar('predikat'),
-            'keterangan'   => $this->request->getVar('keterangan')
+            'predikat' => $this->request->getVar('predikat'),
+            'keterangan' => $this->request->getVar('keterangan')
         ]);
 
         return redirect()->to(base_url('admin/hafalan'))->with('success', 'Data setoran hafalan berhasil ditambahkan!');
@@ -97,29 +110,31 @@ class Hafalan extends BaseController
     public function update($id)
     {
         // Validasi input form edit
-        if (!$this->validate([
-            'id_santri'    => 'required|numeric',
-            'id_guru'      => 'required|numeric',
-            'jenis'        => 'required',
-            'juz'          => 'required|numeric',
-            'surah'        => 'required',
-            'ayat_mulai'   => 'required|numeric',
-            'ayat_selesai' => 'required|numeric',
-            'predikat'     => 'required'
-        ])) {
+        if (
+            !$this->validate([
+                'id_santri' => 'required|numeric',
+                'id_guru' => 'required|numeric',
+                'jenis' => 'required',
+                'juz' => 'required|numeric',
+                'surah' => 'required',
+                'ayat_mulai' => 'required|numeric',
+                'ayat_selesai' => 'required|numeric',
+                'predikat' => 'required'
+            ])
+        ) {
             return redirect()->back()->withInput()->with('error', 'Gagal memperbarui! Mohon cek kembali inputan anda.');
         }
 
         $this->hafalanModel->update($id, [
-            'id_santri'    => $this->request->getVar('id_santri'),
-            'id_guru'      => $this->request->getVar('id_guru'),
-            'jenis'        => $this->request->getVar('jenis'),
-            'juz'          => $this->request->getVar('juz'),
-            'surah'        => $this->request->getVar('surah'),
-            'ayat_mulai'   => $this->request->getVar('ayat_mulai'),
+            'id_santri' => $this->request->getVar('id_santri'),
+            'id_guru' => $this->request->getVar('id_guru'),
+            'jenis' => $this->request->getVar('jenis'),
+            'juz' => $this->request->getVar('juz'),
+            'surah' => $this->request->getVar('surah'),
+            'ayat_mulai' => $this->request->getVar('ayat_mulai'),
             'ayat_selesai' => $this->request->getVar('ayat_selesai'),
-            'predikat'     => $this->request->getVar('predikat'),
-            'keterangan'   => $this->request->getVar('keterangan')
+            'predikat' => $this->request->getVar('predikat'),
+            'keterangan' => $this->request->getVar('keterangan')
         ]);
 
         return redirect()->to(base_url('admin/hafalan'))->with('success', 'Data setoran hafalan berhasil diperbarui!');

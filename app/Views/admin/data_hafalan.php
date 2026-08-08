@@ -127,7 +127,8 @@ $hafalan = $hafalan ?? [];
                                             </div>
                                             <div>
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
-                                                    <?= esc($h['nama_santri']); ?></h6>
+                                                    <?= esc($h['nama_santri']); ?>
+                                                </h6>
                                                 <small class="text-secondary" style="font-size: 12px;"><i
                                                         class="fa-regular fa-calendar me-1"></i>
                                                     <?= date('d M Y', strtotime($h['created_at'])); ?></small>
@@ -265,7 +266,8 @@ $hafalan = $hafalan ?? [];
                             <?php if (!empty($santri)): ?>
                                 <?php foreach ($santri as $s): ?>
                                     <option value="<?= $s['id']; ?>"><?= esc($s['nama_santri']); ?> (NIS:
-                                        <?= esc($s['nis']); ?>)</option>
+                                        <?= esc($s['nis']); ?>)
+                                    </option>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>
@@ -284,7 +286,7 @@ $hafalan = $hafalan ?? [];
                         <!-- Juz -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-medium small text-muted">Juz</label>
-                            <select name="juz" class="form-select" required>
+                            <select name="juz" id="pilih_juz" class="form-select" required>
                                 <option value="" disabled selected>-- Pilih Juz --</option>
                                 <?php for ($i = 1; $i <= 30; $i++): ?>
                                     <option value="<?= $i; ?>">Juz <?= $i; ?></option>
@@ -296,22 +298,24 @@ $hafalan = $hafalan ?? [];
                     <!-- Surah -->
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Surah</label>
-                        <input type="text" name="surah" class="form-control" placeholder="Contoh: Al-Baqarah" required>
+                        <select name="surah" id="pilih_surah" class="form-select" required>
+                            <option value="" disabled selected>-- Pilih Juz Terlebih Dahulu --</option>
+                        </select>
                     </div>
 
                     <div class="row">
                         <!-- Ayat Mulai -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-medium small text-muted">Dari Ayat</label>
-                            <input type="number" name="ayat_mulai" class="form-control" placeholder="Contoh: 1" min="1"
-                                required>
+                            <input type="number" name="ayat_mulai" id="ayat_mulai" class="form-control"
+                                placeholder="Contoh: 1" min="1" required>
                         </div>
 
                         <!-- Ayat Selesai -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-medium small text-muted">Sampai Ayat</label>
-                            <input type="number" name="ayat_selesai" class="form-control" placeholder="Contoh: 10"
-                                min="1" required>
+                            <input type="number" name="ayat_selesai" id="ayat_selesai" class="form-control"
+                                placeholder="Contoh: 10" min="1" required>
                         </div>
                     </div>
 
@@ -400,6 +404,7 @@ $hafalan = $hafalan ?? [];
                     <h5 class="modal-title fw-bold text-dark" id="modalEditLabel">Edit Setoran Hafalan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <input type="hidden" name="id_guru" id="edit-id-guru">
                 <div class="modal-body py-3">
                     <!-- Pilih Santri -->
                     <div class="mb-3">
@@ -419,20 +424,26 @@ $hafalan = $hafalan ?? [];
                         <label class="form-label small fw-medium text-muted">Jenis Setoran</label>
                         <select name="jenis" id="edit-jenis" class="form-select form-select-sm" required>
                             <option value="ZIYADAH">ZIYADAH (Hafalan Baru)</option>
-                            <option value="MURABAHAH">MURABAHAH / Murojaah</option>
+                            <option value="MUROJAAH">Murojaah (Ulang Hafalan)</option>
                         </select>
                     </div>
 
-                    <!-- Juz & Surah -->
+                    <!-- Juz & Surah (Diubah menjadi select agar dinamis via AJAX) -->
                     <div class="row g-2 mb-3">
                         <div class="col-md-4">
                             <label class="form-label small fw-medium text-muted">Juz</label>
-                            <input type="number" name="juz" id="edit-juz" class="form-control form-control-sm" required>
+                            <select name="juz" id="edit-pilih_juz" class="form-select form-select-sm" required>
+                                <option value="" disabled selected>-- Pilih --</option>
+                                <?php for ($i = 1; $i <= 30; $i++): ?>
+                                    <option value="<?= $i; ?>">Juz <?= $i; ?></option>
+                                <?php endfor; ?>
+                            </select>
                         </div>
                         <div class="col-md-8">
                             <label class="form-label small fw-medium text-muted">Surah</label>
-                            <input type="text" name="surah" id="edit-surah" class="form-control form-control-sm"
-                                required>
+                            <select name="surah" id="edit-pilih_surah" class="form-select form-select-sm" required>
+                                <option value="" disabled selected>-- Pilih Surah --</option>
+                            </select>
                         </div>
                     </div>
 
@@ -441,12 +452,12 @@ $hafalan = $hafalan ?? [];
                         <div class="col-md-6">
                             <label class="form-label small fw-medium text-muted">Ayat Mulai</label>
                             <input type="number" name="ayat_mulai" id="edit-ayat-mulai"
-                                class="form-control form-control-sm" required>
+                                class="form-control form-control-sm" required min="1">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-medium text-muted">Ayat Selesai</label>
                             <input type="number" name="ayat_selesai" id="edit-ayat-selesai"
-                                class="form-control form-control-sm" required>
+                                class="form-control form-control-sm" required min="1">
                         </div>
                     </div>
 
@@ -525,6 +536,203 @@ $hafalan = $hafalan ?? [];
         });
     });
 
+    // Script AJAX Dinamis buat Modal Tambah/Input Juz, Surah, dan Ayat
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectJuz = document.getElementById('pilih_juz');
+        const selectSurah = document.getElementById('pilih_surah');
+        const inputAyatMulai = document.getElementById('ayat_mulai');
+        const inputAyatSelesai = document.getElementById('ayat_selesai');
+
+        // Ketika Juz dipilih
+        selectJuz.addEventListener('change', function () {
+            const juzId = this.value;
+
+            selectSurah.innerHTML = '<option value="" disabled selected>Memuat data surah...</option>';
+            inputAyatMulai.value = '';
+            inputAyatSelesai.value = '';
+
+            fetch(`<?= base_url('admin/hafalan/getSurahByJuz'); ?>/${juzId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Server merespon dengan status: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    selectSurah.innerHTML = '<option value="" disabled selected>-- Pilih Surah --</option>';
+
+                    if (!Array.isArray(data) || data.length === 0) {
+                        selectSurah.innerHTML = '<option value="" disabled selected>Tidak ada surah ditemukan</option>';
+                        return;
+                    }
+
+                    data.forEach(surah => {
+                        let opt = document.createElement('option');
+                        opt.value = surah.nama_surah;
+                        opt.textContent = surah.nama_surah;
+                        opt.dataset.maxAyat = surah.jumlah_ayat;
+                        opt.dataset.defaultMulai = surah.ayat_mulai_default;
+                        opt.dataset.defaultSelesai = surah.ayat_selesai_default;
+                        selectSurah.appendChild(opt);
+                    });
+                })
+                .catch(error => {
+                    console.error('Detail Error:', error);
+                    selectSurah.innerHTML = '<option value="" disabled selected>Gagal memuat surah (Cek Console)</option>';
+                });
+        });
+
+        // Ketika Surah dipilih, atur otomatis nilai ayat mulai & selesai
+        selectSurah.addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+
+            const defaultMulai = selectedOption.dataset.defaultMulai;
+            const defaultSelesai = selectedOption.dataset.defaultSelesai;
+            const maxAyat = selectedOption.dataset.maxAyat; // Batas maksimal ayat surah tersebut
+
+            if (defaultMulai) {
+                inputAyatMulai.value = defaultMulai;
+            }
+            if (defaultSelesai) {
+                inputAyatSelesai.value = defaultSelesai;
+            }
+
+            // Terapkan batas maksimal pada input HTML secara dinamis
+            if (maxAyat) {
+                inputAyatMulai.max = maxAyat;
+                inputAyatSelesai.max = maxAyat;
+            }
+        });
+
+        // Tambahan pencegahan jika pengguna mengetik angka melebihi batas maksimal secara manual
+        inputAyatSelesai.addEventListener('input', function () {
+            const selectedOption = selectSurah.options[selectSurah.selectedIndex];
+            const maxAyat = parseInt(selectedOption.dataset.maxAyat) || 0;
+
+            if (maxAyat > 0 && parseInt(this.value) > maxAyat) {
+                this.value = maxAyat; // Otomatis kembalikan ke angka maksimal jika melebihi
+            }
+        });
+
+        inputAyatMulai.addEventListener('input', function () {
+            const selectedOption = selectSurah.options[selectSurah.selectedIndex];
+            const maxAyat = parseInt(selectedOption.dataset.maxAyat) || 0;
+
+            if (maxAyat > 0 && parseInt(this.value) > maxAyat) {
+                this.value = maxAyat;
+            }
+        });
+    });
+
+    // Script AJAX Dinamis untuk Modal Edit (Juz, Surah, dan Ayat)
+    document.addEventListener("DOMContentLoaded", function () {
+        const modalEdit = document.getElementById('modalEdit');
+        const editJuz = document.getElementById('edit-pilih_juz');
+        const editSurah = document.getElementById('edit-pilih_surah');
+        const editAyatMulai = document.getElementById('edit-ayat-mulai');
+        const editAyatSelesai = document.getElementById('edit-ayat-selesai');
+
+        // Fungsi helper untuk mengambil data surah berdasarkan juz secara AJAX
+        function loadSurahForEdit(juzId, selectedSurahName = '') {
+            if (!juzId) return;
+
+            editSurah.innerHTML = '<option value="" disabled selected>Memuat data surah...</option>';
+
+            fetch(`<?= base_url('admin/hafalan/getSurahByJuz'); ?>/${juzId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Gagal memuat surah');
+                    return response.json();
+                })
+                .then(data => {
+                    editSurah.innerHTML = '<option value="" disabled selected>-- Pilih Surah --</option>';
+
+                    if (Array.isArray(data)) {
+                        data.forEach(surah => {
+                            let opt = document.createElement('option');
+                            opt.value = surah.nama_surah;
+                            opt.textContent = surah.nama_surah;
+                            opt.dataset.maxAyat = surah.jumlah_ayat;
+                            opt.dataset.defaultMulai = surah.ayat_mulai_default;
+                            opt.dataset.defaultSelesai = surah.ayat_selesai_default;
+
+                            // Jika nama surah cocok dengan data lama yang sedang diedit, pilih otomatis
+                            if (surah.nama_surah === selectedSurahName) {
+                                opt.selected = true;
+                            }
+
+                            editSurah.appendChild(opt);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    editSurah.innerHTML = '<option value="" disabled selected>Gagal memuat surah</option>';
+                });
+        }
+
+        // Ketika dropdown Juz pada modal edit diubah manual oleh pengguna
+        editJuz.addEventListener('change', function () {
+            loadSurahForEdit(this.value);
+        });
+
+        // Ketika dropdown Surah pada modal edit diubah, sesuaikan max ayat
+        editSurah.addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.dataset.maxAyat) {
+                editAyatMulai.max = selectedOption.dataset.maxAyat;
+                editAyatSelesai.max = selectedOption.dataset.maxAyat;
+            }
+        });
+
+        // Validasi input manual agar tidak melebihi maksimal ayat
+        editAyatSelesai.addEventListener('input', function () {
+            const selectedOption = editSurah.options[editSurah.selectedIndex];
+            const maxAyat = parseInt(selectedOption?.dataset?.maxAyat) || 0;
+            if (maxAyat > 0 && parseInt(this.value) > maxAyat) {
+                this.value = maxAyat;
+            }
+        });
+
+        editAyatMulai.addEventListener('input', function () {
+            const selectedOption = editSurah.options[editSurah.selectedIndex];
+            const maxAyat = parseInt(selectedOption?.dataset?.maxAyat) || 0;
+            if (maxAyat > 0 && parseInt(this.value) > maxAyat) {
+                this.value = maxAyat;
+            }
+        });
+
+        // Saat Modal Edit dibuka, masukkan data lama dari tombol aksi ke dalam form
+        modalEdit.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            const id = button.getAttribute('data-id');
+            const idSantri = button.getAttribute('data-idsantri');
+            const jenis = button.getAttribute('data-jenis');
+            const juz = button.getAttribute('data-juz');
+            const surah = button.getAttribute('data-surah');
+            const ayatMulai = button.getAttribute('data-ayatmulai');
+            const ayatSelesai = button.getAttribute('data-ayatselesai');
+            const predikat = button.getAttribute('data-predikat');
+            const keterangan = button.getAttribute('data-keterangan');
+
+            // Set URL action pada form
+            const form = document.getElementById('formEditHafalan');
+            form.action = "<?= base_url('admin/hafalan/update/'); ?>" + id;
+
+            // Masukkan nilai teks/pilihan dasar
+            document.getElementById('edit-id-santri').value = idSantri;
+            document.getElementById('edit-jenis').value = jenis;
+            document.getElementById('edit-juz').value = juz;
+            document.getElementById('edit-ayat-mulai').value = ayatMulai;
+            document.getElementById('edit-ayat-selesai').value = ayatSelesai;
+            document.getElementById('edit-predikat').value = predikat;
+            document.getElementById('edit-keterangan').value = (keterangan === 'null' || keterangan === '') ? '' : keterangan;
+
+            // Panggil fungsi load surah secara otomatis berdasarkan juz yang tersimpan di database
+            loadSurahForEdit(juz, surah);
+        });
+    });
+
     // AJAX (Dependent Dropdown)
     document.addEventListener('DOMContentLoaded', function () {
         const selectGuru = document.querySelector('select[name="id_guru"]');
@@ -534,10 +742,8 @@ $hafalan = $hafalan ?? [];
             selectGuru.addEventListener('change', function () {
                 const idGuru = this.value;
 
-                // Kosongkan dropdown santri dan tampilkan teks loading
                 selectSantri.innerHTML = '<option value="" disabled selected>Memuat santri...</option>';
 
-                // Panggil API endpoint yang ada di controller admin
                 fetch("<?= base_url('admin/hafalan/getSantriByGuru/'); ?>" + idGuru)
                     .then(response => response.json())
                     .then(data => {
@@ -559,7 +765,7 @@ $hafalan = $hafalan ?? [];
         }
     });
 
-    // Modal tambah setoran
+    // Modal tambah setoran hafalan
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('searchInput');
         const juzFilter = document.getElementById('juzFilter');
@@ -628,14 +834,61 @@ $hafalan = $hafalan ?? [];
     });
 
     // Modal edit setoran
-    document.getElementById('edit-id-guru').value = button.getAttribute('data-idguru');
     document.addEventListener("DOMContentLoaded", function () {
         const modalEdit = document.getElementById('modalEdit');
+        const editJuz = document.getElementById('edit-pilih_juz');
+        const editSurah = document.getElementById('edit-pilih_surah');
+        const editAyatMulai = document.getElementById('edit-ayat-mulai');
+        const editAyatSelesai = document.getElementById('edit-ayat-selesai');
+
+        // Fungsi helper untuk mengambil data surah berdasarkan juz secara AJAX
+        function loadSurahForEdit(juzId, selectedSurahName = '') {
+            if (!juzId) return;
+
+            editSurah.innerHTML = '<option value="" disabled selected>Memuat data surah...</option>';
+
+            fetch(`<?= base_url('admin/hafalan/getSurahByJuz'); ?>/${juzId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Gagal memuat surah');
+                    return response.json();
+                })
+                .then(data => {
+                    editSurah.innerHTML = '<option value="" disabled selected>-- Pilih Surah --</option>';
+
+                    if (Array.isArray(data)) {
+                        data.forEach(surah => {
+                            let opt = document.createElement('option');
+                            opt.value = surah.nama_surah;
+                            opt.textContent = surah.nama_surah;
+                            opt.dataset.maxAyat = surah.jumlah_ayat;
+
+                            // Jika nama surah cocok dengan data lama, pilih otomatis
+                            if (surah.nama_surah === selectedSurahName) {
+                                opt.selected = true;
+                            }
+
+                            editSurah.appendChild(opt);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    editSurah.innerHTML = '<option value="" disabled selected>Gagal memuat surah</option>';
+                });
+        }
+
+        // Ketika dropdown Juz pada modal edit diubah manual
+        editJuz.addEventListener('change', function () {
+            loadSurahForEdit(this.value);
+        });
+
+        // Saat Modal Edit dibuka
         modalEdit.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
 
             // Ambil data dari tombol
             const id = button.getAttribute('data-id');
+            const idGuru = button.getAttribute('data-idguru');
             const idSantri = button.getAttribute('data-idsantri');
             const jenis = button.getAttribute('data-jenis');
             const juz = button.getAttribute('data-juz');
@@ -645,19 +898,24 @@ $hafalan = $hafalan ?? [];
             const predikat = button.getAttribute('data-predikat');
             const keterangan = button.getAttribute('data-keterangan');
 
-            // Set URL action pada form ke route update yang sesuai
+            // Set URL action pada form
             const form = document.getElementById('formEditHafalan');
-            form.action = "<?= base_url('guru/hafalan/update/'); ?>" + id;
+            form.action = "<?= base_url('admin/hafalan/update/'); ?>" + id;
 
-            // Masukkan data ke dalam input form modal
-            document.getElementById('edit-id-santri').value = idSantri;
-            document.getElementById('edit-jenis').value = jenis;
-            document.getElementById('edit-juz').value = juz;
-            document.getElementById('edit-surah').value = surah;
-            document.getElementById('edit-ayat-mulai').value = ayatMulai;
-            document.getElementById('edit-ayat-selesai').value = ayatSelesai;
-            document.getElementById('edit-predikat').value = predikat;
-            document.getElementById('edit-keterangan').value = (keterangan === 'null' || keterangan === '') ? '' : keterangan;
+            // Masukkan data ke dalam input form modal dengan aman
+            if (idSantri) document.getElementById('edit-id-santri').value = idSantri;
+            if (idGuru) document.getElementById('edit-id-guru').value = idGuru;
+            if (jenis) document.getElementById('edit-jenis').value = jenis;
+            if (juz) document.getElementById('edit-pilih_juz').value = juz;
+            if (ayatMulai) document.getElementById('edit-ayat-mulai').value = ayatMulai;
+            if (ayatSelesai) document.getElementById('edit-ayat-selesai').value = ayatSelesai;
+            if (predikat) document.getElementById('edit-predikat').value = predikat;
+            document.getElementById('edit-keterangan').value = (!keterangan || keterangan === 'null') ? '' : keterangan;
+
+            // Panggil fungsi load surah secara otomatis berdasarkan juz yang tersimpan
+            if (juz) {
+                loadSurahForEdit(juz, surah);
+            }
         });
     });
 

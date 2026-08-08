@@ -48,6 +48,7 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     // Manajemen Hafalan
     $routes->get('hafalan', 'Admin\Hafalan::index');
     $routes->get('hafalan/getSantriByGuru/(:num)', 'Admin\Hafalan::getSantriByGuru/$1');
+    $routes->get('hafalan/getSurahByJuz/(:num)', 'Admin\Hafalan::getSurahByJuz/$1');
     $routes->post('hafalan/store', 'Admin\Hafalan::store');
     $routes->post('hafalan/update/(:num)', 'Admin\Hafalan::update/$1');
     $routes->get('hafalan/delete/(:num)', 'Admin\Hafalan::delete/$1');
