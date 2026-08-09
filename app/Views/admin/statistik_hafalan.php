@@ -22,7 +22,7 @@
         <div>
             <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Statistik Hafalan Qur'an
                 Semua Santri</h3>
-            <p class="text-muted text-dark-mode mb-0 small" style="text-transform: none !important;">Grafik perkembangan
+            <p class="text-secondary mb-0 small" style="text-transform: none !important;">Grafik perkembangan
                 setoran, rata-rata hafalan, dan progres seluruh santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
@@ -185,7 +185,7 @@
                             <span class="small text-dark-mode" style="font-size: 0.7rem;">Persentase di atas dihitung
                                 dari
                                 akumulasi
-                                total seluruh santri aktif.</span>
+                                hafalan yang disetor oleh semua santri aktif.</span>
                         </div>
                     </div>
                 </div>

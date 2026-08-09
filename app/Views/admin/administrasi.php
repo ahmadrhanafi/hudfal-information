@@ -60,7 +60,7 @@
                     style="font-size: 8px; width: 16px; height: 16px;" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
-    </div>div>
+    </div>
 
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">

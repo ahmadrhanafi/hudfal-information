@@ -377,7 +377,10 @@ class HafalanModel extends Model
     // Contoh fungsi pendukung di HafalanModel.php untuk Admin
     public function getRataRataGlobal($periode = 'tahun_ini')
     {
+        // Tambahkan join ke santri dan filter status
         $builder = $this->db->table('hafalan');
+        $builder->join('santri', 'santri.id = hafalan.id_santri');
+        $builder->where('santri.status_aktif', 'Aktif');
         $this->applyPeriodeFilter($builder, $periode);
 
         $rows = $builder->select('ayat_mulai, ayat_selesai')->get()->getResultArray();
@@ -392,30 +395,24 @@ class HafalanModel extends Model
         }
 
         $builderCount = $this->db->table('hafalan');
+        $builderCount->join('santri', 'santri.id = hafalan.id_santri');
+        $builderCount->where('santri.status_aktif', 'Aktif');
         $this->applyPeriodeFilter($builderCount, $periode);
         $totalSetoran = $builderCount->countAllResults();
 
-        if ($totalSetoran > 0) {
-            return (int) round($totalAyat / $totalSetoran);
-        }
-
-        return 0;
+        return ($totalSetoran > 0) ? (int) round($totalAyat / $totalSetoran) : 0;
     }
 
     public function getJuzDominanGlobal($periode = 'tahun_ini')
     {
-        // Panggil progress juz yang sudah akurat berdasarkan total ayat
         $progressJuz = $this->getProgressJuzGlobal($periode);
 
-        // Jika data kosong atau belum ada setoran
         if (empty($progressJuz) || $progressJuz[0]['nama'] === 'Belum ada data setoran') {
             return ['juz' => '-', 'persen' => 0];
         }
 
-        // Ambil elemen teratas karena sudah diurutkan dari yang terbesar oleh getProgressJuzGlobal
         $teratas = $progressJuz[0];
 
-        // Bersihkan string 'Juz ' agar yang dikembalikan hanya angkanya saja (misal: '2' atau '1')
         $nomorJuz = str_replace('Juz ', '', $teratas['nama']);
 
         return [
@@ -427,6 +424,8 @@ class HafalanModel extends Model
     public function getPredikatTerbanyakGlobal($periode = 'tahun_ini')
     {
         $builder = $this->db->table('hafalan');
+        $builder->join('santri', 'santri.id = hafalan.id_santri');
+        $builder->where('santri.status_aktif', 'Aktif');
         $this->applyPeriodeFilter($builder, $periode);
 
         $result = $builder->select('predikat, COUNT(predikat) as jumlah')
@@ -435,27 +434,25 @@ class HafalanModel extends Model
             ->get()
             ->getRowArray();
 
-        if ($result && !empty($result['predikat'])) {
-            return ucwords($result['predikat']);
-        }
-
-        return 'Belum Ada';
+        return ($result && !empty($result['predikat'])) ? ucwords($result['predikat']) : 'Belum Ada';
     }
 
     public function getProgressJuzGlobal($periode = 'tahun_ini')
     {
         $builder = $this->db->table($this->table);
+        $builder->join('santri', 'santri.id = hafalan.id_santri');
+        $builder->where('santri.status_aktif', 'Aktif');
 
         if ($periode == 'bulan_ini') {
-            $builder->where('MONTH(created_at)', date('m'));
-            $builder->where('YEAR(created_at)', date('Y'));
+            $builder->where('MONTH(hafalan.created_at)', date('m'));
+            $builder->where('YEAR(hafalan.created_at)', date('Y'));
         } elseif ($periode == 'bulan_lalu') {
-            $builder->where('MONTH(created_at)', date('m', strtotime('-1 month')));
-            $builder->where('YEAR(created_at)', date('Y', strtotime('-1 month')));
+            $builder->where('MONTH(hafalan.created_at)', date('m', strtotime('-1 month')));
+            $builder->where('YEAR(hafalan.created_at)', date('Y', strtotime('-1 month')));
         } elseif ($periode == 'tahun_lalu') {
-            $builder->where('YEAR(created_at)', date('Y', strtotime('-1 year')));
+            $builder->where('YEAR(hafalan.created_at)', date('Y', strtotime('-1 year')));
         } else {
-            $builder->where('YEAR(created_at)', date('Y'));
+            $builder->where('YEAR(hafalan.created_at)', date('Y'));
         }
 
         $builder->select("juz, SUM((ayat_selesai - ayat_mulai) + 1) as total_ayat_juz");
@@ -513,11 +510,12 @@ class HafalanModel extends Model
             $endOfWeek = date('Y-m-d', strtotime('sunday this week'));
 
             $builder = $this->db->table($this->table);
-            $builder->select("DATE(created_at) as tanggal, COUNT(DISTINCT id_santri) as total_santri");
-            // Ganti YEARWEEK dengan rentang tanggal antara awal dan akhir minggu
-            $builder->where('DATE(created_at) >=', $startOfWeek);
-            $builder->where('DATE(created_at) <=', $endOfWeek);
-            $builder->groupBy("DATE(created_at)");
+            $builder->join('santri', 'santri.id = hafalan.id_santri');
+            $builder->where('santri.status_aktif', 'Aktif');
+            $builder->select("DATE(hafalan.created_at) as tanggal, COUNT(DISTINCT id_santri) as total_santri");
+            $builder->where('DATE(hafalan.created_at) >=', $startOfWeek);
+            $builder->where('DATE(hafalan.created_at) <=', $endOfWeek);
+            $builder->groupBy("DATE(hafalan.created_at)");
             $result = $builder->get()->getResultArray();
 
             $dataPerHari = [];
@@ -548,10 +546,12 @@ class HafalanModel extends Model
             $endOfWeek = date('Y-m-d', strtotime('sunday last week'));
 
             $builder = $this->db->table($this->table);
-            $builder->select("DATE(created_at) as tanggal, COUNT(DISTINCT id_santri) as total_santri");
-            $builder->where('DATE(created_at) >=', $startOfWeek);
-            $builder->where('DATE(created_at) <=', $endOfWeek);
-            $builder->groupBy("DATE(created_at)");
+            $builder->join('santri', 'santri.id = hafalan.id_santri');
+            $builder->where('santri.status_aktif', 'Aktif');
+            $builder->select("DATE(hafalan.created_at) as tanggal, COUNT(DISTINCT id_santri) as total_santri");
+            $builder->where('DATE(hafalan.created_at) >=', $startOfWeek);
+            $builder->where('DATE(hafalan.created_at) <=', $endOfWeek);
+            $builder->groupBy("DATE(hafalan.created_at)");
             $result = $builder->get()->getResultArray();
 
             $dataPerHari = [];
@@ -584,10 +584,12 @@ class HafalanModel extends Model
             $jumlahHari = cal_days_in_month(CAL_GREGORIAN, (int) $targetBulan, (int) $targetTahun);
 
             $builder = $this->db->table($this->table);
-            $builder->select("DAY(created_at) as hari_angka, COUNT(DISTINCT id_santri) as total_santri");
-            $builder->where('MONTH(created_at)', $targetBulan);
-            $builder->where('YEAR(created_at)', $targetTahun);
-            $builder->groupBy("DAY(created_at)");
+            $builder->join('santri', 'santri.id = hafalan.id_santri');
+            $builder->where('santri.status_aktif', 'Aktif');
+            $builder->select("DAY(hafalan.created_at) as hari_angka, COUNT(DISTINCT id_santri) as total_santri");
+            $builder->where('MONTH(hafalan.created_at)', $targetBulan);
+            $builder->where('YEAR(hafalan.created_at)', $targetTahun);
+            $builder->groupBy("DAY(hafalan.created_at)");
             $result = $builder->get()->getResultArray();
 
             $dataPerHari = [];
@@ -605,9 +607,11 @@ class HafalanModel extends Model
             $tahunDipilih = ($periode == 'tahun_lalu') ? date('Y') - 1 : date('Y');
 
             $builder = $this->db->table($this->table);
-            $builder->select("MONTH(created_at) as bulan_angka, COUNT(DISTINCT id_santri) as total_santri");
-            $builder->where('YEAR(created_at)', $tahunDipilih);
-            $builder->groupBy("MONTH(created_at)");
+            $builder->join('santri', 'santri.id = hafalan.id_santri');
+            $builder->where('santri.status_aktif', 'Aktif');
+            $builder->select("MONTH(hafalan.created_at) as bulan_angka, COUNT(DISTINCT id_santri) as total_santri");
+            $builder->where('YEAR(hafalan.created_at)', $tahunDipilih);
+            $builder->groupBy("MONTH(hafalan.created_at)");
             $result = $builder->get()->getResultArray();
 
             $dataPerBulan = [];
