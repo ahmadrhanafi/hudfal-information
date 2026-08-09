@@ -26,8 +26,13 @@ class Kelas extends BaseController
         $builder->join('guru', 'guru.id_kelas_diampu = kelas.id', 'left');
 
         $kelasWithTotal = $builder->get()->getResultArray();
-        $guruList = $this->guruModel->where('id_kelas_diampu IS NULL', null, false)
+
+        // Ambil guru yang AKTIF DAN (belum punya kelas atau id kelas kosong)
+        $guruList = $this->guruModel->where('status_aktif', 'Aktif')
+            ->groupStart()
+            ->where('id_kelas_diampu IS NULL', null, false)
             ->orWhere('id_kelas_diampu', '')
+            ->groupEnd()
             ->findAll();
 
         $data = [
@@ -41,19 +46,8 @@ class Kelas extends BaseController
         return view('admin/kelas', $data);
     }
 
-    public function create()
-    {
-        $data = [
-            'title' => 'Tambah Kelas',
-            'role' => session()->get('role') ?? 'admin'
-        ];
-
-        return view('kelas/create', $data);
-    }
-
     public function store()
     {
-        // Validasi sederhana
         if (
             !$this->validate([
                 'nama_kelas' => 'required|min_length[3]|is_unique[kelas.nama_kelas]'
@@ -66,29 +60,44 @@ class Kelas extends BaseController
             'nama_kelas' => $this->request->getVar('nama_kelas')
         ]);
 
-        return redirect()->to(base_url('admin/kelas'))->with('success', 'Data kelas berhasil ditambahkan!');
-    }
+        $kelasId = $this->kelasModel->insertID();
+        $idGuru = $this->request->getVar('id_guru');
 
-    public function edit($id)
-    {
-        $data = [
-            'title' => 'Edit Kelas',
-            'kelas' => $this->kelasModel->find($id),
-            'role' => session()->get('role') ?? 'admin'
-        ];
-
-        if (empty($data['kelas'])) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Kelas dengan ID ' . $id . ' tidak ditemukan.');
+        if (!empty($idGuru)) {
+            $this->guruModel->update($idGuru, [
+                'id_kelas_diampu' => $kelasId
+            ]);
         }
 
-        return view('kelas/edit', $data);
+        return redirect()->to(base_url('admin/kelas'))->with('success', 'Data kelas berhasil ditambahkan!');
     }
 
     public function update($id)
     {
+        if (
+            !$this->validate([
+                'nama_kelas' => 'required|min_length[3]|is_unique[kelas.nama_kelas,id,' . $id . ']'
+            ])
+        ) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
         $this->kelasModel->update($id, [
             'nama_kelas' => $this->request->getVar('nama_kelas')
         ]);
+
+        $idGuruBaru = $this->request->getVar('id_guru');
+
+        $guruLama = $this->guruModel->where('id_kelas_diampu', $id)->findAll();
+        foreach ($guruLama as $g) {
+            $this->guruModel->update($g['id'], ['id_kelas_diampu' => null]);
+        }
+
+        if (!empty($idGuruBaru)) {
+            $this->guruModel->update($idGuruBaru, [
+                'id_kelas_diampu' => $id
+            ]);
+        }
 
         return redirect()->to(base_url('admin/kelas'))->with('success', 'Data kelas berhasil diperbarui!');
     }

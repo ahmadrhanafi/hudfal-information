@@ -46,7 +46,6 @@ class Ustadz extends BaseController
                 'nama_guru' => 'required|min_length[3]',
                 'no_hp' => 'required|numeric|min_length[10]',
                 'jenis_kelamin' => 'required|in_list[L,P]',
-                'id_kelas_diampu' => 'required|numeric'
             ])
         ) {
             return redirect()->back()->withInput()->with('error', 'Gagal validasi data pengajar.');
@@ -67,12 +66,17 @@ class Ustadz extends BaseController
         $namaGuru = $this->request->getVar('nama_guru');
         $noHp = $this->request->getVar('no_hp');
 
+        $idKelasDiampu = $this->request->getVar('id_kelas_diampu');
+        if (empty($idKelasDiampu)) {
+            $idKelasDiampu = null;
+        }
+
         $this->guruModel->save([
             'nip' => $nip,
             'nama_guru' => $namaGuru,
             'no_hp' => $noHp,
             'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
-            'id_kelas_diampu' => $this->request->getVar('id_kelas_diampu'),
+            'id_kelas_diampu' => $idKelasDiampu,
             'status_aktif' => 'Aktif',
         ]);
 
@@ -96,10 +100,14 @@ class Ustadz extends BaseController
                 'nama_guru' => 'required|min_length[3]',
                 'no_hp' => 'required|numeric|min_length[10]',
                 'jenis_kelamin' => 'required|in_list[L,P]',
-                'id_kelas_diampu' => 'required|numeric'
             ])
         ) {
             return redirect()->back()->withInput()->with('error', 'Gagal validasi data pengajar.');
+        }
+
+        $idKelasDiampu = $this->request->getVar('id_kelas_diampu');
+        if (empty($idKelasDiampu)) {
+            $idKelasDiampu = null;
         }
 
         $guruLama = $this->guruModel->find($id);
@@ -117,7 +125,7 @@ class Ustadz extends BaseController
             'nama_guru' => $namaGuru,
             'no_hp' => $noHp,
             'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
-            'id_kelas_diampu' => $this->request->getVar('id_kelas_diampu'),
+            'id_kelas_diampu' => $idKelasDiampu,
             'status_aktif' => $this->request->getVar('status_aktif') ?? 'Aktif',
         ]);
 

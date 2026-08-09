@@ -209,6 +209,16 @@
                         <label class="form-label fw-medium small text-muted">Nama Kelas</label>
                         <input type="text" name="nama_kelas" class="form-control" placeholder="Contoh: 1 Ulya" required>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Guru Pengampu (Opsional)</label>
+                        <select name="id_guru" class="form-select">
+                            <option value="">-- Pilih Guru Pengampu --</option>
+                            <?php foreach ($guruList as $g): ?>
+                                <option value="<?= $g['id']; ?>"><?= esc($g['nama_guru']); ?> (NIP: <?= esc($g['nip']); ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
@@ -233,6 +243,35 @@
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Kelas</label>
                         <input type="text" name="nama_kelas" id="editNamaKelas" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Guru Pengampu (Opsional)</label>
+                        <?php if (empty($guruList)): ?>
+                            <div class="alert alert-danger py-2 px-3 small mb-0 rounded-3"
+                                style="font-size: 0.8rem; line-height: 1.4;">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Tidak ada guru aktif yang tersedia untuk
+                                ditugaskan.
+                            </div>
+                        <?php else: ?>
+                            <select name="id_guru" id="editIdGuru" class="form-select">
+                                <option value="">-- Pilih Guru Pengampu --</option>
+                                <?php foreach ($guruList as $g): ?>
+                                    <option value="<?= $g['id']; ?>"><?= esc($g['nama_guru']); ?> (NIP: <?= esc($g['nip']); ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php endif; ?>
+                        <div
+                            class="alert alert-warning mt-4 p-2 px-3 bg-warning-subtle border border-2 border-warning rounded-3">
+                            <div class="d-flex align-items-center gap-2 small">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <span class="fw-semibold">Catatan Pengalihan Guru</span>
+                            </div>
+                            <div class="small mt-1" style="font-size: 0.8rem; line-height: 1.4;">
+                                Jika Anda memilih guru baru, maka guru tersebut akan otomatis menggantikan peran guru
+                                dari kelas yang diampu sebelumnya.
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">

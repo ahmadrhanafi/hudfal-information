@@ -142,7 +142,7 @@ $kelas = $kelas ?? [];
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($g['nama_guru']); ?>
                                                 </h6>
-                                                <small class="text-secondary"><i
+                                                <small class="text-secondary" style="font-size: 0.75rem;"><i
                                                         class="fa-solid fa-id-card text-secondary me-1"></i> NIP:
                                                     <?= esc($g['nip']); ?></small>
                                             </div>
@@ -164,8 +164,15 @@ $kelas = $kelas ?? [];
                                     <td>
                                         <div>
                                             <h6 class="mb-0 text-secondary small" style="font-size: 0.65rem;">Kelas:</h6>
-                                            <small class="fw-semibold text-dark-mode" style="font-size: 0.9rem;"><i
-                                                    class=" fa-solid fa-chalkboard-user text-secondary me-1"></i><?= esc($g['nama_kelas'] ?? 'Belum Ditentukan'); ?>
+                                            <?php
+                                            $namaKelas = $g['nama_kelas'] ?? 'Unassigned';
+                                            $isBelumAda = ($namaKelas === 'Unassigned');
+                                            ?>
+                                            <small class="fw-semibold <?= $isBelumAda ? 'text-danger' : 'text-dark-mode'; ?>"
+                                                style="font-size: 0.75rem;">
+                                                <i
+                                                    class="fa-solid fa-chalkboard-user <?= $isBelumAda ? 'text-secondary' : 'text-secondary'; ?> me-1"></i>
+                                                <?= esc($namaKelas); ?>
                                             </small>
                                         </div>
                                     </td>
@@ -187,7 +194,8 @@ $kelas = $kelas ?? [];
                                                 data-namaguru="<?= esc($g['nama_guru']); ?>"
                                                 data-nohp="<?= esc($g['no_hp'] ?? ''); ?>"
                                                 data-jeniskelamin="<?= esc($g['jenis_kelamin']); ?>"
-                                                data-idkelas="<?= esc($g['id_kelas_diampu']); ?>">
+                                                data-idkelas="<?= esc($g['id_kelas_diampu']); ?>"
+                                                data-status="<?= $g['status_aktif']; ?>">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
                                             <a href="<?= base_url('admin/ustadz/delete/' . $g['id']); ?>"
@@ -261,8 +269,8 @@ $kelas = $kelas ?? [];
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Kelas Diampu</label>
-                        <select name="id_kelas_diampu" class="form-select" required>
-                            <option value="">-- Pilih Kelas --</option>
+                        <select name="id_kelas_diampu" class="form-select">
+                            <option value="">-- Pilih Kelas (Opsional) --</option>
                             <?php foreach ($kelas as $k): ?>
                                 <option value="<?= $k['id']; ?>"><?= esc($k['nama_kelas']); ?></option>
                             <?php endforeach; ?>
@@ -312,8 +320,8 @@ $kelas = $kelas ?? [];
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Kelas Diampu</label>
-                        <select name="id_kelas_diampu" id="editIdKelas" class="form-select" required>
-                            <option value="">-- Pilih Kelas --</option>
+                        <select name="id_kelas_diampu" id="editIdKelas" class="form-select">
+                            <option value="">Bebaskan dari kelas yang diampu</option>
                             <?php foreach ($kelas as $k): ?>
                                 <option value="<?= $k['id']; ?>"><?= esc($k['nama_kelas']); ?></option>
                             <?php endforeach; ?>
