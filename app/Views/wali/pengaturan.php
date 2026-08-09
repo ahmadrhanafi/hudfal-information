@@ -4,6 +4,49 @@
 
 <div class="container-fluid px-0">
 
+    <!-- Flash Message Floating -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080; max-width: 400px;">
+        <!-- Alert Success -->
+        <?php if (session()->getFlashdata('success')): ?>
+            <div id="flash-alert-success"
+                class="alert alert-success fade show rounded-4 shadow-lg border-0 d-flex align-items-center p-3 mb-2 position-relative"
+                role="alert">
+                <div class="d-flex align-items-center flex-grow-1 pe-4">
+                    <div class="text-success fs-5 me-3 flex-shrink-0">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <span class="fw-bold d-block text-success mb-0">Berhasil!</span>
+                        <span class="text-secondary small"
+                            style="font-size: 12px;"><?= session()->getFlashdata('success'); ?></span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close position-absolute top-0 end-0 mt-3 me-3 shadow-none"
+                    style="font-size: 10px; width: 20px; height: 20px;" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <!-- Alert Error -->
+        <?php if (session()->getFlashdata('error')): ?>
+            <div id="flash-alert-error"
+                class="alert alert-danger fade show rounded-4 shadow-lg border-0 d-flex align-items-center p-3 mb-2 position-relative"
+                role="alert">
+                <div class="d-flex align-items-center flex-grow-1 pe-4">
+                    <div class="text-danger fs-5 me-3 flex-shrink-0">
+                        <i class="fa fa-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <span class="fw-bold d-block text-danger mb-0">Gagal!</span>
+                        <span class="text-secondary small"
+                            style="font-size: 12px;"><?= session()->getFlashdata('error'); ?></span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close position-absolute top-0 end-0 mt-2 me-2 shadow-none"
+                    style="font-size: 8px; width: 16px; height: 16px;" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+    </div>
+
     <!-- Page Header -->
     <div class="mb-4">
         <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Pengaturan Akun Wali Santri</h3>

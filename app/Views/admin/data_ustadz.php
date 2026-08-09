@@ -9,7 +9,7 @@ $kelas = $kelas ?? [];
 
 <div class="container-fluid px-0">
 
-    <!-- Flash Message Floating (Pojok Kanan Atas) -->
+    <!-- Flash Message Floating -->
     <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080; max-width: 400px;">
         <!-- Alert Success -->
         <?php if (session()->getFlashdata('success')): ?>
@@ -162,10 +162,12 @@ $kelas = $kelas ?? [];
                                         </span>
                                     </td>
                                     <td>
-                                        <span
-                                            class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
-                                            <?= esc($g['nama_kelas'] ?? 'Belum Ditentukan'); ?>
-                                        </span>
+                                        <div>
+                                            <h6 class="mb-0 text-secondary small" style="font-size: 0.65rem;">Kelas:</h6>
+                                            <small class="fw-semibold text-dark-mode" style="font-size: 0.9rem;"><i
+                                                    class=" fa-solid fa-chalkboard-user text-secondary me-1"></i><?= esc($g['nama_kelas'] ?? 'Belum Ditentukan'); ?>
+                                            </small>
+                                        </div>
                                     </td>
                                     <td>
                                         <?php if ($g['status_aktif'] == 'Aktif'): ?>

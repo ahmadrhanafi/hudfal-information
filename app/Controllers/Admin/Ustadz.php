@@ -91,7 +91,24 @@ class Ustadz extends BaseController
 
     public function update($id)
     {
+        if (
+            !$this->validate([
+                'nama_guru' => 'required|min_length[3]',
+                'no_hp' => 'required|numeric|min_length[10]',
+                'jenis_kelamin' => 'required|in_list[L,P]',
+                'id_kelas_diampu' => 'required|numeric'
+            ])
+        ) {
+            return redirect()->back()->withInput()->with('error', 'Gagal validasi data pengajar.');
+        }
+
+        $guruLama = $this->guruModel->find($id);
+
         $nip = $this->request->getVar('nip');
+        if (empty($nip)) {
+            $nip = $guruLama['nip'] ?? '';
+        }
+
         $namaGuru = $this->request->getVar('nama_guru');
         $noHp = $this->request->getVar('no_hp');
 
@@ -101,7 +118,7 @@ class Ustadz extends BaseController
             'no_hp' => $noHp,
             'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
             'id_kelas_diampu' => $this->request->getVar('id_kelas_diampu'),
-            'status_aktif' => $this->request->getVar('status_aktif'),
+            'status_aktif' => $this->request->getVar('status_aktif') ?? 'Aktif',
         ]);
 
         $user = $this->userModel->where('ref_id', $id)->where('role', 'guru')->first();

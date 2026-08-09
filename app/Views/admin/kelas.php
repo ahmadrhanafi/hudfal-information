@@ -9,6 +9,51 @@
 
 <div class="container-fluid px-0">
 
+    <!-- Flash Message Floating -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080; max-width: 400px;">
+        <!-- Alert Success -->
+        <?php if (session()->getFlashdata('success')): ?>
+            <div id="flash-alert-success"
+                class="alert alert-success fade show rounded-4 shadow-lg border-0 d-flex align-items-center p-3 mb-2 position-relative"
+                role="alert">
+                <div class="d-flex align-items-center flex-grow-1 pe-4">
+                    <div class="text-success fs-5 me-3 flex-shrink-0">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <span class="fw-bold d-block text-success mb-0">Berhasil!</span>
+                        <span class="text-secondary small" style="font-size: 12px;">
+                            <?= session()->getFlashdata('success'); ?>
+                        </span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close position-absolute top-0 end-0 mt-3 me-3 shadow-none"
+                    style="font-size: 10px; width: 20px; height: 20px;" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <!-- Alert Error -->
+        <?php if (session()->getFlashdata('error')): ?>
+            <div id="flash-alert-error"
+                class="alert alert-danger fade show rounded-4 shadow-lg border-0 d-flex align-items-center p-3 mb-2 position-relative"
+                role="alert">
+                <div class="d-flex align-items-center flex-grow-1 pe-4">
+                    <div class="text-danger fs-5 me-3 flex-shrink-0">
+                        <i class="fa fa-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <span class="fw-bold d-block text-danger mb-0">Gagal!</span>
+                        <span class="text-secondary small" style="font-size: 12px;">
+                            <?= session()->getFlashdata('error'); ?>
+                        </span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close position-absolute top-0 end-0 mt-2 me-2 shadow-none"
+                    style="font-size: 8px; width: 16px; height: 16px;" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+    </div>
+
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
@@ -23,14 +68,6 @@
             </button>
         </div>
     </div>
-
-    <!-- Flash Message -->
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm" role="alert">
-            <?= session()->getFlashdata('success'); ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <?php endif; ?>
 
     <!-- Filter & Search Toolbar Card -->
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
@@ -104,8 +141,23 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-center">
-                                        <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-semibold">
-                                            <i class="fa-solid fa-users me-1"></i> <?= $k['total_santri']; ?> Santri
+                                        <?php $isEmpty = ($k['total_santri'] == 0); ?>
+
+                                        <span
+                                            class="badge <?= $isEmpty ? 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-10' : 'bg-success bg-opacity-10 text-success border border-success border-opacity-10'; ?> px-1.2 py-0.7 rounded-pill d-inline-flex align-items-center gap-2 shadow-sm"
+                                            style="font-weight: 500;">
+                                            <span
+                                                class="<?= $isEmpty ? 'bg-danger' : 'bg-success'; ?> text-white rounded-circle d-flex align-items-center justify-content-center"
+                                                style="width: 20px; height: 20px; font-size: 0.7rem;">
+                                                <i class="fas fa-people-group"></i>
+                                            </span>
+                                            <span>
+                                                <?php if ($isEmpty): ?>
+                                                    Belum Ada Santri
+                                                <?php else: ?>
+                                                    <strong class="fw-bold"><?= $k['total_santri']; ?></strong> Santri Aktif
+                                                <?php endif; ?>
+                                            </span>
                                         </span>
                                     </td>
                                     <td class="text-muted small"><?= esc($k['created_at']); ?></td>
@@ -155,8 +207,7 @@
                 <div class="modal-body py-4">
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Kelas</label>
-                        <input type="text" name="nama_kelas" class="form-control" placeholder="Contoh: Kelas 1 Ula"
-                            required>
+                        <input type="text" name="nama_kelas" class="form-control" placeholder="Contoh: 1 Ulya" required>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">

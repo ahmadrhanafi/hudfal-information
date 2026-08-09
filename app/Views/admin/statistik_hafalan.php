@@ -136,7 +136,7 @@
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h5 class="fw-bold text-dark-mode m-0"
-                            style="text-transform: none !important; font-size: 16px;">
+                            style="text-transform: none !important; font-size: 14px;">
                             <i class="fa-solid fa-chart-line text-success me-2"></i> Grafik Tren Santri Menyetor Hafalan
                             (<?= ucwords(str_replace('_', ' ', $periode)); ?>)
                         </h5>
@@ -156,8 +156,8 @@
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4">
-                    <h5 class="fw-bold text-dark-mode mb-4" style="text-transform: none !important; font-size: 16px;">
-                        <i class="fa-solid fa-layer-group text-success me-2"></i> Capaian per Juz (Setiap Santri)
+                    <h5 class="fw-bold text-dark-mode mb-4" style="text-transform: none !important; font-size: 14px;">
+                        <i class="fa-solid fa-layer-group text-success me-2"></i> Capaian per Juz (Semua Santri)
                     </h5>
 
                     <?php if (!empty($capaian_juz)): ?>
@@ -176,9 +176,17 @@
                         <?php endforeach; ?>
                     <?php endif; ?>
 
-                    <div class="mt-4 pt-2 text-center">
-                        <small class="text-muted text-dark-mode">Persentase dihitung dari akumulasi total seluruh santri
-                            aktif.</small>
+                    <div
+                        class="mt-4 p-3 bg-warning bg-opacity-10 rounded-3 border border-2 border-warning border-opacity-25 d-flex align-items-center gap-3">
+                        <div class="text-warning fs-5">
+                            <i class="fas fa-circle-info"></i>
+                        </div>
+                        <div class="text-start">
+                            <span class="small text-dark-mode" style="font-size: 0.7rem;">Persentase di atas dihitung
+                                dari
+                                akumulasi
+                                total seluruh santri aktif.</span>
+                        </div>
                     </div>
                 </div>
             </div>

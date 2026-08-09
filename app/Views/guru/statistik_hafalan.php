@@ -21,7 +21,7 @@
         <div>
             <h3 class="fw-bold text-dark mb-1 text-dark-mode" style="text-transform: none !important;">Statistik Hafalan
                 Santri Kelas <?= esc($nama_kelas); ?></h3>
-            <p class="text-muted mb-0 small text-dark-mode" style="text-transform: none !important;">Analisis grafik
+            <p class="mb-0 small text-secondary" style="text-transform: none !important;">Analisis grafik
                 perkembangan setoran hafalan dan rata-rata hafalan santri.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
@@ -173,14 +173,21 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <div class="text-center text-muted py-4 small">
-                            <i class="fa-solid fa-info-circle mb-2 fa-lg"></i>
-                            <p class="mb-0 text-dark-mode">Belum ada data capaian juz untuk kelas ini.</p>
+                            <i class="fa-solid fa-info-circle mb-4 fa-lg text-warning"></i>
+                            <p class="mb-0 text-secondary">Belum ada data capaian juz untuk kelas ini.</p>
                         </div>
                     <?php endif; ?>
 
-                    <div class="mt-4 pt-2 text-center">
-                        <small class="text-muted text-dark-mode">Persentase dihitung dari total target hafalan kelas
-                            binaan aktif.</small>
+                    <div
+                        class="mt-4 p-3 bg-warning bg-opacity-10 rounded-3 border border-2 border-warning border-opacity-25 d-flex align-items-center gap-3">
+                        <div class="text-warning fs-5">
+                            <i class="fas fa-circle-info"></i>
+                        </div>
+                        <div class="text-start">
+                            <span class="small text-dark-mode" style="font-size: 0.7rem;">Persentase dihitung dari total
+                                target hafalan kelas
+                                binaan aktif.</span>
+                        </div>
                     </div>
                 </div>
             </div>

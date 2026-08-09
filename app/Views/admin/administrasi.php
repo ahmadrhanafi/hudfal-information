@@ -19,6 +19,49 @@
 
 <div class="container-fluid px-0">
 
+    <!-- Flash Message Floating -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080; max-width: 400px;">
+        <!-- Alert Success -->
+        <?php if (session()->getFlashdata('success')): ?>
+            <div id="flash-alert-success"
+                class="alert alert-success fade show rounded-4 shadow-lg border-0 d-flex align-items-center p-3 mb-2 position-relative"
+                role="alert">
+                <div class="d-flex align-items-center flex-grow-1 pe-4">
+                    <div class="text-success fs-5 me-3 flex-shrink-0">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <span class="fw-bold d-block text-success mb-0">Berhasil!</span>
+                        <span class="text-secondary small"
+                            style="font-size: 12px;"><?= session()->getFlashdata('success'); ?></span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close position-absolute top-0 end-0 mt-3 me-3 shadow-none"
+                    style="font-size: 10px; width: 20px; height: 20px;" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <!-- Alert Error -->
+        <?php if (session()->getFlashdata('error')): ?>
+            <div id="flash-alert-error"
+                class="alert alert-danger fade show rounded-4 shadow-lg border-0 d-flex align-items-center p-3 mb-2 position-relative"
+                role="alert">
+                <div class="d-flex align-items-center flex-grow-1 pe-4">
+                    <div class="text-danger fs-5 me-3 flex-shrink-0">
+                        <i class="fa fa-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <span class="fw-bold d-block text-danger mb-0">Gagal!</span>
+                        <span class="text-secondary small"
+                            style="font-size: 12px;"><?= session()->getFlashdata('error'); ?></span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close position-absolute top-0 end-0 mt-2 me-2 shadow-none"
+                    style="font-size: 8px; width: 16px; height: 16px;" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+    </div>div>
+
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
@@ -227,8 +270,11 @@
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($row['nama_santri']); ?>
                                                 </h6>
-                                                <small
-                                                    class="text-secondary"><?= esc($row['nama_kelas'] ?? 'Belum ada kelas'); ?></small>
+                                                <small class="fw-semibold text-dark-mode" style="font-size: 0.75rem;"><i
+                                                        class=" fa-solid fa-school text-secondary me-1"></i><span
+                                                        class="small text-secondary">Kelas :</span>
+                                                    <?= esc($row['nama_kelas'] ?? 'Belum Ditentukan'); ?>
+                                                </small>
                                             </div>
                                         </div>
                                     </td>
@@ -236,16 +282,18 @@
                                         <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                             <?= esc($row['nama_wali']); ?>
                                         </h6>
-                                        <small class="text-secondary"><i class="fa-brands fa-whatsapp me-1"></i>
+                                        <small class="text-secondary" style="font-size: 0.75rem;"><i
+                                                class="fa-brands fa-whatsapp me-1"></i>
                                             <?= esc($row['no_hp_wali'] ?? 'Belum ada nomor HP'); ?></small>
                                     </td>
                                     <td>
-                                        <span
-                                            class="fw-semibold text-dark-mode d-block"><?= esc($row['jenis_pembayaran']); ?></span>
-                                        <small class="text-secondary"><i class="fa-regular fa-calendar me-1"></i>
+                                        <span class="fw-semibold text-dark-mode d-block"
+                                            style="font-size: 0.9rem;"><?= esc($row['jenis_pembayaran']); ?></span>
+                                        <small class="text-secondary" style="font-size: 0.75rem;"><i
+                                                class="fa-regular fa-calendar me-1"></i>
                                             <?= date('d M Y, H:i', strtotime($row['tanggal'])); ?></small>
                                     </td>
-                                    <td><span class="font-monospace fw-semibold text-dark-mode">Rp
+                                    <td><span class="font-monospace fw-semibold text-dark-mode" style="font-size: 0.9rem;">Rp
                                             <?= number_format($row['jumlah'], 0, ',', '.'); ?></span></td>
                                     <td class="text-center">
                                         <span

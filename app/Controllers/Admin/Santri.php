@@ -88,13 +88,31 @@ class Santri extends BaseController
 
     public function update($id)
     {
+        if (
+            !$this->validate([
+                'nama_santri' => 'required|min_length[3]',
+                'jenis_kelamin' => 'required|in_list[L,P]',
+                'id_kelas' => 'required|numeric',
+                'id_wali' => 'required|numeric',
+            ])
+        ) {
+            return redirect()->back()->withInput()->with('error', 'Gagal validasi data santri.');
+        }
+
+        $santriLama = $this->santriModel->find($id);
+
+        $nis = $this->request->getVar('nis');
+        if (empty($nis)) {
+            $nis = $santriLama['nis'] ?? '';
+        }
+
         $this->santriModel->update($id, [
-            'nis' => $this->request->getVar('nis'),
+            'nis' => $nis,
             'nama_santri' => $this->request->getVar('nama_santri'),
             'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
             'id_kelas' => $this->request->getVar('id_kelas'),
             'id_wali' => $this->request->getVar('id_wali'),
-            'status_aktif' => $this->request->getVar('status_aktif'),
+            'status_aktif' => $this->request->getVar('status_aktif') ?? 'Aktif',
         ]);
 
         return redirect()->to(base_url('admin/santri'))->with('success', 'Data santri berhasil diperbarui!');

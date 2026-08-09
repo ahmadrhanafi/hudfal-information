@@ -14,23 +14,41 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
             <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Riwayat Hafalan
-                <?= esc($santri_aktif['nama_santri'] ?? 'Ananda'); ?></h3>
+                <?= esc($santri_aktif['nama_santri'] ?? 'Ananda'); ?>
+            </h3>
             <p class="text-secondary mb-0 small" style="text-transform: none !important;">
                 Catatan lengkap setoran hafalan Al-Qur'an ananda di pesantren.
             </p>
         </div>
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex flex-column align-items-start gap-1 mb-2">
             <?php
             $noHpGuru = $santri_aktif['no_hp_guru'] ?? '';
             if (!empty($noHpGuru) && substr($noHpGuru, 0, 1) === '0') {
                 $noHpGuru = '62' . substr($noHpGuru, 1);
             }
+            $namaGuru = $santri_aktif['nama_guru'] ?? 'Belum ada';
+            $adaKontak = !empty($noHpGuru);
             ?>
-            <a href="<?= !empty($noHpGuru) ? 'https://wa.me/' . esc($noHpGuru) : '#'; ?>" <?= !empty($noHpGuru) ? 'target="_blank"' : 'onclick="alert(\'Nomor WhatsApp guru belum tersedia\'); return false;"'; ?>
-                class="btn btn-outline-light btn-sm px-3 rounded-pill bg-success shadow-sm text-decoration-none"
+            <span class="text-secondary small fw-medium" style="font-size: 0.7rem; letter-spacing: 0.3px;">GURU
+                PENGAMPU</span>
+
+            <a href="<?= $adaKontak ? 'https://wa.me/' . esc($noHpGuru) : '#'; ?>" <?= $adaKontak ? 'target="_blank"' : 'onclick="alert(\'Nomor WhatsApp guru belum tersedia\'); return false;"'; ?>
+                class="btn btn-light border bg-white px-3 py-2 rounded-3 shadow-sm text-decoration-none d-inline-flex align-items-center gap-2 transition-all hover-shadow"
                 style="text-transform: none !important;">
-                <i class="fab fa-whatsapp text-white me-1 fs-6"></i> <span
-                    class="text-white"><?= esc($santri_aktif['nama_guru'] ?? 'Belum ada'); ?></span>
+
+                <!-- Ikon WhatsApp dengan Background Bulat Hijau -->
+                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
+                    style="width: 24px; height: 24px; font-size: 0.8rem;">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+
+                <div class="d-flex flex-column text-start">
+                    <span class="text-dark-mode fw-semibold small lh-sm"
+                        style="font-size: 0.7rem;"><?= esc($namaGuru); ?></span>
+                    <span class="text-success" style="font-size: 0.5rem;">
+                        <?= $adaKontak ? 'Hubungi via WhatsApp' : 'Belum ada kontak'; ?>
+                    </span>
+                </div>
             </a>
         </div>
     </div>
@@ -140,9 +158,11 @@
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
         <div class="card card-header border-0 py-3 px-4">
             <h5 class="fw-bold text-dark-mode mb-1">Riwayat Setoran:
-                <?= esc($santri_aktif['nama_santri'] ?? 'Tidak Ada Data Santri'); ?></h5>
+                <?= esc($santri_aktif['nama_santri'] ?? 'Tidak Ada Data Santri'); ?>
+            </h5>
             <p class="text-secondary small mb-0">NIS: <?= esc($santri_aktif['nis'] ?? '-'); ?> &bull; Kelas:
-                <?= esc($santri_aktif['nama_kelas'] ?? '-'); ?></p>
+                <?= esc($santri_aktif['nama_kelas'] ?? '-'); ?>
+            </p>
         </div>
 
         <div class="card-body p-0">
@@ -171,7 +191,8 @@
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="fw-semibold text-dark-mode small">
-                                            <?= date('d M Y', strtotime($row['created_at'])); ?></div>
+                                            <?= date('d M Y', strtotime($row['created_at'])); ?>
+                                        </div>
                                         <small class="text-secondary" style="font-size: 0.75rem;"><i
                                                 class="fa-regular fa-clock me-1"></i>
                                             <?= date('H:i', strtotime($row['created_at'])); ?> WIB</small>
