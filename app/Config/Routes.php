@@ -69,7 +69,10 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
 
     $routes->get('esertifikat', 'Admin\Esertifikat::index');
     $routes->get('ekartu', 'Admin\Ekartu::index');
+
     $routes->get('profile', 'Admin\Profile::index');
+    $routes->post('profile/update', 'Admin\Profile::update');
+
     $routes->get('pengaturan', 'Admin\Pengaturan::index');
 });
 
@@ -92,6 +95,8 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     $routes->get('statistik-hafalan/export', 'Guru\Statistik::export');
 
     $routes->get('profile', 'Guru\Profile::index');
+    $routes->post('profile/update', 'Guru\Profile::update');
+
     $routes->get('pengaturan', 'Guru\Pengaturan::index');
 });
 
@@ -116,5 +121,7 @@ $routes->group('wali', ['filter' => 'auth'], function ($routes) {
     $routes->get('ekartu', 'Wali\Ekartu::index');
 
     $routes->get('profile', 'Wali\Profile::index');
+    $routes->post('profile/update', 'Wali\Profile::update');
+
     $routes->get('pengaturan', 'Wali\Pengaturan::index');
 });

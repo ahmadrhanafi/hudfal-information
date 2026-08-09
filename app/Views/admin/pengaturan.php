@@ -68,10 +68,6 @@
                             <i class="fa-solid fa-sliders me-2 text-success"></i> Konfigurasi Umum
                         </button>
                         <button class="nav-link text-start py-2 px-3 rounded-3 small fw-semibold text-dark"
-                            id="profile-tab" data-bs-toggle="pill" data-bs-target="#profile" type="button" role="tab">
-                            <i class="fa-solid fa-user-gear me-2 text-success"></i> Profil Admin
-                        </button>
-                        <button class="nav-link text-start py-2 px-3 rounded-3 small fw-semibold text-dark"
                             id="security-tab" data-bs-toggle="pill" data-bs-target="#security" type="button" role="tab">
                             <i class="fa-solid fa-shield-halved me-2 text-success"></i> Keamanan & Sandi
                         </button>
@@ -133,47 +129,7 @@
                     </div>
                 </div>
 
-                <!-- Tab 2: Profil Admin -->
-                <div class="tab-pane fade" id="profile" role="tabpanel">
-                    <div class="card border-0 shadow-sm rounded-4 bg-white">
-                        <div class="card-body p-4">
-                            <h5 class="fw-bold text-dark mb-3" style="text-transform: none !important;">Profil
-                                Administrator</h5>
-                            <p class="text-muted small mb-4">Perbarui informasi data diri akun super admin.</p>
-
-                            <form>
-                                <div class="d-flex align-items-center gap-3 mb-4">
-                                    <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4"
-                                        style="width: 60px; height: 60px;">
-                                        SA
-                                    </div>
-                                    <div>
-                                        <button type="button"
-                                            class="btn btn-outline-secondary btn-sm rounded-pill bg-white shadow-sm mb-1">Unggah
-                                            Foto Baru</button>
-                                        <small class="d-block text-muted">Format JPG/PNG maksimal 2MB.</small>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-semibold text-dark">Nama Lengkap</label>
-                                        <input type="text" class="form-control form-control-sm bg-light border-0 py-2"
-                                            value="Super Administrator">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-semibold text-dark">Alamat Email</label>
-                                        <input type="email" class="form-control form-control-sm bg-light border-0 py-2"
-                                            value="admin@alhidayah.sch.id">
-                                    </div>
-                                </div>
-                                <button type="submit"
-                                    class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Perbarui Profil</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab 3: Keamanan -->
+                <!-- Tab 2: Keamanan -->
                 <div class="tab-pane fade" id="security" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
@@ -206,7 +162,7 @@
                     </div>
                 </div>
 
-                <!-- Tab 4: Backup -->
+                <!-- Tab 3: Backup -->
                 <div class="tab-pane fade" id="backup" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
