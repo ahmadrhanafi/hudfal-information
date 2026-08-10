@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\SantriModel;
 use App\Models\KelasModel;
 use App\Models\WaliModel;
+use Dompdf\Dompdf;
 
 class Santri extends BaseController
 {
@@ -141,5 +142,23 @@ class Santri extends BaseController
         ];
 
         return view('admin/santri-detail', $data);
+    }
+
+    public function cetakKartu($id)
+    {
+        $santri = $this->santriModel->select('santri.*, kelas.nama_kelas, wali.no_hp as no_hp_wali, wali.alamat as alamat_wali')
+            ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+            ->join('wali', 'wali.id = santri.id_wali', 'left')
+            ->find($id);
+
+        if (!$santri)
+            return redirect()->back();
+
+        $dompdf = new Dompdf();
+        $html = view('admin/cetak_ekartu_santri', ['santri' => $santri]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('a7', 'landscape');
+        $dompdf->render();
+        $dompdf->stream("Kartu_Santri_" . $santri['nama_santri'] . ".pdf", ["Attachment" => 0]);
     }
 }

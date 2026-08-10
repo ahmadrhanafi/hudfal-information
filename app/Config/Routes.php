@@ -29,6 +29,7 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     // $routes->get('santri/tambah', 'Admin\Santri::tambah');
     $routes->post('santri/store', 'Admin\Santri::store');
     $routes->get('santri-detail/(:num)', 'Admin\Santri::detail/$1');
+    $routes->get('santri/cetakKartu/(:num)', 'Admin\Santri::cetakKartu/$1');
     $routes->get('santri/edit/(:num)', 'Admin\Santri::edit/$1');
     $routes->post('santri/update/(:num)', 'Admin\Santri::update/$1');
     $routes->get('santri/delete/(:num)', 'Admin\Santri::delete/$1');
