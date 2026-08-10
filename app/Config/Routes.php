@@ -74,6 +74,9 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('profile/update', 'Admin\Profile::update');
 
     $routes->get('pengaturan', 'Admin\Pengaturan::index');
+    $routes->post('pengaturan/update-general', 'Admin\Pengaturan::updateGeneral');
+    $routes->post('pengaturan/update-password', 'Admin\Pengaturan::updatePassword');
+    $routes->get('pengaturan/backup', 'Admin\Pengaturan::backupDatabase');
 });
 
 $routes->group('guru', ['filter' => 'auth'], function ($routes) {
