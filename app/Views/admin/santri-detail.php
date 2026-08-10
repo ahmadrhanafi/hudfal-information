@@ -77,7 +77,7 @@
                     <div class="d-grid gap-2">
                         <a href="<?= base_url('admin/santri/cetakKartu/' . $santri['id']); ?>"
                             class="btn btn-success rounded-3 py-2 fw-semibold shadow-sm" target="_blank">
-                            <i class="fa-solid fa-print me-1"></i> Cetak / Unduh E-Card
+                            <i class="fa-solid fa-print me-1"></i> Cetak E-Kartu Santri
                         </a>
                     </div>
                 </div>
