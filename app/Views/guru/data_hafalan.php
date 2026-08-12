@@ -101,9 +101,15 @@
                                             <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.9rem;">
                                                 <?= strtoupper(substr($row['nama_santri'], 0, 2)); ?>
                                             </div>
+                                            <?php
+                                                date_default_timezone_set('Asia/Jakarta');
+                                                $formattedDate = !empty($row['created_at']) ? date('d M Y, H:i', strtotime($row['created_at'])) : '-';
+                                                ?>
                                             <div>
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($row['nama_santri']); ?></h6>
-                                                <small class="text-secondary"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y, H:i', strtotime($row['created_at'] ?? 'now')); ?></small>
+                                                <small class="text-secondary" style="font-size: 12px;">
+                                                    <i class="fa-regular fa-clock me-1"></i><?= $formattedDate; ?> WIB
+                                                </small>
                                             </div>
                                         </div>
                                     </td>

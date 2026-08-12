@@ -193,9 +193,13 @@
                                         <div class="fw-semibold text-dark-mode small">
                                             <?= date('d M Y', strtotime($row['created_at'])); ?>
                                         </div>
-                                        <small class="text-secondary" style="font-size: 0.75rem;"><i
-                                                class="fa-regular fa-clock me-1"></i>
-                                            <?= date('H:i', strtotime($row['created_at'])); ?> WIB</small>
+                                        <?php
+                                        date_default_timezone_set('Asia/Jakarta');
+                                        $formattedDate = !empty($row['created_at']) ? date('d M Y, H:i', strtotime($row['created_at'])) : '-';
+                                        ?>
+                                        <small class="text-secondary" style="font-size: 12px;">
+                                            <i class="fa-regular fa-clock me-1"></i><?= $formattedDate; ?> WIB
+                                        </small>
                                     </td>
                                     <td>
                                         <span class="fw-semibold text-dark-mode d-block">Surah <?= esc($row['surah']); ?> <span

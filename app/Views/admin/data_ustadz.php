@@ -299,7 +299,8 @@ $kelas = $kelas ?? [];
                 <div class="modal-body py-4">
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">NIP</label>
-                        <input type="text" name="nip" id="editNip" class="form-control" readonly>
+                        <input type="text" name="nip" id="editNip" class="form-control bg-secondary bg-opacity-25"
+                            readonly disabled>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Pengajar</label>

@@ -69,10 +69,10 @@
             <div class="card border-0 shadow-sm rounded-4 bg-white">
                 <div class="card-body p-2">
                     <div class="nav flex-column nav-pills gap-1" id="settingsTab" role="tablist">
-                        <button class="nav-link active text-start py-2 px-3 rounded-3 small fw-semibold"
+                        <!-- <button class="nav-link active text-start py-2 px-3 rounded-3 small fw-semibold"
                             id="general-tab" data-bs-toggle="pill" data-bs-target="#general" type="button" role="tab">
                             <i class="fa-solid fa-sliders me-2 text-success"></i> Konfigurasi Umum
-                        </button>
+                        </button> -->
                         <button class="nav-link text-start py-2 px-3 rounded-3 small fw-semibold text-dark"
                             id="security-tab" data-bs-toggle="pill" data-bs-target="#security" type="button" role="tab">
                             <i class="fa-solid fa-shield-halved me-2 text-success"></i> Keamanan & Sandi
@@ -91,7 +91,7 @@
             <div class="tab-content" id="settingsTabContent">
 
                 <!-- Tab 1: Konfigurasi Umum -->
-                <div class="tab-pane fade show active" id="general" role="tabpanel">
+                <!-- <div class="tab-pane fade show active" id="general" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
                             <h5 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Pengaturan
@@ -138,7 +138,7 @@
                             </form>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Tab 2: Keamanan -->
                 <div class="tab-pane fade" id="security" role="tabpanel">
