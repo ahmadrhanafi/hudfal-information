@@ -4,8 +4,8 @@
     $role = session()->get('role');
     $dashboardUrl = base_url($role . '/dashboard');
     ?>
-    <div class="container-fluid">
-        <!-- Brand / Title -->
+    <div class="container-fluid d-flex justify-content-between align-items-center px-0">
+        <!-- Brand / Title (Sisi Kiri) -->
         <div class="d-flex align-items-center gap-2">
             <!-- Tombol Burger Mobile (Hanya muncul di HP) -->
             <button class="btn btn-link text-dark-mode p-0 d-lg-none" id="sidebarToggle" type="button">
@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <!-- Right Side: Dark Mode Toggle & User Dropdown -->
+        <!-- Right Side: Dark Mode Toggle & User Dropdown (Sisi Kanan) -->
         <div class="d-flex align-items-center gap-3">
             <!-- User Dropdown Menu -->
             <div class="dropdown">

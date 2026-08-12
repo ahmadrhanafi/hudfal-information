@@ -331,16 +331,125 @@
             }
         }
 
-        @media (max-width: 576px) {
-            .navbar-main {
-                height: 60px !important;
-                padding: 0 10px !important;
+        @media (max-width: 768px) {
+
+            /* Mencegah seluruh elemen keluar dari batas layar HP */
+            html,
+            body {
+                overflow-x: hidden !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
-            /* Pastikan area kanan (dark mode & profil) punya ruang tetap dan tidak mengecil */
-            .navbar-main .d-flex.align-items-center:last-child {
-                flex-shrink: 0;
-                gap: 6px !important;
+            .container-fluid {
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            .container-fluid h3,
+            .card-title h3,
+            h3.fw-bold {
+                font-size: 1.1rem !important;
+                line-height: 1.3 !important;
+                word-break: break-word;
+            }
+
+            .container-fluid p,
+            .text-muted {
+                font-size: 0.75rem !important;
+            }
+
+            /* Merapikan tombol aksi di atas agar turun rapi jika di HP */
+            .d-flex.flex-wrap,
+            .card-body .d-flex {
+                flex-wrap: wrap !important;
+            }
+
+            .container-fluid .btn,
+            a.btn {
+                font-size: 0.75rem !important;
+                padding: 0.35rem 0.6rem !important;
+            }
+
+            .form-control,
+            .form-select {
+                font-size: 0.75rem !important;
+                padding: 0.35rem 0.6rem !important;
+            }
+
+            .table td,
+            .table th {
+                padding: 0.4rem 0.2rem !important;
+                font-size: 0.65rem !important;
+            }
+
+            .table h6 {
+                font-size: 0.75rem !important;
+            }
+
+            .table small {
+                font-size: 0.6rem !important;
+            }
+
+            .table .rounded-circle {
+                width: 24px !important;
+                height: 24px !important;
+                font-size: 0.6rem !important;
+            }
+
+            .table td.text-end .d-flex {
+                gap: 1px !important;
+                justify-content: flex-end !important;
+            }
+
+            .table td.text-end .btn-sm {
+                padding: 0.15rem 0.3rem !important;
+                font-size: 0.65rem !important;
+            }
+
+            .table {
+                min-width: 100% !important;
+            }
+
+            .card-footer span {
+                font-size: 0.65rem !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-main {
+                height: 55px !important;
+                padding: 0 8px !important;
+            }
+
+            .container-fluid h3,
+            .card-title h3,
+            h3.fw-bold {
+                font-size: 1rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .container-fluid .d-flex,
+            .card-body .d-flex {
+                flex-wrap: wrap !important;
+            }
+
+            h3,
+            .h3 {
+                font-size: 1.1rem !important;
+            }
+
+            .container-fluid .btn,
+            a.btn,
+            button.btn {
+                font-size: 0.75rem !important;
+                padding: 0.35rem 0.6rem !important;
+                margin-bottom: 4px;
             }
         }
     </style>

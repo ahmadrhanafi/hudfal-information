@@ -70,7 +70,7 @@
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light text-muted small text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
                         <tr>
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
@@ -103,7 +103,7 @@
                                             </div>
                                             <div>
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;"><?= esc($row['nama_santri']); ?></h6>
-                                                <small class="text-muted text-dark-mode"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y, H:i', strtotime($row['created_at'] ?? 'now')); ?></small>
+                                                <small class="text-secondary"><i class="fa-regular fa-calendar me-1"></i> <?= date('d M Y, H:i', strtotime($row['created_at'] ?? 'now')); ?></small>
                                             </div>
                                         </div>
                                     </td>
@@ -174,9 +174,7 @@
         <div class="card card-footer bg-white border-0 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
             <span class="text-secondary small">
                 <?php
-                // Ambil informasi detail pagination
-                $details = $pager->getDetails('hafalan'); // Pastikan grup name sesuai
-                // Jika data kosong, tampilkan 0
+                $details = $pager->getDetails('hafalan'); 
                 $total = $details['total'] ?? 0;
                 $perPage = $details['perPage'] ?? 10;
                 $currentPage = $details['currentPage'] ?? 1;

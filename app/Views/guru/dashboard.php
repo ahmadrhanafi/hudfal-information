@@ -118,7 +118,7 @@ $guru = $guru ?? [];
                         </span>
                     </div>
 
-                    <p class="text-secondary small mb-4">Informasi kelas dan mandat pengajaran yang diampu saat ini.</p>
+                    <p class="text-secondary small mb-4">Informasi kelas yang Anda ampu saat ini.</p>
 
                     <?php if (!empty($kelas_binaan)): ?>
                         <div class="d-flex flex-column gap-3">
@@ -170,9 +170,9 @@ $guru = $guru ?? [];
                         <!-- Kondisi Jika Belum Diatur Kelasnya -->
                         <div class="text-center py-5 text-muted border border-dashed rounded-4 p-4">
                             <i class="fa-solid fa-triangle-exclamation fa-2x mb-2 text-warning opacity-75"></i>
-                            <h6 class="fw-bold text-dark mb-1">Belum Ada Kelas Binaan</h6>
-                            <p class="small mb-0 text-muted">Anda belum terhubung dengan kelas manapun. Silakan hubungi
-                                Administrator untuk menetapkan kelas pengampu.</p>
+                            <h6 class="fw-bold text-dark-mode mb-1">Belum Ada Kelas Binaan</h6>
+                            <p class="small mb-0 text-secondary">Anda belum terhubung dengan kelas manapun. Silakan hubungi
+                                Admin Pondok Pesantren untuk menetapkan Anda sebagai pengampu kelas.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -191,7 +191,8 @@ $guru = $guru ?? [];
                             class="text-success small fw-semibold text-decoration-none">Lihat Semua <i
                                 class="fa-solid fa-arrow-right ms-1"></i></a>
                     </div>
-                    <p class="text-secondary small mb-3" style="text-transform: none !important;">Catatan setoran santri
+                    <p class="text-secondary small"
+                        style="text-transform: none !important; margin-top: 0.6cm !important;">Catatan setoran santri
                         yang baru saja diuji hari ini.</p>
 
                     <div class="table-responsive">

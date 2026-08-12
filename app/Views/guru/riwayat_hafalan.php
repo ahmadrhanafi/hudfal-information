@@ -155,7 +155,7 @@ $santri = $santri ?? [];
                         style="font-size: 0.75rem; letter-spacing: 0.5px;">
                         <tr>
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
-                            <th class="py-3" style="width: 30%;">Nama Santri</th>
+                            <th class="py-3" style="width: 30%;">Santri</th>
                             <th class="py-3" style="width: 25%;">NIS</th>
                             <th class="py-3" style="width: 20%;">Kelas</th>
                             <th class="py-3 text-end pe-4" style="width: 20%;">Aksi</th>
@@ -198,7 +198,7 @@ $santri = $santri ?? [];
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="text-muted text-dark-mode"><?= esc($s['nis']); ?></span>
+                                        <span class="text-dark-mode small"><?= esc($s['nis']); ?></span>
                                     </td>
                                     <td>
                                         <span
