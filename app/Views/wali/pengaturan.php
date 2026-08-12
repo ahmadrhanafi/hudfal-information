@@ -144,12 +144,32 @@ $wali = $wali ?? [];
 
                             <?php if (!empty($list_santri)): ?>
                                 <?php foreach ($list_santri as $santri): ?>
+                                    <?php
+                                    $fotoSantri = $santri['foto'] ?? '';
+                                    $pathFoto = FCPATH . 'uploads/santri/' . $fotoSantri;
+
+                                    if (!empty($fotoSantri) && file_exists($pathFoto)) {
+                                        $urlSantri = base_url('uploads/santri/' . $fotoSantri);
+                                        $tampilkanFoto = true;
+                                    } else {
+                                        $tampilkanFoto = false;
+                                    }
+                                    ?>
+
                                     <div class="p-3 bg-light rounded-4 mb-3 d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                                style="width: 45px; height: 45px;">
-                                                <?= strtoupper(substr($santri['nama_santri'], 0, 2)); ?>
-                                            </div>
+
+                                            <?php if ($tampilkanFoto): ?>
+                                                <img src="<?= $urlSantri; ?>" alt="<?= esc($santri['nama_santri']); ?>"
+                                                    class="rounded-circle object-fit-cover border shadow-sm"
+                                                    style="width: 45px; height: 45px;">
+                                            <?php else: ?>
+                                                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                                    style="width: 45px; height: 45px;">
+                                                    <?= strtoupper(substr($santri['nama_santri'], 0, 2)); ?>
+                                                </div>
+                                            <?php endif; ?>
+
                                             <div>
                                                 <h6 class="fw-semibold text-dark mb-1" style="font-size: 0.95rem;">
                                                     <?= esc($santri['nama_santri']); ?>

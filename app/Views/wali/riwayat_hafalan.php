@@ -157,12 +157,30 @@
     <!-- Main Table Card -->
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
         <div class="card card-header border-0 py-3 px-4">
-            <h5 class="fw-bold text-dark-mode mb-1">Riwayat Setoran:
-                <?= esc($santri_aktif['nama_santri'] ?? 'Tidak Ada Data Santri'); ?>
-            </h5>
-            <p class="text-secondary small mb-0">NIS: <?= esc($santri_aktif['nis'] ?? '-'); ?> &bull; Kelas:
-                <?= esc($santri_aktif['nama_kelas'] ?? '-'); ?>
-            </p>
+            <div class="d-flex align-items-center gap-3">
+                <div class="flex-shrink-0">
+                    <?php if (!empty($santri_aktif['foto']) && file_exists(FCPATH . 'uploads/santri/' . $santri_aktif['foto'])): ?>
+                        <img src="<?= base_url('uploads/santri/' . $santri_aktif['foto']); ?>" alt="Foto Santri"
+                            class="rounded-circle shadow-sm object-fit-cover border" style="width: 60px; height: 60px;">
+                    <?php else: ?>
+                        <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4 shadow-sm"
+                            style="width: 60px; height: 60px;">
+                            <?= strtoupper(substr($santri_aktif['nama_santri'] ?? '?', 0, 1)); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Bagian Teks -->
+                <div>
+                    <h5 class="fw-bold text-dark-mode mb-1">Riwayat Setoran:
+                        <?= esc($santri_aktif['nama_santri'] ?? 'Tidak Ada Data Santri'); ?>
+                    </h5>
+                    <p class="text-secondary small mb-0">
+                        NIS: <?= esc($santri_aktif['nis'] ?? '-'); ?> &bull;
+                        Kelas: <?= esc($santri_aktif['nama_kelas'] ?? '-'); ?>
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div class="card-body p-0">

@@ -53,10 +53,7 @@
                     <div class="position-relative">
                         <?php
                         $fotoUser = session()->get('foto');
-                        $pathFile = FCPATH . 'uploads/profile/' . $fotoUser;
-                        $urlFoto = '';
-
-                        if (!empty($fotoUser) && file_exists($pathFile)) {
+                        if (!empty($fotoUser) && file_exists(FCPATH . 'uploads/profile/' . $fotoUser)) {
                             $urlFoto = base_url('uploads/profile/' . $fotoUser);
                         } else {
                             $urlFoto = base_url('uploads/profile/default.png');

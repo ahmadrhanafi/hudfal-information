@@ -98,10 +98,20 @@
                                 <!-- Kolom 1: Profil & Identitas Santri -->
                                 <div class="col-lg-4">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4 flex-shrink-0 shadow-sm"
-                                            style="width: 55px; height: 55px;">
-                                            <?= strtoupper(substr($a['nama_santri'], 0, 1)); ?>
+                                        <!-- AWAL BAGIAN FOTO -->
+                                        <div class="flex-shrink-0">
+                                            <?php if (!empty($a['foto']) && file_exists(FCPATH . 'uploads/santri/' . $a['foto'])): ?>
+                                                <img src="<?= base_url('uploads/santri/' . $a['foto']); ?>" alt="Foto Santri"
+                                                    class="rounded-circle shadow-sm object-fit-cover"
+                                                    style="width: 55px; height: 55px;">
+                                            <?php else: ?>
+                                                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4 shadow-sm"
+                                                    style="width: 55px; height: 55px;">
+                                                    <?= strtoupper(substr($a['nama_santri'], 0, 1)); ?>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
+
                                         <div>
                                             <div class="mb-1">
                                                 <a href="<?= base_url('wali/santri-detail/' . $a['id']); ?>"

@@ -67,14 +67,18 @@ $wali = $wali ?? [];
             <div class="card border-0 shadow-sm rounded-4 bg-white text-center p-4">
                 <div class="card-body">
                     <div class="position-relative d-inline-block mb-3">
-                        <?php if (!empty($user['foto']) && file_exists('upload/profile/' . $user['foto'])): ?>
-                            <img src="<?= base_url('upload/profile/' . $user['foto']) ?>"
+                        <?php
+                        $fotoUser = $user['foto'] ?? '';
+                        $pathFile = FCPATH . 'uploads/profile/' . $fotoUser;
+
+                        if (!empty($fotoUser) && file_exists($pathFile)): ?>
+                            <img src="<?= base_url('uploads/profile/' . $fotoUser) ?>"
                                 class="rounded-circle shadow-sm object-fit-cover" style="width: 100px; height: 100px;"
                                 alt="Foto Profil">
                         <?php else: ?>
                             <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold fs-2 mx-auto shadow-sm"
                                 style="width: 100px; height: 100px;">
-                                <?= strtoupper(substr($user['name'], 0, 2)) ?>
+                                <?= strtoupper(substr($user['name'] ?? 'W', 0, 2)) ?>
                             </div>
                         <?php endif; ?>
                         <!-- <span

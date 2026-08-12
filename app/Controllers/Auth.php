@@ -80,7 +80,7 @@ class Auth extends BaseController
                 'role' => $data['role'],
                 'name' => $data['name'],
                 'nama_wali' => $namaWali ? $namaWali : $data['name'], // Simpan nama wali
-                'foto' => !empty($data['foto']) ? base_url('upload/profile/' . $data['foto']) : base_url('upload/profile/default.png'),
+                'foto' => !empty($data['foto']) ? $data['foto'] : 'default.png',
                 'ref_id' => $data['ref_id'],
                 'id_kelas' => $idKelas,
                 'nama_kelas' => $namaKelas ? $namaKelas : 'Belum Ada Kelas',

@@ -73,14 +73,14 @@ class Profile extends BaseController
         $fileFoto = $this->request->getFile('foto');
         if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
             $namaFoto = $fileFoto->getRandomName();
-            $fileFoto->move('upload/profile', $namaFoto);
+            $fileFoto->move('uploads/profile', $namaFoto);
 
-            if (!empty($user['foto']) && file_exists('upload/profile/' . $user['foto'])) {
-                @unlink('upload/profile/' . $user['foto']);
+            if (!empty($user['foto']) && file_exists('uploads/profile/' . $user['foto'])) {
+                @unlink('uploads/profile/' . $user['foto']);
             }
 
             $dataUserUpdate['foto'] = $namaFoto;
-            session()->set('foto', base_url('upload/profile/' . $namaFoto));
+            session()->set('foto', $namaFoto);
         }
 
         if ($this->request->getPost('password')) {
