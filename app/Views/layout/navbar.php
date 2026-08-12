@@ -45,8 +45,20 @@
                         <?php endif; ?>
                     </div>
                     <div class="position-relative">
-                        <img src="<?= session()->get('foto') ?: 'https://via.placeholder.com/40' ?>" alt="User"
-                            width="38" height="38"
+                        <?php
+                        $fotoUser = session()->get('foto');
+
+                        $pathFile = FCPATH . 'uploads/profile/' . $fotoUser;
+                        $urlFoto = '';
+
+                        if (!empty($fotoUser) && file_exists($pathFile)) {
+                            $urlFoto = base_url('uploads/profile/' . $fotoUser);
+                        } else {
+                            $urlFoto = base_url('uploads/profile/default.png');
+                        }
+                        ?>
+
+                        <img src="<?= $urlFoto; ?>" alt="User" width="38" height="38"
                             class="rounded-circle border border-2 border-white shadow-sm object-fit-cover">
                         <!-- <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-light rounded-circle"
                             style="width: 14px; height: 14px;"></span> -->
