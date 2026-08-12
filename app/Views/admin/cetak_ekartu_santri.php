@@ -3,12 +3,22 @@
  * @var array $santri
  */
 
-$pathImg = FCPATH . 'assets/img/kartu_santri.png';
-$base64Img = '';
-if (file_exists($pathImg)) {
-    $type = pathinfo($pathImg, PATHINFO_EXTENSION);
-    $data = file_get_contents($pathImg);
-    $base64Img = 'data:image/' . $type . ';base64,' . base64_encode($data);
+// Load Gambar Bagian Depan
+$pathImgDepan = FCPATH . 'assets/img/depan_kartu.png';
+$base64ImgDepan = '';
+if (file_exists($pathImgDepan)) {
+    $type = pathinfo($pathImgDepan, PATHINFO_EXTENSION);
+    $data = file_get_contents($pathImgDepan);
+    $base64ImgDepan = 'data:image/' . $type . ';base64,' . base64_encode($data);
+}
+
+// Load Gambar Bagian Belakang
+$pathImgBelakang = FCPATH . 'assets/img/belakang_kartu.png';
+$base64ImgBelakang = '';
+if (file_exists($pathImgBelakang)) {
+    $type = pathinfo($pathImgBelakang, PATHINFO_EXTENSION);
+    $data = file_get_contents($pathImgBelakang);
+    $base64ImgBelakang = 'data:image/' . $type . ';base64,' . base64_encode($data);
 }
 ?>
 
@@ -75,7 +85,6 @@ if (file_exists($pathImg)) {
         .val-text {
             position: absolute;
             left: 4.6cm;
-            /* Sesuaikan pas setelah titik dua di gambar */
             font-size: 7.5px;
             color: #0a2540;
             font-weight: bold;
@@ -107,13 +116,13 @@ if (file_exists($pathImg)) {
 
 <body>
 
+    <!-- ================= KARTU BAGIAN DEPAN ================= -->
     <div class="card">
-        <!-- Background Gambar Lokal -->
-        <?php if (!empty($base64Img)): ?>
-            <img src="<?= $base64Img; ?>" class="bg-image">
+        <?php if (!empty($base64ImgDepan)): ?>
+            <img src="<?= $base64ImgDepan; ?>" class="bg-image">
         <?php endif; ?>
 
-        <!-- Foto Santri -->
+        <!-- Foto Santri (Jika ingin diaktifkan, hapus komentar) -->
         <!-- <div class="photo-box">
             <?php if (!empty($santri['foto']) && file_exists(FCPATH . 'uploads/santri/' . $santri['foto'])): ?>
                 <img src="<?= base_url('uploads/santri/' . $santri['foto']); ?>" alt="Foto">
@@ -122,15 +131,23 @@ if (file_exists($pathImg)) {
             <?php endif; ?>
         </div> -->
 
-        <!-- Data Value Saja (Tanpa Label Nama Lengkap, NIS, dll karena sudah ada di gambar) -->
         <div class="val-text pos-nama"><?= esc($santri['nama_santri'] ?? ''); ?></div>
         <div class="val-text pos-nis" style="font-family: monospace;"><?= esc($santri['nis'] ?? ''); ?></div>
         <div class="val-text pos-ttl">
-
             <?= esc(($santri['tempat_lahir'] ?? '-') . ', ' . ($santri['tgl_lahir'] ?? '-')); ?>
         </div>
         <div class="val-text pos-hp"><?= esc($santri['no_hp_wali'] ?? '-'); ?></div>
         <div class="val-text pos-alamat"><?= esc($santri['alamat_wali'] ?? '-'); ?></div>
+    </div>
+
+
+    <!-- ================= KARTU BAGIAN BELAKANG ================= -->
+    <div class="card" style="page-break-after: avoid;">
+        <?php if (!empty($base64ImgBelakang)): ?>
+            <img src="<?= $base64ImgBelakang; ?>" class="bg-image">
+        <?php endif; ?>
+
+        <!-- Tambahkan teks atau elemen tambahan di bagian belakang di sini jika diperlukan -->
     </div>
 
 </body>
