@@ -196,9 +196,9 @@
 
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mt-4">
         <div class="card-header border-0 pt-4 px-4 pb-0">
-            <h5 class="fw-bold text-dark mb-1 text-dark-mode"
-                style="text-transform: none !important; font-size: 1.05rem;">Rekapitulasi Setoran Santri</h5>
-            <p class="text-muted small mb-3 text-dark-mode">Data rekapitulasi setoran hafalan santri.</p>
+            <h5 class="fw-bold mb-1 text-dark-mode" style="text-transform: none !important; font-size: 1.05rem;">
+                Rekapitulasi Setoran Santri</h5>
+            <p class="text-secondary small mb-3">Data rekapitulasi setoran hafalan santri.</p>
         </div>
         <div class="card-body">
             <div class="table-responsive">

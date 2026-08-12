@@ -4,12 +4,13 @@
     $role = session()->get('role');
     $dashboardUrl = base_url($role . '/dashboard');
     ?>
-    <div class="container-fluid d-flex justify-content-between align-items-center px-0">
+    <div class="container-fluid d-flex justify-content-between align-items-center p-0">
         <!-- Brand / Title (Sisi Kiri) -->
         <div class="d-flex align-items-center gap-2">
             <!-- Tombol Burger Mobile (Hanya muncul di HP) -->
-            <button class="btn btn-link text-dark-mode p-0 d-lg-none" id="sidebarToggle" type="button">
-                <i class="fa-solid fa-bars fa-lg"></i>
+            <button class="btn btn-link text-dark-mode p-0 d-lg-none" id="sidebarToggle" type="button"
+                style="margin-left: -10px;">
+                <i class="fa-solid fa-bars fa-lg" style="font-size: large; padding-top: 15px !important;"></i>
             </button>
 
             <div class="d-none d-md-flex align-items-center gap-2">
@@ -58,7 +59,7 @@
                         }
                         ?>
 
-                        <img src="<?= $urlFoto; ?>" alt="User" width="38" height="38"
+                        <img src="<?= $urlFoto; ?>" alt="User" width="38" height="38" style="margin-right: -10px;"
                             class="rounded-circle border border-2 border-white shadow-sm object-fit-cover">
                         <!-- <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-light rounded-circle"
                             style="width: 14px; height: 14px;"></span> -->

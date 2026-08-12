@@ -90,7 +90,8 @@
             <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
                 <div
                     class="card-header bg-success rounded-top-4 py-3 px-4 border-0 d-flex align-items-center justify-content-between">
-                    <h5 class="card-title fw-bold text-dark-mode mb-0">Rincian Data Santri & Wali</h5>
+                    <h5 class="card-title fw-bold mb-1 text-white"
+                        style="text-transform: none !important; font-size: 1.05rem;">Rincian Data Santri & Wali</h5>
                 </div>
                 <div class="card-body p-4">
                     <div class="table-responsive">
@@ -152,7 +153,7 @@
                 </div>
                 <div class="card-footer bg-success py-3 px-4 border-0 text-end rounded-bottom-4">
                     <a href="<?= base_url('guru/santri'); ?>"
-                        class="btn btn-secondary btn-sm bg-secondary bg-opacity-30 px-4 py-2 rounded-3 shadow-sm">Selesai</a>
+                        class="btn btn-secondary btn-sm bg-dark px-4 py-2 rounded-3 shadow-sm">Selesai</a>
                 </div>
             </div>
         </div>
