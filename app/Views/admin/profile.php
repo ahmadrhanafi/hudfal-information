@@ -66,8 +66,13 @@ $user = $user ?? [];
             <div class="card border-0 shadow-sm rounded-4 bg-white text-center p-4">
                 <div class="card-body">
                     <div class="position-relative d-inline-block mb-3">
-                        <?php if (!empty($user['foto']) && file_exists('upload/profile/' . $user['foto'])): ?>
-                            <img src="<?= base_url('upload/profile/' . $user['foto']) ?>"
+                        <?php
+                        $folderRelatif = FCPATH . 'uploads/profile/' . ($user['foto'] ?? '');
+                        $adaFoto = !empty($user['foto']) && file_exists($folderRelatif);
+                        ?>
+
+                        <?php if ($adaFoto): ?>
+                            <img src="<?= base_url('uploads/profile/' . $user['foto']) ?>"
                                 class="rounded-circle shadow-sm object-fit-cover" style="width: 100px; height: 100px;"
                                 alt="Foto Profil">
                         <?php else: ?>

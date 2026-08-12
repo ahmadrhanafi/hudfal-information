@@ -27,18 +27,18 @@ class Profile extends BaseController
         return view('admin/profile', $data);
     }
 
-    public function updateProfile()
+    public function update()
     {
         $userId = session()->get('id');
         $user = $this->userModel->find($userId);
 
-        // Validasi input
+        // Validasi input (ditambah validasi untuk foto)
         $rules = [
             'name' => 'required|min_length[3]',
             'username' => "required|min_length[3]|is_unique[users.username,id,{$userId}]",
+            'foto' => 'max_size[foto,2048]|is_image[foto]|ext_in[foto,png,jpg,jpeg]',
         ];
 
-        // Jika user berniat mengganti password
         if ($this->request->getPost('password')) {
             $rules['password'] = 'required|min_length[6]';
             $rules['pass_confirm'] = 'required|matches[password]';
@@ -53,20 +53,20 @@ class Profile extends BaseController
             'username' => $this->request->getPost('username'),
         ];
 
-        // Handle Upload Foto
         $fileFoto = $this->request->getFile('foto');
         if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
             $namaFoto = $fileFoto->getRandomName();
-            $fileFoto->move('upload/profile', $namaFoto);
 
-            // Hapus foto lama jika bukan default
-            if (!empty($user['foto']) && file_exists('upload/profile/' . $user['foto'])) {
-                @unlink('upload/profile/' . $user['foto']);
+            $folderTujuan = 'uploads/profile/';
+            $fileFoto->move($folderTujuan, $namaFoto);
+
+            if (!empty($user['foto']) && file_exists($folderTujuan . $user['foto'])) {
+                @unlink($folderTujuan . $user['foto']);
             }
 
             $dataUpdate['foto'] = $namaFoto;
-            // Update session foto juga
-            session()->set('foto', base_url('upload/profile/' . $namaFoto));
+
+            session()->set('foto', $namaFoto);
         }
 
         // Handle Password Baru
