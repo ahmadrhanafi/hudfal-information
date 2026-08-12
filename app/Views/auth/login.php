@@ -12,11 +12,19 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1e970e 0%, #aabda8 100%);
+            background-image: url('<?= base_url('assets/img/bg_login.png') ?>');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* Menghitamkan background (angka 0.4 adalah tingkat gelapnya, bisa diubah dari 0.1 sampai 0.9) */
+            background-color: rgba(0, 0, 0, 0.4);
+            background-blend-mode: overlay;
             height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding-left: 8%;
+            margin: 0;
         }
 
         .login-card {
@@ -25,7 +33,7 @@
             padding: 40px;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
         }
 
         .btn-custom {
@@ -81,7 +89,7 @@
 
 <body>
 
-    <div class="container">
+    <div class="container-fluid p-0">
         <div class="login-card">
             <div class="text-center mb-4">
                 <h3 class="fw-bold" style="color: #1e970e;">Selamat Datang</h3>
@@ -130,18 +138,16 @@
         window.setTimeout(function () {
             const alertElement = document.getElementById('flash-alert');
             if (alertElement) {
-                // Kita pakai fade out transisi dulu biar mulus
                 alertElement.style.transition = "opacity 0.5s ease";
                 alertElement.style.opacity = "0";
 
-                // Setelah transisi selesai, hapus elemennya dari halaman
                 window.setTimeout(function () {
                     alertElement.remove();
                 }, 500);
             }
         }, 3000);
 
-        // Toogle Eye Icon
+        // Toggle Eye Icon
         const togglePassword = document.querySelector('#togglePassword');
         const password = document.querySelector('#password');
         const eyeIcon = document.querySelector('#eyeIcon');
