@@ -14,6 +14,7 @@ class SantriModel extends Model
 
     // Tambahkan field baru di sini agar bisa di-insert/update
     protected $allowedFields = [
+        'foto',
         'nis',
         'nama_santri',
         'tempat_lahir',

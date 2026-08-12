@@ -148,10 +148,17 @@ $wali = $wali ?? [];
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                                style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                                <?= $initials; ?>
-                                            </div>
+                                            <?php if (!empty($s['foto']) && file_exists('uploads/santri/' . $s['foto'])): ?>
+                                                <!-- Tampilkan Foto Asli -->
+                                                <img src="<?= base_url('uploads/santri/' . $s['foto']) ?>" alt="Foto <?= $s['nama_santri'] ?>"
+                                                    class="rounded-circle object-fit-cover" width="40" height="40">
+                                            <?php else: ?>
+                                                <!-- Tampilkan Inisial Nama Jika Foto Kosong/Null -->
+                                                <div class="rounded-circle bg-success bg-opacity-25 text-success d-flex align-items-center justify-content-center fw-bold"
+                                                    style="width: 40px; height: 40px; font-size: 14px;">
+                                                    <?= $initials; ?>
+                                                </div>
+                                            <?php endif; ?>
                                             <div>
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($s['nama_santri']); ?>
@@ -177,7 +184,7 @@ $wali = $wali ?? [];
                                         </div>
                                     </td>
                                     <td><span
-                                            class="font-monospace border border-1 border-secondary rounded text-secondary small px-2 py-1.2"><?= esc($s['nis']); ?></span>
+                                            class="font-monospace border border-1 border-secondary rounded-pill text-secondary small px-2 py-1.2"><?= esc($s['nis']); ?></span>
                                     </td>
                                     <td>
                                         <div>
@@ -257,7 +264,8 @@ $wali = $wali ?? [];
                 <h5 class="modal-title fw-bold text-dark">Tambah Santri</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="<?= base_url('admin/santri/store'); ?>" method="post">
+            <!-- TAMBAHKAN enctype="multipart/form-data" DI SINI -->
+            <form action="<?= base_url('admin/santri/store'); ?>" method="post" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <div class="modal-body py-4">
 
@@ -309,6 +317,14 @@ $wali = $wali ?? [];
                             <?php endforeach; ?>
                         </select>
                     </div>
+
+                    <!-- TAMBAHAN INPUT FOTO DI MODAL TAMBAH -->
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Foto Santri (Opsional)</label>
+                        <input type="file" name="foto" class="form-control" accept="image/png, image/jpeg, image/jpg">
+                        <small class="text-muted" style="font-size: 11px;">Format: JPG, JPEG, PNG. Maksimal 2MB.</small>
+                    </div>
+
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
@@ -327,8 +343,7 @@ $wali = $wali ?? [];
                 <h5 class="modal-title fw-bold text-dark">Edit Data Santri</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <!-- PERBAIKAN: Berikan nilai default action agar tidak kosong jika JS gagal -->
-            <form id="formEdit" action="" method="post">
+            <form id="formEdit" action="" method="post" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <div class="modal-body py-4">
                     <div class="mb-3">
@@ -383,6 +398,15 @@ $wali = $wali ?? [];
                             <option value="Keluar">Keluar</option>
                         </select>
                     </div>
+
+                    <!-- TAMBAHAN INPUT FOTO DI MODAL EDIT -->
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Ganti Foto Santri (Opsional)</label>
+                        <input type="file" name="foto" class="form-control" accept="image/png, image/jpeg, image/jpg">
+                        <small class="text-muted" style="font-size: 11px;">Biarkan kosong jika tidak ingin mengubah
+                            foto.</small>
+                    </div>
+
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Batal</button>

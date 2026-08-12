@@ -7,7 +7,6 @@
     <div class="container-fluid d-flex justify-content-between align-items-center p-0">
         <!-- Brand / Title (Sisi Kiri) -->
         <div class="d-flex align-items-center gap-2">
-            <!-- Tombol Burger Mobile (Hanya muncul di HP) -->
             <button class="btn btn-link text-dark-mode p-0 d-lg-none" id="sidebarToggle" type="button"
                 style="margin-left: -10px;">
                 <i class="fa-solid fa-bars fa-lg" style="font-size: large; padding-top: 15px !important;"></i>
@@ -28,27 +27,32 @@
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle-no-caret"
                     id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="me-3 text-end d-none d-sm-block">
-                        <div class="small fw-bold text-dark-mode" style="font-size: 12px;"><?= session()->get('name') ?>
+
+                    <!-- Teks Nama & Role (Hidden di Mobile) -->
+                    <div class="me-2 text-end d-none d-sm-block">
+                        <div class="small fw-bold text-dark-mode" style="font-size: 12px; line-height: 1.2;">
+                            <?= session()->get('name') ?>
                         </div>
                         <?php if (session()->get('role') == 'guru'): ?>
-                            <div class="ket-user">
+                            <div class="ket-user mt-1">
                                 <span class="text-dark-mode" style="font-size: 8px;">Pengampu: </span>
                                 <span
-                                    class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2"
+                                    class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0"
                                     style="font-size: 8px;">
                                     Kelas <?= session()->get('nama_kelas') ?>
                                 </span>
                             </div>
                         <?php else: ?>
-                            <span class="text-dark-mode small"
-                                style="font-size: 10px;"><?= ucfirst(session()->get('role') ?? 'Wali Santri') ?></span>
+                            <span class="text-dark-mode small d-block" style="font-size: 10px;">
+                                <?= ucfirst(session()->get('role') ?? 'Wali Santri') ?>
+                            </span>
                         <?php endif; ?>
                     </div>
+
+                    <!-- Foto Profil -->
                     <div class="position-relative">
                         <?php
                         $fotoUser = session()->get('foto');
-
                         $pathFile = FCPATH . 'uploads/profile/' . $fotoUser;
                         $urlFoto = '';
 
@@ -58,20 +62,23 @@
                             $urlFoto = base_url('uploads/profile/default.png');
                         }
                         ?>
-
-                        <img src="<?= $urlFoto; ?>" alt="User" width="38" height="38" style="margin-right: -10px;"
+                        <img src="<?= $urlFoto; ?>" alt="User" width="38" height="38"
                             class="rounded-circle border border-2 border-white shadow-sm object-fit-cover">
-                        <!-- <span class="position-absolute bottom-0 end-0 p-1 bg-success border border-light rounded-circle"
-                            style="width: 14px; height: 14px;"></span> -->
                     </div>
                 </a>
 
-                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-3 p-2 rounded-4 animate-fade-in"
-                    aria-labelledby="dropdownUser" style="min-width: 220px;">
-                    <li class="px-3 py-2 d-sm-none border-bottom mb-2">
-                        <div class="fw-bold text-dark"><?= session()->get('name') ?></div>
-                        <small
-                            class="text-muted"><?= session()->get('role') == 'guru' ? 'Pengampu: ' . session()->get('nama_kelas') : (session()->get('role') == 'wali' ? 'Wali Santri' : 'User') ?></small>
+                <!-- Dropdown Menu List -->
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-2 rounded-4 animate-fade-in"
+                    aria-labelledby="dropdownUser"
+                    style="min-width: 220px; position: absolute !important; right: 0 !important; left: auto !important; top: 100% !important; z-index: 9999 !important;">
+                    <li class="px-3 py-2 d-sm-none mb-2">
+                        <div class="fw-bold text-dark-mode"><?= session()->get('name') ?></div>
+                        <small class="text-secondary">
+                            <?= session()->get('role') == 'guru' ? 'Pengampu: ' . session()->get('nama_kelas') : (session()->get('role') == 'wali' ? 'Wali Santri' : 'Admin') ?>
+                        </small>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider border border-secondary border-opacity-25">
                     </li>
                     <li>
                         <?php if ($role === 'admin'): ?>
@@ -115,7 +122,7 @@
                             </a>
                         <?php endif; ?>
                     </li>
-                    <!-- Tombol Toggle Dark Mode Pindah ke Sini -->
+                    <!-- Tombol Toggle Dark Mode -->
                     <li>
                         <button
                             class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-dark hover-bg-light transition-base w-100 border-0 bg-transparent"
@@ -125,7 +132,7 @@
                         </button>
                     </li>
                     <li>
-                        <hr class="dropdown-divider my-2">
+                        <hr class="dropdown-divider border border-secondary border-opacity-25">
                     </li>
                     <li>
                         <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-2 text-danger custom-logout-hover transition-base"

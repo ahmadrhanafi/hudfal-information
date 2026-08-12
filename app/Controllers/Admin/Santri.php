@@ -52,7 +52,7 @@ class Santri extends BaseController
 
     public function store()
     {
-        // Tambahkan validasi untuk tempat_lahir dan tanggal_lahir
+        // Validasi input termasuk file foto (opsional/boleh kosong, tapi kalau diisi harus gambar valid)
         if (
             !$this->validate([
                 'nama_santri' => 'required|min_length[3]',
@@ -61,9 +61,10 @@ class Santri extends BaseController
                 'jenis_kelamin' => 'required|in_list[L,P]',
                 'id_kelas' => 'required|numeric',
                 'id_wali' => 'required|numeric',
+                'foto' => 'uploaded[foto]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]|max_size[foto,2048]'
             ])
         ) {
-            return redirect()->back()->withInput()->with('error', 'Gagal validasi data santri. Periksa kembali inputan Anda.');
+            return redirect()->back()->withInput()->with('error', 'Gagal validasi data santri atau format foto salah (Maks. 2MB, format JPG/JPEG/PNG).');
         }
 
         $tahun = date('Y');
@@ -82,6 +83,15 @@ class Santri extends BaseController
 
         $nis = $tahun . $idKelas . str_pad($noUrut, 3, '0', STR_PAD_LEFT);
 
+        // Handle Upload Foto
+        $fileFoto = $this->request->getFile('foto');
+        $namaFoto = null;
+
+        if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
+            $namaFoto = $fileFoto->getRandomName();
+            $fileFoto->move('uploads/santri', $namaFoto);
+        }
+
         $this->santriModel->save([
             'nis' => $nis,
             'nama_santri' => $this->request->getVar('nama_santri'),
@@ -91,6 +101,7 @@ class Santri extends BaseController
             'id_kelas' => $this->request->getVar('id_kelas'),
             'id_wali' => $this->request->getVar('id_wali'),
             'status_aktif' => 'Aktif',
+            'foto' => $namaFoto,
         ]);
 
         return redirect()->to(base_url('admin/santri'))->with('success', 'Data santri berhasil ditambahkan! NIS: ' . $nis);
@@ -98,16 +109,22 @@ class Santri extends BaseController
 
     public function update($id)
     {
-        if (
-            !$this->validate([
-                'nama_santri' => 'required|min_length[3]',
-                'tempat_lahir' => 'required',
-                'tanggal_lahir' => 'required|valid_date',
-                'jenis_kelamin' => 'required|in_list[L,P]',
-                'id_kelas' => 'required|numeric',
-                'id_wali' => 'required|numeric',
-            ])
-        ) {
+        // Validasi update (foto bersifat opsional saat update, hanya divalidasi jika diunggah)
+        $rules = [
+            'nama_santri' => 'required|min_length[3]',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required|valid_date',
+            'jenis_kelamin' => 'required|in_list[L,P]',
+            'id_kelas' => 'required|numeric',
+            'id_wali' => 'required|numeric',
+        ];
+
+        $fileFoto = $this->request->getFile('foto');
+        if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
+            $rules['foto'] = 'is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]|max_size[foto,2048]';
+        }
+
+        if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('error', 'Gagal validasi data santri. Periksa kembali inputan Anda.');
         }
 
@@ -116,6 +133,19 @@ class Santri extends BaseController
         $nis = $this->request->getVar('nis');
         if (empty($nis)) {
             $nis = $santriLama['nis'] ?? '';
+        }
+
+        $namaFoto = $santriLama['foto']; // Tetap pakai foto lama by default
+
+        // Jika ada file foto baru yang di-upload
+        if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
+            $namaFoto = $fileFoto->getRandomName();
+            $fileFoto->move('uploads/santri', $namaFoto);
+
+            // Hapus foto lama jika ada
+            if (!empty($santriLama['foto']) && file_exists('uploads/santri/' . $santriLama['foto'])) {
+                unlink('uploads/santri/' . $santriLama['foto']);
+            }
         }
 
         $this->santriModel->update($id, [
@@ -127,6 +157,7 @@ class Santri extends BaseController
             'id_kelas' => $this->request->getVar('id_kelas'),
             'id_wali' => $this->request->getVar('id_wali'),
             'status_aktif' => $this->request->getVar('status_aktif') ?? 'Aktif',
+            'foto' => $namaFoto,
         ]);
 
         return redirect()->to(base_url('admin/santri'))->with('success', 'Data santri berhasil diperbarui!');
@@ -134,6 +165,14 @@ class Santri extends BaseController
 
     public function delete($id)
     {
+        // Ambil data untuk hapus file fisik fotonya juga
+        $santri = $this->santriModel->find($id);
+        if ($santri && !empty($santri['foto'])) {
+            if (file_exists('uploads/santri/' . $santri['foto'])) {
+                unlink('uploads/santri/' . $santri['foto']);
+            }
+        }
+
         $this->santriModel->delete($id);
         return redirect()->to(base_url('admin/santri'))->with('success', 'Data santri berhasil dihapus!');
     }

@@ -342,11 +342,19 @@
                 padding: 0 !important;
             }
 
+            .navbar,
+            .navbar-main,
+            header,
             .container-fluid {
-                max-width: 100% !important;
-                overflow-x: hidden !important;
-                padding-left: 12px !important;
-                padding-right: 12px !important;
+                overflow: visible !important;
+            }
+
+            /* Paksa menu dropdown agar keluar melayang di atas elemen lain dengan posisi fixed/absolute aman */
+            .dropdown-menu.show {
+                position: absolute !important;
+                inset: auto 0 auto auto !important;
+                transform: translate(0px, 8px) !important;
+                z-index: 99999 !important;
             }
 
             .container-fluid h3,
