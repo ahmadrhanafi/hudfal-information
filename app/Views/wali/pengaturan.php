@@ -88,20 +88,6 @@ $wali = $wali ?? [];
         <!-- Content Area -->
         <div class="col-lg-9">
 
-            <!-- Notifikasi Flash Message -->
-            <?php if (session()->getFlashdata('success')): ?>
-                <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm small mb-3" role="alert">
-                    <i class="fa-solid fa-circle-check me-2"></i> <?= session()->getFlashdata('success'); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php endif; ?>
-            <?php if (session()->getFlashdata('error')): ?>
-                <div class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm small mb-3" role="alert">
-                    <i class="fa-solid fa-triangle-exclamation me-2"></i> <?= session()->getFlashdata('error'); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php endif; ?>
-
             <div class="tab-content" id="settingsWaliTabContent">
 
                 <!-- Tab 1: Profil Orang Tua -->

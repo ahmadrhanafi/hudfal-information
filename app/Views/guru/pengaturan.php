@@ -49,8 +49,8 @@
 
     <!-- Page Header -->
     <div class="mb-4">
-        <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Pengaturan Akun Ustadz</h3>
-        <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola informasi profil pengajar,
+        <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Pengaturan Akun Pengajar</h3>
+        <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola informasi profil pengajar,
             jadwal mengajar, dan keamanan akun Anda.</p>
     </div>
 
@@ -70,10 +70,14 @@
                             role="tab">
                             <i class="fa-solid fa-lock me-2 text-success"></i> Ubah Kata Sandi
                         </button>
-                        <button class="nav-link text-start py-2 px-3 rounded-3 small fw-semibold text-dark"
+                        <!-- <button class="nav-link text-start py-2 px-3 rounded-3 small fw-semibold text-dark"
                             id="u-notification-tab" data-bs-toggle="pill" data-bs-target="#u-notification" type="button"
                             role="tab">
                             <i class="fa-solid fa-bell me-2 text-success"></i> Notifikasi Setoran
+                        </button> -->
+                        <button class="nav-link text-start py-2 px-3 rounded-3 small fw-semibold text-dark"
+                            id="u-help-tab" data-bs-toggle="pill" data-bs-target="#u-help" type="button" role="tab">
+                            <i class="fa-solid fa-circle-question me-2 text-success"></i> Bantuan & Panduan
                         </button>
                     </div>
                 </div>
@@ -82,47 +86,45 @@
 
         <!-- Content Area -->
         <div class="col-lg-9">
+
             <div class="tab-content" id="settingsUstadzTabContent">
 
                 <!-- Tab 1: Profil Pengajar -->
                 <div class="tab-pane fade show active" id="u-profile" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold text-dark mb-3" style="text-transform: none !important;">Informasi Profil
-                                Ustadz</h5>
-                            <p class="text-muted small mb-4">Perbarui biodata dan nomor kontak resmi Anda.</p>
+                            <h5 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Informasi
+                                Profil
+                                Pengajar</h5>
+                            <p class="text-secondary small mb-4">Perbarui biodata dan nomor kontak resmi Anda.</p>
 
-                            <form>
+                            <form action="<?= base_url('guru/pengaturan/update-profile'); ?>" method="POST">
+                                <?= csrf_field(); ?>
                                 <div class="row g-3 mb-3">
                                     <div class="col-md-6">
-                                        <label class="form-label small fw-semibold text-dark">Nama Lengkap &
+                                        <label class="form-label small fw-semibold text-dark-mode">Nama Lengkap &
                                             Gelar</label>
-                                        <input type="text" class="form-control form-control-sm bg-light border-0 py-2"
-                                            value="Ustadz Ahmad Hidayat, Lc.">
+                                        <input type="text" name="nama_guru"
+                                            class="form-control form-control-sm bg-light border-0 py-2"
+                                            value="<?= esc($guru['nama_guru'] ?? ''); ?>" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label small fw-semibold text-dark">Nomor WhatsApp /
-                                            HP</label>
-                                        <input type="text" class="form-control form-control-sm bg-light border-0 py-2"
-                                            value="081234567890">
+                                        <label class="form-label small fw-semibold text-dark-mode">Nomor
+                                            WhatsApp</label>
+                                        <input type="text" name="no_hp"
+                                            class="form-control form-control-sm bg-light border-0 py-2"
+                                            value="<?= esc($guru['no_hp'] ?? ''); ?>" required>
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label small fw-semibold text-dark">Kelas Binaan / Perwalian
-                                        Utama</label>
+                                    <label class="form-label small fw-semibold text-dark-mode">Kelas Binaan</label>
                                     <input type="text" class="form-control form-control-sm bg-light border-0 py-2"
-                                        value="Kelas 8A Tsanawiyah" readonly>
-                                    <small class="text-muted">Hubungi admin jika terjadi kesalahan penugasan
+                                        value="<?= esc($guru['nama_kelas'] ?? 'Belum ada kelas binaan'); ?>" readonly>
+                                    <small class="text-secondary">Hubungi admin jika terjadi kesalahan penugasan
                                         kelas.</small>
                                 </div>
-                                <div class="mb-4">
-                                    <label class="form-label small fw-semibold text-dark">Bio Singkat / Motto
-                                        Mengajar</label>
-                                    <textarea class="form-control bg-light border-0"
-                                        rows="3">Mencetak generus qur'ani yang berakhlak mulia dan hafal Al-Qur'an.</textarea>
-                                </div>
                                 <button type="submit" class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Simpan
-                                    Profil</button>
+                                    Perubahan</button>
                             </form>
                         </div>
                     </div>
@@ -132,58 +134,164 @@
                 <div class="tab-pane fade" id="u-security" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold text-dark mb-3" style="text-transform: none !important;">Keamanan Akun
-                                Ustadz</h5>
-                            <p class="text-muted small mb-4">Ganti kata sandi panel ustadz Anda.</p>
+                            <h5 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Keamanan
+                                Akun
+                                Ustadz
+                            </h5>
+                            <p class="text-secondary small mb-4">Ganti kata sandi panel pengajar Anda.</p>
 
-                            <form>
+                            <form action="<?= base_url('guru/pengaturan/update-password'); ?>" method="POST">
+                                <?= csrf_field(); ?>
                                 <div class="mb-3">
-                                    <label class="form-label small fw-semibold text-dark">Kata Sandi Lama</label>
-                                    <input type="password" class="form-control form-control-sm bg-light border-0 py-2"
-                                        placeholder="••••••••••••">
+                                    <label class="form-label small fw-semibold text-dark-mode">Kata Sandi Lama</label>
+                                    <input type="password" name="current_password"
+                                        class="form-control form-control-sm bg-light border-0 py-2"
+                                        placeholder="••••••••••••" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label small fw-semibold text-dark">Kata Sandi Baru</label>
-                                    <input type="password" class="form-control form-control-sm bg-light border-0 py-2"
-                                        placeholder="Minimal 8 karakter">
+                                    <label class="form-label small fw-semibold text-dark-mode">Kata Sandi Baru</label>
+                                    <input type="password" name="new_password"
+                                        class="form-control form-control-sm bg-light border-0 py-2"
+                                        placeholder="Minimal 8 karakter" required>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="form-label small fw-semibold text-dark">Konfirmasi Kata Sandi
+                                    <label class="form-label small fw-semibold text-dark-mode">Konfirmasi Kata Sandi
                                         Baru</label>
-                                    <input type="password" class="form-control form-control-sm bg-light border-0 py-2"
-                                        placeholder="Ulangi sandi baru">
+                                    <input type="password" name="confirm_password"
+                                        class="form-control form-control-sm bg-light border-0 py-2"
+                                        placeholder="Ulangi sandi baru" required>
                                 </div>
                                 <button type="submit"
-                                    class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Perbarui Sandi</button>
+                                    class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Perbarui
+                                    Sandi</button>
                             </form>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tab 3: Notifikasi -->
-                <div class="tab-pane fade" id="u-notification" role="tabpanel">
+                <!-- <div class="tab-pane fade" id="u-notification" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
                             <h5 class="fw-bold text-dark mb-3" style="text-transform: none !important;">Preferensi
                                 Notifikasi</h5>
                             <p class="text-muted small mb-4">Atur jenis pemberitahuan yang ingin Anda terima.</p>
 
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" id="notif1" checked>
-                                <label class="form-check-label small fw-semibold text-dark ms-2" for="notif1">Pengingat
-                                    Jadwal Setoran Hafalan Harian</label>
+                            <form action="<?= base_url('guru/pengaturan/update-notification'); ?>" method="POST">
+                                <?= csrf_field(); ?>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="notif_jadwal" id="notif1"
+                                        value="1" <?= (isset($guru['notif_jadwal']) && $guru['notif_jadwal'] == 1) ? 'checked' : 'checked'; ?>>
+                                    <label class="form-check-label small fw-semibold text-dark ms-2"
+                                        for="notif1">Pengingat
+                                        Jadwal Setoran Hafalan Harian</label>
+                                </div>
+                                <div class="form-check form-switch mb-4">
+                                    <input class="form-check-input" type="checkbox" name="notif_laporan" id="notif2"
+                                        value="1" <?= (isset($guru['notif_laporan']) && $guru['notif_laporan'] == 1) ? 'checked' : 'checked'; ?>>
+                                    <label class="form-check-label small fw-semibold text-dark ms-2"
+                                        for="notif2">Notifikasi
+                                        Laporan Bulanan Kelas</label>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Simpan
+                                    Pengaturan</button>
+                            </form>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Tab 4: Bantuan & Panduan -->
+                <div class="tab-pane fade" id="u-help" role="tabpanel">
+                    <div class="card border-0 shadow-sm rounded-4 bg-white">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Pusat
+                                Bantuan &
+                                Panduan Pengajar</h5>
+                            <p class="text-secondary small mb-4">Panduan singkat penggunaan sistem dan tata cara
+                                pelaporan
+                                kendala.</p>
+
+                            <!-- Accordion Panduan -->
+                            <div class="accordion accordion-flush" id="accordionHelp">
+                                <!-- Item 1 -->
+                                <div class="accordion-item border rounded-3 mb-3 overflow-hidden shadow-sm">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button collapsed small fw-semibold text-dark bg-light"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                            aria-expanded="false" aria-controls="collapseOne">
+                                            <i class="fa-solid fa-book-open me-2 text-success"></i> Bagaimana cara
+                                            menginput nilai atau setoran hafalan santri?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse"
+                                        aria-labelledby="headingOne" data-bs-parent="#accordionHelp">
+                                        <div class="accordion-body small text-muted">
+                                            Pilih menu <strong>Setoran Hafalan</strong> pada sidebar utama panel guru.
+                                            Pilih kelas bimbingan Anda, cari nama santri yang bersangkutan, lalu
+                                            masukkan detail surah, ayat, serta predikat kelulusan setoran
+                                            (lancar/mengulang), kemudian klik simpan.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Item 2 -->
+                                <div class="accordion-item border rounded-3 mb-3 overflow-hidden shadow-sm">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed small fw-semibold text-dark bg-light"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                            aria-expanded="false" aria-controls="collapseTwo">
+                                            <i class="fa-solid fa-user-gear me-2 text-success"></i> Bagaimana jika
+                                            terjadi kesalahan penugasan kelas atau biodata?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse"
+                                        aria-labelledby="headingTwo" data-bs-parent="#accordionHelp">
+                                        <div class="accordion-body small text-muted">
+                                            Data kelas binaan dan NIP bersifat terikat dengan data induk yang dikelola
+                                            oleh Administrator pusat. Jika terdapat kesalahan penulisan nama, gelar,
+                                            atau penugasan kelas, silakan hubungi bagian Admin Pesantren secara
+                                            langsung.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Item 3 -->
+                                <div class="accordion-item border rounded-3 mb-3 overflow-hidden shadow-sm">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed small fw-semibold text-dark bg-light"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                            aria-expanded="false" aria-controls="collapseThree">
+                                            <i class="fa-solid fa-shield-halved me-2 text-success"></i> Apa yang harus
+                                            dilakukan jika lupa kata sandi akun?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse collapse"
+                                        aria-labelledby="headingThree" data-bs-parent="#accordionHelp">
+                                        <div class="accordion-body small text-muted">
+                                            Anda dapat mengubah kata sandi secara mandiri melalui menu <strong>Ubah Kata
+                                                Sandi</strong> di halaman pengaturan ini apabila masih dapat login. Jika
+                                            sudah terkunci atau lupa sama sekali, mintalah bantuan Admin untuk melakukan
+                                            *reset password* akun Anda.
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-check form-switch mb-4">
-                                <input class="form-check-input" type="checkbox" id="notif2" checked>
-                                <label class="form-check-label small fw-semibold text-dark ms-2" for="notif2">Notifikasi
-                                    Laporan Bulanan Kelas</label>
+
+                            <!-- Kontak Admin Card -->
+                            <div class="alert alert-success bg-success bg-opacity-25 border-2 border-success rounded-4 p-3 mt-4 d-flex align-items-center"
+                                role="alert">
+                                <i class="fa-solid fa-headset fs-3 text-success me-3"></i>
+                                <div>
+                                    <h6 class="fw-bold text-dark-mode mb-1 small">Butuh bantuan teknis lebih lanjut?
+                                    </h6>
+                                    <p class="text-secondary small mb-0">Hubungi tim pengembang atau administrator
+                                        melalui
+                                        WhatsApp layanan internal pesantren.</p>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Simpan
-                                Pengaturan</button>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
