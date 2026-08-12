@@ -46,15 +46,22 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
         // $this->session = service('session');
         $uri = service('uri');
-        $segment = $uri->getSegment(1); // Mengambil segment URL pertama (contoh: admin, guru, wali)
+        $segment = $uri->getSegment(1); // Contoh: admin, guru, wali, login, auth, dll
 
-        // Cek autentikasi umum
+        // 1. DAFTARKAN KECUALIAN (Whitelist)
+        // Jika sedang mengakses halaman login, proses login, logout, atau loading, lewati pengecekan!
+        $allowedRoutes = ['login', 'auth', 'logout', 'loading'];
+        if (in_array($segment, $allowedRoutes)) {
+            return; // Keluar dari initController, biarkan halaman publik diakses bebas
+        }
+
+        // 2. Cek autentikasi umum untuk halaman selain di atas
         if (!session()->get('logged_in')) {
             header('Location: ' . base_url('login'));
             exit();
         }
 
-        // Validasi kecocokan role dengan URL segment
+        // 3. Validasi kecocokan role dengan URL segment
         $roleSession = session()->get('role'); // misal: 'admin', 'guru', 'wali'
 
         if ($segment === 'admin' && $roleSession !== 'admin') {
