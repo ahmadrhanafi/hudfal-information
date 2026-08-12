@@ -6,14 +6,14 @@ use CodeIgniter\Model;
 
 class SantriModel extends Model
 {
-    protected $table            = 'santri';
-    protected $primaryKey       = 'id';
+    protected $table = 'santri';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
+    protected $returnType = 'array';
+    protected $useSoftDeletes = false;
 
     // Tambahkan field baru di sini agar bisa di-insert/update
-    protected $allowedFields    = [
+    protected $allowedFields = [
         'nis',
         'nama_santri',
         'tempat_lahir',
@@ -21,15 +21,14 @@ class SantriModel extends Model
         'jenis_kelamin',
         'id_kelas',
         'id_wali',
-        'uid_kartu',
         'status_aktif'
     ];
 
     // Dates
     protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    protected $dateFormat = 'datetime';
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
 
     // Fungsi untuk mengambil data santri beserta relasi
     public function getSantriWithRelations($id = null)

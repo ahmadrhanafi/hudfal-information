@@ -15,18 +15,22 @@
         <div>
             <h3 class="fw-bold text-dark-mode mb-1"><i
                     class="fa-solid fa-id-card-clip text-success me-2"></i><?= esc($santri['nama_santri']); ?></h3>
-            <p class="text-secondary small mb-0">Informasi profil lengkap <?= esc($santri['nama_santri']); ?>.</p>
+            <p class="text-secondary small mb-0">Informasi profil lengkap santri.</p>
         </div>
         <div>
             <a href="<?= base_url('admin/santri'); ?>"
-                class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm">
-                <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Daftar
+                class="btn btn-sm px-3 py-2 rounded-pill border-0 fw-semibold bg-success bg-opacity-10 text-success shadow-sm hover-bg-success">
+                <i class="fa-solid fa-arrow-left me-2"></i> Kembali ke Daftar
             </a>
         </div>
     </div>
 
-    <div class="row g-4">
+    <?php
+    $tglLahir = $santri['tanggal_lahir'] ? date('d', strtotime($santri['tanggal_lahir'])) . ' ' . ['01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'Mei', '06' => 'Jun', '07' => 'Jul', '08' => 'Agu', '09' => 'Sep', '10' => 'Okt', '11' => 'Nov', '12' => 'Des']
+    [date('m', strtotime($santri['tanggal_lahir']))] . ' ' . date('Y', strtotime($santri['tanggal_lahir'])) : '-';
+    ?>
 
+    <div class="row g-4">
         <!-- Kolom Kiri: Pratinjau E-Kartu Santri (Digital ID Card) -->
         <div class="col-xl-4">
             <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
@@ -89,7 +93,8 @@
             <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
                 <div
                     class="card-header bg-success rounded-top-4 py-3 px-4 border-0 d-flex align-items-center justify-content-between">
-                    <h5 class="card-title fw-bold text-dark-mode mb-0">Rincian Data Santri & Wali</h5>
+                    <h5 class="card-title fw-semibold mb-1 text-white"
+                        style="text-transform: none !important; font-size: 1.05rem;">Rincian Data Santri & Wali</h5>
                 </div>
                 <div class="card-body p-4">
                     <div class="table-responsive">
@@ -103,6 +108,12 @@
                                 <tr>
                                     <td class="text-secondary py-3">Nama Lengkap Santri</td>
                                     <td class="fw-bold text-dark-mode py-3">: <?= esc($santri['nama_santri']); ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-secondary py-3">Tempat, Tanggal Lahir</td>
+                                    <td class="fw-bold text-dark-mode py-3">:
+                                        <?= esc($santri['tempat_lahir'] ?? '-'); ?>, <?= $tglLahir; ?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="text-secondary py-3">Jenis Kelamin</td>
@@ -122,7 +133,12 @@
                                         </span>
                                     </td>
                                 </tr>
-                                <tr class="border-top">
+                                <tr>
+                                    <td colspan="2" class="p-0">
+                                        <hr class="my-2 text-secondary opacity-25">
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td class="text-secondary py-3">Nama Wali Santri</td>
                                     <td class="fw-bold text-dark-mode py-3">:
                                         <?= esc($santri['nama_wali'] ?? 'Belum ada wali'); ?>
@@ -149,13 +165,14 @@
                         </table>
                     </div>
                 </div>
-                <div class="card-footer bg-success py-3 px-4 border-0 text-end rounded-bottom-4">
-                    <a href="<?= base_url('admin/santri'); ?>"
-                        class="btn btn-secondary btn-sm bg-secondary bg-opacity-30 px-4 py-2 rounded-3 shadow-sm">Selesai</a>
+                <div
+                    class="card-footer bg-success py-3 px-4 border-0 d-flex align-items-center justify-content-between rounded-bottom-4">
+                    <span class="text-white small">
+                        <i class="fa-solid fa-clock-rotate-left me-1"></i> Terakhir diperbarui oleh sistem
+                    </span>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 <?= $this->endSection(); ?>

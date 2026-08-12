@@ -120,6 +120,7 @@ $wali = $wali ?? [];
                         <tr>
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
                             <th class="py-3" style="width: 25%;">Nama Santri</th>
+                            <th class="py-3" style="width: 25%;">Wali Santri</th>
                             <th class="py-3" style="width: 15%;">Nomor Induk</th>
                             <th class="py-3" style="width: 15%;">Kelas</th>
                             <th class="py-3 text-center" style="width: 15%;">Status</th>
@@ -139,6 +140,8 @@ $wali = $wali ?? [];
                                 <?php
                                 $words = explode(' ', $s['nama_santri']);
                                 $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+                                $tglLahir = $s['tanggal_lahir'] ? date('d', strtotime($s['tanggal_lahir'])) . ' ' . ['01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'Mei', '06' => 'Jun', '07' => 'Jul', '08' => 'Agu', '09' => 'Sep', '10' => 'Okt', '11' => 'Nov', '12' => 'Des']
+                                [date('m', strtotime($s['tanggal_lahir']))] . ' ' . date('Y', strtotime($s['tanggal_lahir'])) : '-';
                                 ?>
                                 <tr class="santri-row" data-kelas="<?= strtolower($s['nama_kelas'] ?? ''); ?>"
                                     data-status="<?= strtolower($s['status_aktif'] ?? ''); ?>">
@@ -153,17 +156,35 @@ $wali = $wali ?? [];
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($s['nama_santri']); ?>
                                                 </h6>
-                                                <small class="text-secondary">Wali:
-                                                    <?= esc($s['nama_wali'] ?? 'Tidak ada data'); ?></small>
+                                                <small class="text-secondary d-block" style="font-size: 0.8rem;">
+                                                    <i class=" fa-solid fa-cake-candles text-secondary me-1"></i>
+                                                    <?= esc($s['tempat_lahir'] ?? '-'); ?>,
+                                                    <?= $tglLahir; ?>
+                                                </small>
                                             </div>
                                         </div>
                                     </td>
-                                    <td><span class="font-monospace text-secondary small"><?= esc($s['nis']); ?></span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div>
+                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
+                                                    <?= esc($s['nama_wali']); ?>
+                                                </h6>
+                                                <small class="text-secondary"><i
+                                                        class="fa-solid fa-phone-volume text-secondary me-1"></i>
+                                                    <?= esc($s['no_hp_wali'] ?? 'Tidak ada data'); ?></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span
+                                            class="font-monospace border border-1 border-secondary rounded text-secondary small px-2 py-1.2"><?= esc($s['nis']); ?></span>
+                                    </td>
                                     <td>
                                         <div>
                                             <h6 class="mb-0 text-secondary small" style="font-size: 0.65rem;">Kelas:</h6>
                                             <small class="fw-semibold text-dark-mode" style="font-size: 0.9rem;"><i
-                                                    class=" fa-solid fa-school text-secondary me-1"></i><?= esc($s['nama_kelas'] ?? 'Belum Ditentukan'); ?>
+                                                    class=" fa-solid fa-school text-secondary me-1"></i>
+                                                <?= esc($s['nama_kelas'] ?? 'Belum Ditentukan'); ?>
                                             </small>
                                         </div>
                                     </td>
@@ -190,6 +211,8 @@ $wali = $wali ?? [];
                                                 title="Edit" data-bs-toggle="modal" data-bs-target="#modalEdit"
                                                 data-id="<?= $s['id']; ?>" data-nis="<?= esc($s['nis'], 'attr'); ?>"
                                                 data-namasantri="<?= esc($s['nama_santri'], 'attr'); ?>"
+                                                data-tempat_lahir="<?= $s['tempat_lahir']; ?>"
+                                                data-tanggal_lahir="<?= $s['tanggal_lahir']; ?>"
                                                 data-jeniskelamin="<?= esc($s['jenis_kelamin'], 'attr'); ?>"
                                                 data-idkelas="<?= esc($s['id_kelas'], 'attr'); ?>"
                                                 data-idwali="<?= esc($s['id_wali'], 'attr'); ?>"
@@ -252,6 +275,15 @@ $wali = $wali ?? [];
                             placeholder="Contoh: Ahmad Zaki Al-Faruq" required>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Tempat Lahir</label>
+                        <input type="text" name="tempat_lahir" class="form-control"
+                            placeholder="Contoh: Bogor, Depok, Jakarta" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Tanggal Lahir</label>
+                        <input type="date" name="tanggal_lahir" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Jenis Kelamin</label>
                         <select name="jenis_kelamin" class="form-select" required>
                             <option value="L">Laki-laki</option>
@@ -306,6 +338,16 @@ $wali = $wali ?? [];
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Nama Lengkap Santri</label>
                         <input type="text" name="nama_santri" id="editNamaSantri" class="form-control" required>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium small text-muted">Tempat Lahir</label>
+                            <input type="text" name="tempat_lahir" id="editTempatLahir" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium small text-muted">Tanggal Lahir</label>
+                            <input type="date" name="tanggal_lahir" id="editTanggalLahir" class="form-control" required>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium small text-muted">Jenis Kelamin</label>
@@ -415,6 +457,8 @@ $wali = $wali ?? [];
             const id = button.getAttribute('data-id');
             const nis = button.getAttribute('data-nis');
             const namaSantri = button.getAttribute('data-namasantri');
+            const tempatLahir = button.getAttribute('data-tempat_lahir');
+            const tanggalLahir = button.getAttribute('data-tanggal_lahir');
             const jenisKelamin = button.getAttribute('data-jeniskelamin');
             const idKelas = button.getAttribute('data-idkelas');
             const idWali = button.getAttribute('data-idwali');
@@ -422,6 +466,8 @@ $wali = $wali ?? [];
 
             modalEdit.querySelector('#editNis').value = nis;
             modalEdit.querySelector('#editNamaSantri').value = namaSantri;
+            modalEdit.querySelector('#editTempatLahir').value = tempatLahir;
+            modalEdit.querySelector('#editTanggalLahir').value = tanggalLahir;
             modalEdit.querySelector('#editJenisKelamin').value = jenisKelamin;
             modalEdit.querySelector('#editIdKelas').value = idKelas;
             modalEdit.querySelector('#editStatus').value = status;

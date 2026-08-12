@@ -127,7 +127,7 @@
                                                     <?= esc($w['nama_wali']); ?>
                                                 </h6>
                                                 <small class="text-secondary"><i
-                                                        class="fa-solid fa-phone-volume text-secondary me-1"></i>:
+                                                        class="fa-solid fa-phone-volume text-secondary me-1"></i>
                                                     <?= esc($w['no_hp'] ?? 'Tidak ada data'); ?></small>
                                             </div>
                                         </div>

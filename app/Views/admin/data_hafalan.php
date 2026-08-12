@@ -162,13 +162,17 @@ $hafalan = $hafalan ?? [];
                                                 style="width: 38px; height: 38px; font-size: 0.9rem;">
                                                 <?= $initials; ?>
                                             </div>
+                                            <?php
+                                            date_default_timezone_set('Asia/Jakarta');
+                                            $formattedDate = !empty($h['created_at']) ? date('d M Y, H:i', strtotime($h['created_at'])) : '-';
+                                            ?>
                                             <div>
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($h['nama_santri']); ?>
                                                 </h6>
-                                                <small class="text-secondary" style="font-size: 12px;"><i
-                                                        class="fa-regular fa-calendar me-1"></i>
-                                                    <?= date('d M Y', strtotime($h['created_at'])); ?></small>
+                                                <small class="text-secondary" style="font-size: 12px;">
+                                                    <i class="fa-regular fa-clock me-1"></i><?= $formattedDate; ?> WIB
+                                                </small>
                                             </div>
                                         </div>
                                     </td>

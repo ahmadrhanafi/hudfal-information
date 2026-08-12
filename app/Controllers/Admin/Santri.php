@@ -52,18 +52,20 @@ class Santri extends BaseController
 
     public function store()
     {
+        // Tambahkan validasi untuk tempat_lahir dan tanggal_lahir
         if (
             !$this->validate([
                 'nama_santri' => 'required|min_length[3]',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required|valid_date',
                 'jenis_kelamin' => 'required|in_list[L,P]',
                 'id_kelas' => 'required|numeric',
                 'id_wali' => 'required|numeric',
             ])
         ) {
-            return redirect()->back()->withInput()->with('error', 'Gagal validasi data santri.');
+            return redirect()->back()->withInput()->with('error', 'Gagal validasi data santri. Periksa kembali inputan Anda.');
         }
 
-        // Format: Tahun(4 digit) + id_kelas(2 digit) + NoUrut(3 digit) -> Contoh: 202601001
         $tahun = date('Y');
         $idKelas = str_pad($this->request->getVar('id_kelas'), 2, '0', STR_PAD_LEFT);
 
@@ -83,6 +85,8 @@ class Santri extends BaseController
         $this->santriModel->save([
             'nis' => $nis,
             'nama_santri' => $this->request->getVar('nama_santri'),
+            'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+            'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
             'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
             'id_kelas' => $this->request->getVar('id_kelas'),
             'id_wali' => $this->request->getVar('id_wali'),
@@ -97,12 +101,14 @@ class Santri extends BaseController
         if (
             !$this->validate([
                 'nama_santri' => 'required|min_length[3]',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required|valid_date',
                 'jenis_kelamin' => 'required|in_list[L,P]',
                 'id_kelas' => 'required|numeric',
                 'id_wali' => 'required|numeric',
             ])
         ) {
-            return redirect()->back()->withInput()->with('error', 'Gagal validasi data santri.');
+            return redirect()->back()->withInput()->with('error', 'Gagal validasi data santri. Periksa kembali inputan Anda.');
         }
 
         $santriLama = $this->santriModel->find($id);
@@ -115,6 +121,8 @@ class Santri extends BaseController
         $this->santriModel->update($id, [
             'nis' => $nis,
             'nama_santri' => $this->request->getVar('nama_santri'),
+            'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+            'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
             'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
             'id_kelas' => $this->request->getVar('id_kelas'),
             'id_wali' => $this->request->getVar('id_wali'),

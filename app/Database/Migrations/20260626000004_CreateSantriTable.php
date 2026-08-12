@@ -47,11 +47,6 @@ class CreateSantriTable extends Migration
                 'constraint' => 11,
                 'unsigned' => true
             ],
-            'uid_kartu' => [
-                'type' => 'VARCHAR',
-                'constraint' => 100,
-                'null' => true
-            ],
             'status_aktif' => [
                 'type' => 'ENUM',
                 'constraint' => ['Aktif', 'Lulus', 'Keluar'],

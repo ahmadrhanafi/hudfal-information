@@ -106,8 +106,10 @@ $santri = $santri ?? [];
                         <tr>
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
                             <th class="py-3" style="width: 30%;">Nama Santri</th>
+                            <th class="py-3" style="width: 30%;">Wali Santri</th>
                             <th class="py-3" style="width: 15%;">NIS</th>
-                            <th class="py-3" style="width: 15%;">Kelas</th>
+                            <th class="py-3" style="width: 15%;">Jenis Kelamin</th>
+                            <th class="py-3" style="width: 15%;">Alamat</th>
                             <th class="py-3 text-center" style="width: 15%;">Status</th>
                             <th class="py-3 text-end pe-4" style="width: 20%;">Aksi</th>
                         </tr>
@@ -126,7 +128,8 @@ $santri = $santri ?? [];
                                 // Generate Inisial Avatar Dinamis
                                 $words = explode(' ', $s['nama_santri']);
                                 $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
-
+                                $tglLahir = $s['tanggal_lahir'] ? date('d', strtotime($s['tanggal_lahir'])) . ' ' . ['01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'Mei', '06' => 'Jun', '07' => 'Jul', '08' => 'Agu', '09' => 'Sep', '10' => 'Okt', '11' => 'Nov', '12' => 'Des']
+                                [date('m', strtotime($s['tanggal_lahir']))] . ' ' . date('Y', strtotime($s['tanggal_lahir'])) : '-';
                                 // Format warna status aktif santri
                                 $statusColor = 'success';
                                 $statusText = ucfirst($s['status_aktif'] ?? 'Aktif');
@@ -139,7 +142,6 @@ $santri = $santri ?? [];
                                 if ($statusLower == 'keluar' || $statusLower == 'tidak aktif')
                                     $statusColor = 'danger';
                                 ?>
-                                <!-- Baris data dengan atribut data-* untuk filter JS -->
                                 <tr class="santri-row"
                                     data-kelas="<?= strtolower(str_replace(' ', '', $s['nama_kelas'] ?? '')); ?>"
                                     data-status="<?= $statusLower; ?>"
@@ -155,20 +157,37 @@ $santri = $santri ?? [];
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($s['nama_santri']); ?>
                                                 </h6>
-                                                <small class="text-muted text-dark-mode">Wali:
-                                                    <?= esc($s['nama_wali'] ?? 'Belum diset'); ?></small>
+                                                <small class="text-secondary d-block" style="font-size: 0.8rem;">
+                                                    <i class=" fa-solid fa-cake-candles text-secondary me-1"></i>
+                                                    <?= esc($s['tempat_lahir'] ?? '-'); ?>,
+                                                    <?= $tglLahir; ?>
+                                                </small>
                                             </div>
                                         </div>
                                     </td>
-                                    <td><span class="font-monospace text-secondary small"><?= esc($s['nis']); ?></span></td>
-                                    <td><span
-                                            class="badge bg-light text-dark border px-2 py-1"><?= esc($s['nama_kelas'] ?? '-'); ?></span>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div>
+                                                <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
+                                                    <?= esc($s['nama_wali']); ?>
+                                                </h6>
+                                                <small class="text-secondary"><i
+                                                        class="fa-solid fa-phone-volume text-secondary me-1"></i>
+                                                    <?= esc($s['no_hp_wali'] ?? 'Tidak ada data'); ?></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><small class="font-monospace text-secondary small"><?= esc($s['nis']); ?></small></td>
+                                    <td><small
+                                            class="text-secondary small"><?= ($s['jenis_kelamin'] == 'L') ? 'Laki-laki' : 'Perempuan'; ?></small>
+                                    </td>
+                                    <td><small class="text-secondary small"><?= esc($s['alamat_wali'] ?? '-'); ?></small>
                                     </td>
                                     <td class="text-center">
-                                        <span
+                                        <small
                                             class="badge bg-<?= $statusColor; ?> bg-opacity-10 text-<?= $statusColor; ?> px-3 py-1 rounded-pill small fw-semibold">
                                             <?= $statusText; ?>
-                                        </span>
+                                        </small>
                                     </td>
                                     <td class="text-end pe-4">
                                         <div class="d-flex justify-content-end gap-1">

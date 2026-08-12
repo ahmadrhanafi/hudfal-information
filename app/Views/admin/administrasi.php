@@ -278,13 +278,29 @@
                                             </div>
                                         </div>
                                     </td>
+                                    <?php
+                                    $rawHp = $row['no_hp_wali'] ?? '';
+                                    $cleanHp = preg_replace('/[^0-9]/', '', $rawHp);
+                                    if (substr($cleanHp, 0, 1) === '0') {
+                                        $cleanHp = '62' . substr($cleanHp, 1);
+                                    }
+                                    ?>
                                     <td>
                                         <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                             <?= esc($row['nama_wali']); ?>
                                         </h6>
-                                        <small class="text-secondary" style="font-size: 0.75rem;"><i
-                                                class="fa-brands fa-whatsapp me-1"></i>
-                                            <?= esc($row['no_hp_wali'] ?? 'Belum ada nomor HP'); ?></small>
+                                        <small class="text-secondary" style="font-size: 0.75rem;">
+                                            <?php if (!empty($row['no_hp_wali'])): ?>
+                                                <a href="https://wa.me/<?= $cleanHp; ?>" target="_blank"
+                                                    class="text-secondary text-decoration-none fw-medium">
+                                                    <i
+                                                        class="fa-brands fa-whatsapp text-success me-1"></i><?= esc($row['no_hp_wali']); ?>
+                                                </a>
+                                            <?php else: ?>
+                                                <span class="text-muted"><i class="fa-brands fa-whatsapp me-1"></i>Belum ada nomor
+                                                    WhatsApp</span>
+                                            <?php endif; ?>
+                                        </small>
                                     </td>
                                     <td>
                                         <span class="fw-semibold text-dark-mode d-block"
