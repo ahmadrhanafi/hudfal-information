@@ -144,4 +144,66 @@ class RiwayatHafalan extends BaseController
 
         return view('guru/_detail_riwayat_hafalan', $data);
     }
+
+    public function ekspor()
+    {
+        $idGuru = session()->get('ref_id');
+        $namaGuru = session()->get('name');
+        $idKelasGuru = session()->get('id_kelas');
+
+        if (empty($idKelasGuru) && !empty($idGuru)) {
+            $guru = $this->guruModel->find($idGuru);
+            if (!$guru) {
+                $guru = $this->guruModel->where('nama_guru', $namaGuru)->first();
+            }
+            $idKelasGuru = $guru['id_kelas_diampu'] ?? null;
+        }
+
+        if (empty($idKelasGuru)) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki kelas yang diampu untuk diekspor.');
+        }
+
+        $kelas = $this->kelasModel->find($idKelasGuru);
+        $namaKelas = $kelas['nama_kelas'] ?? 'Kelas';
+
+        $santri = $this->santriModel->select('santri.*, kelas.nama_kelas')
+            ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+            ->where('santri.id_kelas', $idKelasGuru)
+            ->orderBy('santri.nama_santri', 'ASC')
+            ->findAll();
+
+        $filename = 'Rekap_Hafalan_' . str_replace(' ', '_', $namaKelas) . '_' . date('Y-m-d') . '.csv';
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        $output = fopen('php://output', 'w');
+
+        fputcsv($output, ['No', 'NIS', 'Nama Santri', 'Jenis Kelamin', 'Kelas', 'Total Setoran Bulan Ini']);
+
+        $no = 1;
+        $bulanIni = date('m');
+        $tahunIni = date('Y');
+
+        foreach ($santri as $s) {
+            $totalSetoran = $this->hafalanModel->where('id_santri', $s['id'])
+                ->where('MONTH(created_at)', $bulanIni)
+                ->where('YEAR(created_at)', $tahunIni)
+                ->countAllResults();
+
+            $jk = ($s['jenis_kelamin'] == 'L') ? 'Laki-laki' : 'Perempuan';
+
+            fputcsv($output, [
+                $no++,
+                $s['nis'],
+                $s['nama_santri'],
+                $jk,
+                $s['nama_kelas'],
+                $totalSetoran . ' Setoran'
+            ]);
+        }
+
+        fclose($output);
+        exit();
+    }
 }

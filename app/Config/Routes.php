@@ -95,6 +95,8 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     $routes->get('hafalan/delete/(:num)', 'Guru\Hafalan::delete/$1');
 
     $routes->get('riwayat-hafalan', 'Guru\RiwayatHafalan::index');
+    $routes->get('riwayat-hafalan/ekspor', 'Guru\RiwayatHafalan::ekspor');
+
     $routes->get('statistik-hafalan', 'Guru\Statistik::index');
     $routes->get('statistik-hafalan/export', 'Guru\Statistik::export');
 

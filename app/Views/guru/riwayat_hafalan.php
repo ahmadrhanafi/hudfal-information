@@ -63,10 +63,11 @@ $santri = $santri ?? [];
                 hafalan Al-Qur'an (ziyadah dan murojaah) santri binaan kelas Anda.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm"
+            <a href="<?= base_url('guru/riwayat-hafalan/ekspor'); ?>" target="_blank"
+                class="btn btn-outline-secondary btn-sm px-3 rounded-pill bg-white shadow-sm text-decoration-none"
                 style="text-transform: none !important;">
                 <i class="fa-solid fa-file-excel text-success me-1"></i> Ekspor Rekap
-            </button>
+            </a>
         </div>
     </div>
 
