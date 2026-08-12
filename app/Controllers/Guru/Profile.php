@@ -51,7 +51,7 @@ class Profile extends BaseController
         ];
 
         if (!empty($user['ref_id'])) {
-            $rules['nip'] = "required|is_unique[guru.nip,id,{$user['ref_id']}]";
+            $rules['nip'] = "permit_empty|is_unique[guru.nip,id,{$user['ref_id']}]";
             $rules['nama_guru'] = 'required';
             $rules['no_hp'] = 'required';
         }
@@ -73,14 +73,15 @@ class Profile extends BaseController
         $fileFoto = $this->request->getFile('foto');
         if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
             $namaFoto = $fileFoto->getRandomName();
-            $fileFoto->move('upload/profile', $namaFoto);
+            $fileFoto->move(FCPATH . 'uploads/profile', $namaFoto);
 
-            if (!empty($user['foto']) && file_exists('upload/profile/' . $user['foto'])) {
-                @unlink('upload/profile/' . $user['foto']);
+            if (!empty($user['foto']) && file_exists(FCPATH . 'uploads/profile/' . $user['foto'])) {
+                @unlink(FCPATH . 'uploads/profile/' . $user['foto']);
             }
 
             $dataUserUpdate['foto'] = $namaFoto;
-            session()->set('foto', base_url('upload/profile/' . $namaFoto));
+
+            session()->set('foto', $namaFoto);
         }
 
         if ($this->request->getPost('password')) {
@@ -92,7 +93,6 @@ class Profile extends BaseController
 
         if (!empty($user['ref_id'])) {
             $dataGuruUpdate = [
-                'nip' => $this->request->getPost('nip'),
                 'nama_guru' => $this->request->getPost('nama_guru'),
                 'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
                 'no_hp' => $this->request->getPost('no_hp'),
