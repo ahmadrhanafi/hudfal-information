@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\SantriModel;
 use App\Models\HafalanModel;
 use App\Models\PembayaranModel;
+use Dompdf\Dompdf;
 
 class Dashboard extends BaseController
 {
@@ -15,16 +16,16 @@ class Dashboard extends BaseController
 
     public function __construct()
     {
-        $this->santriModel  = new SantriModel();
+        $this->santriModel = new SantriModel();
         $this->hafalanModel = new HafalanModel();
         $this->pembayaranModel = new PembayaranModel();
     }
 
     public function index()
     {
-        $santriModel     = new SantriModel();
+        $santriModel = new SantriModel();
         $this->hafalanModel = new HafalanModel();
-        $idWali          = session()->get('ref_id') ?? session()->get('id');
+        $idWali = session()->get('ref_id') ?? session()->get('id');
 
         $anak = $santriModel->select('santri.*, kelas.nama_kelas')
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
@@ -71,10 +72,10 @@ class Dashboard extends BaseController
         }
 
         $data = [
-            'title'            => 'Dashboard Wali',
-            'anak'             => $anak,
-            'setoran_terbaru'  => $setoranTerbaru,
-            'tagihan_terbaru'  => $tagihanTerbaru,
+            'title' => 'Dashboard Wali',
+            'anak' => $anak,
+            'setoran_terbaru' => $setoranTerbaru,
+            'tagihan_terbaru' => $tagihanTerbaru,
             'stat_jumlah_anak' => count($anak)
         ];
 
@@ -93,11 +94,29 @@ class Dashboard extends BaseController
         }
 
         $data = [
-            'title'  => 'Detail Santri',
-            'icon'   => 'fa-solid fa-user-graduate',
+            'title' => 'Detail Santri',
+            'icon' => 'fa-solid fa-user-graduate',
             'santri' => $santri
         ];
 
         return view('wali/santri-detail', $data);
+    }
+
+    public function cetakKartu($id)
+    {
+        $santri = $this->santriModel->select('santri.*, kelas.nama_kelas, wali.no_hp as no_hp_wali, wali.alamat as alamat_wali')
+            ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+            ->join('wali', 'wali.id = santri.id_wali', 'left')
+            ->find($id);
+
+        if (!$santri)
+            return redirect()->back();
+
+        $dompdf = new Dompdf();
+        $html = view('wali/cetak_ekartu_santri', ['santri' => $santri]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('a7', 'landscape');
+        $dompdf->render();
+        $dompdf->stream("Kartu_Santri_" . $santri['nama_santri'] . ".pdf", ["Attachment" => 0]);
     }
 }

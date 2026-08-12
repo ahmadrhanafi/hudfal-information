@@ -69,7 +69,6 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('administrasi/delete/(:num)', 'Admin\Administrasi::delete/$1');
 
     $routes->get('esertifikat', 'Admin\Esertifikat::index');
-    $routes->get('ekartu', 'Admin\Ekartu::index');
 
     $routes->get('profile', 'Admin\Profile::index');
     $routes->post('profile/update', 'Admin\Profile::update');
@@ -85,6 +84,7 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     $routes->get('santri', 'Guru\Santri::index');
     $routes->get('santri-detail/(:num)', 'Guru\Santri::detail/$1');
     $routes->get('santri/cetak', 'Guru\Santri::cetak');
+    $routes->get('santri/cetakKartu/(:num)', 'Guru\Santri::cetakKartu/$1');
 
     // Manajemen Hafalan
     $routes->get('hafalan', 'Guru\Hafalan::index');
@@ -109,6 +109,7 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
 $routes->group('wali', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'Wali\Dashboard::index');
     $routes->get('santri-detail/(:num)', 'Wali\Dashboard::detailSantri/$1');
+    $routes->get('santri/cetakKartu/(:num)', 'Wali\Dashboard::cetakKartu/$1');
 
     // Riwayat Hafalan
     $routes->get('riwayat-hafalan', 'Wali\RiwayatHafalan::index');
@@ -124,7 +125,6 @@ $routes->group('wali', ['filter' => 'auth'], function ($routes) {
 
     $routes->get('esertifikat', 'Wali\Esertifikat::index');
     $routes->get('statistik-hafalan', 'Wali\Statistik::index');
-    $routes->get('ekartu', 'Wali\Ekartu::index');
 
     $routes->get('profile', 'Wali\Profile::index');
     $routes->post('profile/update', 'Wali\Profile::update');

@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\SantriModel;
 use App\Models\GuruModel;
 use App\Models\KelasModel;
+use Dompdf\Dompdf;
 
 class Santri extends BaseController
 {
@@ -50,11 +51,11 @@ class Santri extends BaseController
             // $santri = $this->santriModel->searchSantri($keyword, $idKelasDiampu, $status)->paginate(10, 'santri');
 
             $data = [
-                'title'      => 'Data Santri',
-                'icon'       => 'fa-solid fa-user-graduate',
-                'santri'     => $santri,
+                'title' => 'Data Santri',
+                'icon' => 'fa-solid fa-user-graduate',
+                'santri' => $santri,
                 'nama_kelas' => $namaKelasString,
-                'role'       => $role
+                'role' => $role
             ];
 
             return view('guru/data_santri', $data);
@@ -77,11 +78,29 @@ class Santri extends BaseController
         }
 
         $data = [
-            'title'  => 'Detail Santri',
+            'title' => 'Detail Santri',
             'santri' => $santri
         ];
 
         return view('guru/santri-detail', $data);
+    }
+
+    public function cetakKartu($id)
+    {
+        $santri = $this->santriModel->select('santri.*, kelas.nama_kelas, wali.no_hp as no_hp_wali, wali.alamat as alamat_wali')
+            ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
+            ->join('wali', 'wali.id = santri.id_wali', 'left')
+            ->find($id);
+
+        if (!$santri)
+            return redirect()->back();
+
+        $dompdf = new Dompdf();
+        $html = view('guru/cetak_ekartu_santri', ['santri' => $santri]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('a7', 'landscape');
+        $dompdf->render();
+        $dompdf->stream("Kartu_Santri_" . $santri['nama_santri'] . ".pdf", ["Attachment" => 0]);
     }
 
     public function cetak()
@@ -106,9 +125,9 @@ class Santri extends BaseController
         $kelas = $kelasModel->find($idKelasDiampu);
 
         $data = [
-            'nama_guru'  => $guru['nama_guru'] ?? '-',
+            'nama_guru' => $guru['nama_guru'] ?? '-',
             'nama_kelas' => $kelas['nama_kelas'] ?? 'Semua Kelas',
-            'santri'     => $santri
+            'santri' => $santri
         ];
 
         // FITUR OPSIONAL: Jika diakses dengan /cetak?print=1 di URL, tampilkan debug isinya
