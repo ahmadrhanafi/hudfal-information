@@ -55,6 +55,10 @@ class Pengaturan extends BaseController
             return redirect()->to('/admin/pengaturan#security')->with('error', 'Kata sandi saat ini salah!');
         }
 
+        if (strlen($newPassword) < 8) {
+            return redirect()->to('/admin/pengaturan#security')->with('error', 'Kata sandi baru minimal harus 8 karakter!');
+        }
+
         if ($newPassword !== $confirmPassword) {
             return redirect()->to('/admin/pengaturan#security')->with('error', 'Konfirmasi kata sandi baru tidak cocok!');
         }

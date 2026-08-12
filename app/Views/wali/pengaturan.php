@@ -2,6 +2,10 @@
 
 <?= $this->section('content') ?>
 
+<?php
+$wali = $wali ?? [];
+?>
+
 <div class="container-fluid px-0">
 
     <!-- Flash Message Floating -->
@@ -49,8 +53,9 @@
 
     <!-- Page Header -->
     <div class="mb-4">
-        <h3 class="fw-bold text-dark mb-1" style="text-transform: none !important;">Pengaturan Akun Wali Santri</h3>
-        <p class="text-muted mb-0 small" style="text-transform: none !important;">Kelola informasi kontak orang tua,
+        <h3 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Pengaturan Akun Wali Santri
+        </h3>
+        <p class="text-secondary mb-0 small" style="text-transform: none !important;">Kelola informasi kontak orang tua,
             informasi ananda, dan sandi portal wali.</p>
     </div>
 
@@ -82,39 +87,61 @@
 
         <!-- Content Area -->
         <div class="col-lg-9">
+
+            <!-- Notifikasi Flash Message -->
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm small mb-3" role="alert">
+                    <i class="fa-solid fa-circle-check me-2"></i> <?= session()->getFlashdata('success'); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm small mb-3" role="alert">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i> <?= session()->getFlashdata('error'); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
             <div class="tab-content" id="settingsWaliTabContent">
 
                 <!-- Tab 1: Profil Orang Tua -->
                 <div class="tab-pane fade show active" id="w-profile" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold text-dark mb-3" style="text-transform: none !important;">Informasi Kontak
-                                Wali Santri</h5>
-                            <p class="text-muted small mb-4">Pastikan nomor WhatsApp dan email aktif untuk menerima
+                            <h5 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Informasi
+                                Kontak Wali Santri</h5>
+                            <p class="text-secondary small mb-4">Pastikan nomor WhatsApp dan email aktif untuk menerima
                                 laporan hafalan & tagihan.</p>
 
-                            <form>
+                            <form action="<?= base_url('wali/pengaturan/update-profile'); ?>" method="POST">
+                                <?= csrf_field(); ?>
                                 <div class="row g-3 mb-3">
                                     <div class="col-md-6">
-                                        <label class="form-label small fw-semibold text-dark">Nama Ayah / Bunda /
+                                        <label class="form-label small fw-semibold text-dark-mode">Nama Ayah / Bunda /
                                             Wali</label>
-                                        <input type="text" class="form-control form-control-sm bg-light border-0 py-2"
-                                            value="Bapak Abdullah & Ibu Siti">
+                                        <input type="text" name="nama_wali"
+                                            class="form-control form-control-sm bg-light border-0 py-2"
+                                            value="<?= esc($wali['nama_wali'] ?? ''); ?>" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label small fw-semibold text-dark">Nomor WhatsApp (Penerima
-                                            Notifikasi)</label>
-                                        <input type="text" class="form-control form-control-sm bg-light border-0 py-2"
-                                            value="081987654321">
+                                        <label class="form-label small fw-semibold text-dark-mode">Nomor
+                                            WhatsApp</label>
+                                        <input type="text" name="no_hp"
+                                            class="form-control form-control-sm bg-light border-0 py-2"
+                                            value="<?= esc($wali['no_hp'] ?? ''); ?>" required>
                                     </div>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="form-label small fw-semibold text-dark">Alamat Rumah Domisili</label>
-                                    <textarea class="form-control bg-light border-0"
-                                        rows="3">Jl. Mawar Indah Blok B2 No. 12, Depok, Jawa Barat</textarea>
+                                    <label class="form-label small fw-semibold text-dark-mode">Alamat Rumah
+                                        Domisili</label>
+                                    <textarea name="alamat" class="form-control bg-light border-0" rows="3"
+                                        required><?= esc($wali['alamat'] ?? ''); ?></textarea>
                                 </div>
-                                <button type="submit" class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Simpan
-                                    Kontak</button>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit"
+                                        class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Simpan
+                                        Perubahan</button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -124,29 +151,35 @@
                 <div class="tab-pane fade" id="w-student" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold text-dark mb-3" style="text-transform: none !important;">Informasi Santri
-                                (Anak Terhubung)</h5>
-                            <p class="text-muted small mb-4">Data santri yang terhubung dengan akun portal wali Anda.
-                            </p>
+                            <h5 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Informasi
+                                Ananda (Santri Terhubung)</h5>
+                            <p class="text-secondary small mb-4">Data santri yang terhubung dengan akun portal wali
+                                Anda.</p>
 
-                            <div class="p-3 bg-light rounded-4 mb-3 d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                        style="width: 45px; height: 45px;">
-                                        AZ
+                            <?php if (!empty($list_santri)): ?>
+                                <?php foreach ($list_santri as $santri): ?>
+                                    <div class="p-3 bg-light rounded-4 mb-3 d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                                style="width: 45px; height: 45px;">
+                                                <?= strtoupper(substr($santri['nama_santri'], 0, 2)); ?>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-semibold text-dark mb-1" style="font-size: 0.95rem;">
+                                                    <?= esc($santri['nama_santri']); ?>
+                                                </h6>
+                                                <small class="text-muted">NIS: <?= esc($santri['nis']); ?> • Kelas
+                                                    <?= esc($santri['nama_kelas'] ?? '-'); ?></small>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small">Terhubung</span>
                                     </div>
-                                    <div>
-                                        <h6 class="fw-semibold text-dark mb-1" style="font-size: 0.95rem;">Ahmad Zaki
-                                            Al-Faruq</h6>
-                                        <small class="text-muted">NIS: 202401001 • Kelas 8A Tsanawiyah</small>
-                                    </div>
-                                </div>
-                                <span
-                                    class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small">Terhubung</span>
-                            </div>
-                            <small class="text-muted"><i class="fa-solid fa-circle-info me-1"></i> Jika Anda memiliki
-                                lebih dari satu anak di pesantren ini, silakan hubungi bagian administrasi untuk
-                                penautan akun ganda.</small>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div class="text-center py-4 text-muted small">Belum ada data santri/ananda yang terhubung
+                                    dengan akun Anda.</div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -155,30 +188,37 @@
                 <div class="tab-pane fade" id="w-security" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold text-dark mb-3" style="text-transform: none !important;">Keamanan Portal
-                                Wali</h5>
-                            <p class="text-muted small mb-4">Ganti kata sandi akun portal wali Anda.</p>
+                            <h5 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Keamanan
+                                Portal Wali</h5>
+                            <p class="text-secondary small mb-4">Ganti kata sandi akun portal wali Anda.</p>
 
-                            <form>
+                            <form action="<?= base_url('wali/pengaturan/update-password'); ?>" method="POST">
+                                <?= csrf_field(); ?>
                                 <div class="mb-3">
-                                    <label class="form-label small fw-semibold text-dark">Kata Sandi Saat Ini</label>
-                                    <input type="password" class="form-control form-control-sm bg-light border-0 py-2"
-                                        placeholder="••••••••••••">
+                                    <label class="form-label small fw-semibold text-dark-mode">Kata Sandi Saat
+                                        Ini</label>
+                                    <input type="password" name="current_password"
+                                        class="form-control form-control-sm bg-light border-0 py-2"
+                                        placeholder="••••••••••••" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label small fw-semibold text-dark">Kata Sandi Baru</label>
-                                    <input type="password" class="form-control form-control-sm bg-light border-0 py-2"
-                                        placeholder="Minimal 8 karakter">
+                                    <label class="form-label small fw-semibold text-dark-mode">Kata Sandi Baru</label>
+                                    <input type="password" name="new_password"
+                                        class="form-control form-control-sm bg-light border-0 py-2"
+                                        placeholder="Minimal 8 karakter" required>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="form-label small fw-semibold text-dark">Konfirmasi Kata Sandi
+                                    <label class="form-label small fw-semibold text-dark-mode">Konfirmasi Kata Sandi
                                         Baru</label>
-                                    <input type="password" class="form-control form-control-sm bg-light border-0 py-2"
-                                        placeholder="Ulangi sandi baru">
+                                    <input type="password" name="confirm_password"
+                                        class="form-control form-control-sm bg-light border-0 py-2"
+                                        placeholder="Ulangi sandi baru" required>
                                 </div>
-                                <button type="submit"
-                                    class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Perbarui Kata
-                                    Sandi</button>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit"
+                                        class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Perbarui Kata
+                                        Sandi</button>
+                                </div>
                             </form>
                         </div>
                     </div>

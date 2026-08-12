@@ -102,6 +102,8 @@ $routes->group('guru', ['filter' => 'auth'], function ($routes) {
     $routes->post('profile/update', 'Guru\Profile::update');
 
     $routes->get('pengaturan', 'Guru\Pengaturan::index');
+    $routes->post('pengaturan/update-profile', 'Guru\Pengaturan::updateProfile');
+    $routes->post('pengaturan/update-password', 'Guru\Pengaturan::updatePassword');
 });
 
 $routes->group('wali', ['filter' => 'auth'], function ($routes) {
@@ -128,4 +130,6 @@ $routes->group('wali', ['filter' => 'auth'], function ($routes) {
     $routes->post('profile/update', 'Wali\Profile::update');
 
     $routes->get('pengaturan', 'Wali\Pengaturan::index');
+    $routes->post('pengaturan/update-profile', 'Wali\Pengaturan::updateProfile');
+    $routes->post('pengaturan/update-password', 'Wali\Pengaturan::updatePassword');
 });
