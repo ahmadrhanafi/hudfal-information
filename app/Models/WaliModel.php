@@ -6,18 +6,18 @@ use CodeIgniter\Model;
 
 class WaliModel extends Model
 {
-    protected $table            = 'wali';
-    protected $primaryKey       = 'id';
+    protected $table = 'wali';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $allowedFields    = ['nama_wali', 'no_hp', 'alamat'];
+    protected $returnType = 'array';
+    protected $useSoftDeletes = false;
+    protected $allowedFields = ['nama_wali', 'no_hp', 'alamat'];
 
     // Dates
     protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    protected $dateFormat = 'datetime';
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
 
     public function getWaliWithSantri()
     {
@@ -32,6 +32,15 @@ class WaliModel extends Model
                 ->where('santri.id_wali', $w['id'])
                 ->get()
                 ->getResultArray();
+
+            $user = $db->table('users')
+                ->select('foto')
+                ->where('ref_id', $w['id'])
+                ->where('role', 'wali')
+                ->get()
+                ->getRowArray();
+
+            $w['foto'] = $user['foto'] ?? null;
         }
 
         return $wali;

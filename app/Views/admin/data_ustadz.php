@@ -134,10 +134,17 @@ $kelas = $kelas ?? [];
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                                style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                                <?= $initials; ?>
-                                            </div>
+                                            <?php if (!empty($g['foto']) && file_exists('uploads/profile/' . $g['foto'])): ?>
+                                                <img src="<?= base_url('uploads/profile/' . $g['foto']); ?>"
+                                                    alt="Foto <?= esc($g['nama_guru']); ?>"
+                                                    class="rounded-circle object-fit-cover shadow-sm"
+                                                    style="width: 38px; height: 38px;">
+                                            <?php else: ?>
+                                                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                                    style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                    <?= $initials; ?>
+                                                </div>
+                                            <?php endif; ?>
                                             <div>
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($g['nama_guru']); ?>
@@ -149,7 +156,7 @@ $kelas = $kelas ?? [];
                                         </div>
                                     </td>
                                     <td>
-                                        <a href="https://wa.me/<?= esc($w['no_hp'] ?? ''); ?>" target="_blank"
+                                        <a href="https://wa.me/<?= esc($g['no_hp'] ?? ''); ?>" target="_blank"
                                             rel="noopener noreferrer">
                                             <span class="badge bg-success text-light border">
                                                 <i class="fa-brands fa-whatsapp text-light me-1"></i> Click to Chat
@@ -237,11 +244,10 @@ $kelas = $kelas ?? [];
                 <h5 class="modal-title fw-bold text-dark">Tambah Pengajar</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="<?= base_url('admin/ustadz/store'); ?>" method="post">
+            <form action="<?= base_url('admin/ustadz/store'); ?>" method="post" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <div class="modal-body py-4">
 
-                    <!-- NIP sudah dihapus, ditambahkan info sistem -->
                     <div class="mb-3 p-2 bg-light rounded-3">
                         <small class="text-muted">
                             <i class="fa-solid fa-circle-info me-1"></i> NIP akan dibuat otomatis oleh sistem setelah
@@ -276,6 +282,13 @@ $kelas = $kelas ?? [];
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <!-- Tambahan Input Foto -->
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Foto Profil</label>
+                        <input type="file" name="foto" class="form-control" accept="image/png, image/jpeg, image/jpg"
+                            required>
+                        <div class="form-text text-muted">Format: JPG, JPEG, PNG (Maks. 2MB)</div>
+                    </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Batal</button>
@@ -294,7 +307,7 @@ $kelas = $kelas ?? [];
                 <h5 class="modal-title fw-bold text-dark">Edit Data Pengajar</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="formEdit" action="" method="post">
+            <form id="formEdit" action="" method="post" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <div class="modal-body py-4">
                     <div class="mb-3">
@@ -334,6 +347,11 @@ $kelas = $kelas ?? [];
                             <option value="Aktif">Aktif</option>
                             <option value="Non-Aktif">Non-Aktif</option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-muted">Ganti Foto Profil</label>
+                        <input type="file" name="foto" class="form-control" accept="image/png, image/jpeg, image/jpg">
+                        <div class="form-text text-muted">Kosongkan jika tidak ingin mengubah foto.</div>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">

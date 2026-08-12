@@ -51,9 +51,10 @@ class Ustadz extends BaseController
                 'nama_guru' => 'required|min_length[3]',
                 'no_hp' => 'required|numeric|min_length[10]',
                 'jenis_kelamin' => 'required|in_list[L,P]',
+                'foto' => 'uploaded[foto]|max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]'
             ])
         ) {
-            return redirect()->back()->withInput()->with('error', 'Gagal validasi data pengajar.');
+            return redirect()->back()->withInput()->with('error', 'Gagal validasi data atau format foto tidak sesuai (Maks. 2MB).');
         }
 
         $tahun = date('Y');
@@ -76,6 +77,15 @@ class Ustadz extends BaseController
             $idKelasDiampu = null;
         }
 
+        // Handle Upload Foto ke tabel users
+        $fileFoto = $this->request->getFile('foto');
+        $namaFoto = null;
+        if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
+            $namaFoto = $fileFoto->getRandomName();
+            $fileFoto->move('uploads/profile', $namaFoto);
+        }
+
+        // Simpan data guru
         $this->guruModel->save([
             'nip' => $nip,
             'nama_guru' => $namaGuru,
@@ -87,12 +97,14 @@ class Ustadz extends BaseController
 
         $guruId = $this->guruModel->insertID();
 
+        // Simpan data user beserta foto
         $this->userModel->save([
             'name' => $namaGuru,
             'username' => $nip,
             'password' => password_hash($nip, PASSWORD_DEFAULT),
             'role' => 'guru',
-            'ref_id' => $guruId
+            'ref_id' => $guruId,
+            'foto' => $namaFoto
         ]);
 
         return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data pengajar dan akun login berhasil ditambahkan! NIP: ' . $nip);
@@ -105,6 +117,7 @@ class Ustadz extends BaseController
                 'nama_guru' => 'required|min_length[3]',
                 'no_hp' => 'required|numeric|min_length[10]',
                 'jenis_kelamin' => 'required|in_list[L,P]',
+                'foto' => 'max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]'
             ])
         ) {
             return redirect()->back()->withInput()->with('error', 'Gagal validasi data pengajar.');
@@ -135,11 +148,26 @@ class Ustadz extends BaseController
         ]);
 
         $user = $this->userModel->where('ref_id', $id)->where('role', 'guru')->first();
+
         if ($user) {
-            $this->userModel->update($user['id'], [
+            $dataUpdateUser = [
                 'name' => $namaGuru,
                 'username' => $nip
-            ]);
+            ];
+
+            $fileFoto = $this->request->getFile('foto');
+            if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
+                $namaFotoBaru = $fileFoto->getRandomName();
+                $fileFoto->move('uploads/profile', $namaFotoBaru);
+
+                if (!empty($user['foto']) && file_exists('uploads/profile/' . $user['foto'])) {
+                    unlink('uploads/profile/' . $user['foto']);
+                }
+
+                $dataUpdateUser['foto'] = $namaFotoBaru;
+            }
+
+            $this->userModel->update($user['id'], $dataUpdateUser);
         }
 
         return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data pengajar berhasil diperbarui!');
@@ -147,7 +175,15 @@ class Ustadz extends BaseController
 
     public function delete($id)
     {
-        $this->userModel->where('ref_id', $id)->where('role', 'guru')->delete();
+        // Ambil data user untuk menghapus file foto fisiknya
+        $user = $this->userModel->where('ref_id', $id)->where('role', 'guru')->first();
+        if ($user) {
+            if (!empty($user['foto']) && file_exists('uploads/profile/' . $user['foto'])) {
+                unlink('uploads/profile/' . $user['foto']);
+            }
+            $this->userModel->delete($user['id']);
+        }
+
         $this->guruModel->delete($id);
 
         return redirect()->to(base_url('admin/ustadz'))->with('success', 'Data pengajar dan akun login berhasil dihapus!');

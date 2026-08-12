@@ -142,15 +142,16 @@
                                     </td>
                                     <td class="text-muted small"><?= esc($w['alamat']); ?></td>
                                     <td class="text-center">
-                                        <!-- Tombol Detail Baru -->
+                                        <!-- detail -->
                                         <button type="button" class="btn btn-sm btn-light text-primary border-0 rounded-2"
                                             title="Detail" data-bs-toggle="modal" data-bs-target="#modalDetail"
                                             data-nama="<?= esc($w['nama_wali']); ?>" data-nohp="<?= esc($w['no_hp'] ?? ''); ?>"
-                                            data-alamat="<?= esc($w['alamat']); ?>"
+                                            data-alamat="<?= esc($w['alamat']); ?>" data-foto="<?= $w['foto']; ?>"
                                             data-santri='<?= json_encode($w['santri'] ?? []); ?>'>
                                             <i class="fa-solid fa-eye"></i>
                                         </button>
 
+                                        <!-- edit -->
                                         <button type="button"
                                             class="btn btn-sm btn-light text-warning border-0 rounded-2 btn-edit" title="Edit"
                                             data-bs-toggle="modal" data-bs-target="#modalEdit" data-id="<?= $w['id']; ?>"
@@ -158,6 +159,8 @@
                                             data-alamat="<?= esc($w['alamat']); ?>">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
+
+                                        <!-- hapus -->
                                         <a href="<?= base_url('admin/wali-santri/delete/' . $w['id']); ?>"
                                             onclick="return confirm('Yakin ingin menghapus data wali ini?')"
                                             class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus">
@@ -207,9 +210,13 @@
                     <h5 class="modal-title fw-bold text-dark">Tambah Data Wali Santri</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="<?= base_url('admin/wali-santri/store'); ?>" method="post">
+                <form action="<?= base_url('admin/wali-santri/store'); ?>" method="post" enctype="multipart/form-data">
                     <?= csrf_field(); ?>
                     <div class="modal-body py-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-medium small text-muted">Foto Profil</label>
+                            <input type="file" name="foto" class="form-control" accept="image/*">
+                        </div>
                         <div class="mb-3">
                             <label class="form-label fw-medium small text-muted">Nama Wali</label>
                             <input type="text" name="nama_wali" class="form-control" placeholder="Contoh: Bpk. Abdul"
@@ -243,9 +250,14 @@
                     <h5 class="modal-title fw-bold text-dark">Edit Data Wali Santri</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="formEdit" action="" method="post">
+                <form id="formEdit" action="" method="post" enctype="multipart/form-data">
                     <?= csrf_field(); ?>
                     <div class="modal-body py-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-medium small text-muted">Ganti Foto Profil (Biarkan jika tidak
+                                ingin diganti)</label>
+                            <input type="file" name="foto" class="form-control" accept="image/*">
+                        </div>
                         <div class="mb-3">
                             <label class="form-label fw-medium small text-muted">Nama Wali</label>
                             <input type="text" name="nama_wali" id="editNama" class="form-control" required>
@@ -292,17 +304,36 @@
                 <div class="modal-body p-4">
 
                     <!-- Card Informasi Singkat Wali (Lebih Estetik) -->
-                    <div class="p-4 rounded-4 border bg-white shadow-sm mb-4 position-relative overflow-hidden">
-                        <!-- Aksen garis hijau di kiri -->
-                        <div class="position-absolute start-0 top-0 bottom-0 bg-success" style="width: 5px;"></div>
+                    <div class="p-4 rounded-4 border bg-white shadow-sm mb-4 position-relative overflow-hidden pt-5">
+                        <!-- Aksen garis hijau di atas -->
+                        <div class="position-absolute start-0 top-0 end-0 bg-success" style="height: 5px;"></div>
 
                         <div class="ps-2">
-                            <span
-                                class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-pill small fw-semibold mb-2">
-                                <i class="fa-solid fa-id-card me-1"></i> Profil Wali Santri
-                            </span>
-                            <h5 class="fw-bold text-dark mb-3" id="detailNamaWali">-</h5>
+                            <!-- Bagian Header (Foto di Kiri, Nama & Badge di Kanan) -->
+                            <div class="d-flex align-items-center mb-3">
+                                <!-- FOTO / INISIAL DI KIRI -->
+                                <div class="me-3 flex-shrink-0">
+                                    <img id="detailFotoWali" src=""
+                                        class="rounded-circle shadow-sm border border-2 border-white"
+                                        style="width: 75px; height: 75px; object-fit: cover;" alt="Foto Wali">
+                                    <div id="detailInisialWali"
+                                        class="bg-success bg-opacity-10 text-success rounded-circle align-items-center justify-content-center fw-bold"
+                                        style="width: 75px; height: 75px; font-size: 1.5rem;">
+                                        -
+                                    </div>
+                                </div>
 
+                                <!-- BADGE & NAMA DI KANAN -->
+                                <div>
+                                    <span
+                                        class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-pill small fw-semibold mb-1">
+                                        <i class="fa-solid fa-id-card me-1"></i> Profil Wali Santri
+                                    </span>
+                                    <h5 class="fw-bold text-dark mb-0" id="detailNamaWali">-</h5>
+                                </div>
+                            </div>
+
+                            <!-- Bagian Kontak (No HP & Alamat) -->
                             <div class="row g-2">
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center text-secondary small">
@@ -329,24 +360,13 @@
                         <h6 class="fw-bold text-dark m-0">
                             <i class="fa-solid fa-children text-success me-2"></i>Daftar Anak / Santri Asuhan
                         </h6>
+                        <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-pill small"
+                            id="badgeTotalAnak">0 Anak</span>
                     </div>
 
-                    <div class="table-responsive rounded-4 border overflow-hidden">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="bg-light text-muted small text-uppercase"
-                                style="font-size: 0.7rem; letter-spacing: 0.5px;">
-                                <tr>
-                                    <th class="text-center py-3" width="8%">#</th>
-                                    <th class="py-3">NIS</th>
-                                    <th class="py-3">Nama Santri</th>
-                                    <th class="py-3">Jenis Kelamin</th>
-                                    <th class="py-3">Kelas</th>
-                                </tr>
-                            </thead>
-                            <tbody id="listAnakSantri" class="border-top-0">
-                                <!-- Data anak akan dimasukkan otomatis lewat JavaScript -->
-                            </tbody>
-                        </table>
+                    <div id="listAnakSantri" class="d-flex flex-column gap-2"
+                        style="max-height: 280px; overflow-y: auto;">
+                        <!-- Data anaknya masing-masing dimasukkan otomatis lewat JavaScript -->
                     </div>
 
                 </div>
@@ -411,6 +431,7 @@
                 const namaWali = button.getAttribute('data-nama');
                 const noHp = button.getAttribute('data-nohp');
                 const alamat = button.getAttribute('data-alamat');
+                const fotoWali = button.getAttribute('data-foto');
 
                 // Parse data JSON santri/anak
                 let listSantri = [];
@@ -420,27 +441,122 @@
                     listSantri = [];
                 }
 
-                // Masukkan data ke dalam elemen modal
-                modalDetail.querySelector('#detailNamaWali').textContent = namaWali;
-                modalDetail.querySelector('#detailNoHp').textContent = noHp;
-                modalDetail.querySelector('#detailAlamat').textContent = alamat;
+                modalDetail.querySelector('#detailNamaWali').textContent = namaWali || '-';
+                modalDetail.querySelector('#detailNoHp').textContent = noHp || '-';
+                modalDetail.querySelector('#detailAlamat').textContent = alamat || '-';
 
-                const tbodyAnak = modalDetail.querySelector('#listAnakSantri');
-                tbodyAnak.innerHTML = ''; // Kosongkan dulu
+                // --- HANDLE TAMPILAN FOTO / INISIAL WALI ---
+                const imgEl = modalDetail.querySelector('#detailFotoWali');
+                const inisialEl = modalDetail.querySelector('#detailInisialWali');
+
+                if (fotoWali && fotoWali !== '' && fotoWali !== 'null' && fotoWali !== 'undefined') {
+                    imgEl.src = "<?= base_url('uploads/profile/'); ?>/" + fotoWali;
+                    imgEl.style.display = 'block';
+                    inisialEl.style.display = 'none';
+                } else {
+                    imgEl.style.display = 'none';
+                    inisialEl.style.display = 'flex';
+
+                    // Logika 2 huruf
+                    if (namaWali) {
+                        const kata = namaWali.trim().split(/\s+/);
+                        let inisial = '';
+
+                        if (kata.length >= 2) {
+                            inisial = kata[0].charAt(0) + kata[1].charAt(0);
+                        } else if (kata[0].length >= 2) {
+                            inisial = kata[0].substring(0, 2);
+                        } else {
+                            inisial = kata[0].charAt(0);
+                        }
+
+                        inisialEl.textContent = inisial.toUpperCase();
+                    } else {
+                        inisialEl.textContent = '-';
+                    }
+                }
+                // ---------------------------------
+
+                const containerAnak = modalDetail.querySelector('#listAnakSantri');
+                containerAnak.innerHTML = '';
 
                 if (listSantri.length > 0) {
+                    // Update badge jumlah anak di sebelah kanan header
+                    const badgeTotal = modalDetail.querySelector('#badgeTotalAnak');
+                    if (badgeTotal) badgeTotal.textContent = listSantri.length + ' Anak';
+
                     listSantri.forEach((anak, index) => {
-                        let row = `<tr>
-                        <td class="text-center">${index + 1}</td>
-                        <td>${anak.nis ?? '-'}</td>
-                        <td class="fw-semibold">${anak.nama_santri ?? '-'}</td>
-                        <td>${anak.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
-                        <td><span class="badge bg-success-subtle text-success">${anak.nama_kelas ?? 'Belum ada kelas'}</span></td>
-                    </tr>`;
-                        tbodyAnak.insertAdjacentHTML('beforeend', row);
+                        const isLaki = anak.jenis_kelamin === 'L' || anak.jenis_kelamin === 'Laki-laki';
+
+                        // Cek apakah ada field foto santri (sesuaikan 'anak.foto' dengan nama field di database kamu)
+                        const punyaFoto = anak.foto && anak.foto !== '' && anak.foto !== 'null' && anak.foto !== 'undefined';
+
+                        let avatarHtml = '';
+                        if (punyaFoto) {
+                            avatarHtml = `<img src="<?= base_url('uploads/santri/'); ?>/${anak.foto}" 
+                class="rounded-circle shadow-sm border border-2 border-white flex-shrink-0" 
+                style="width: 45px; height: 45px; object-fit: cover;" 
+                alt="Foto Santri">`;
+                        } else {
+                            let namaSantri = anak.nama_santri ?? 'No Name';
+                            const kata = namaSantri.trim().split(/\s+/);
+                            let inisial = '';
+
+                            if (kata.length >= 2) {
+                                inisial = kata[0].charAt(0) + kata[1].charAt(0);
+                            } else if (kata[0].length >= 2) {
+                                inisial = kata[0].substring(0, 2);
+                            } else {
+                                inisial = kata[0].charAt(0);
+                            }
+                            inisial = inisial.toUpperCase();
+
+                            const bgClass = isLaki ? 'bg-primary bg-opacity-10 text-primary' : 'bg-danger bg-opacity-10 text-danger';
+
+                            avatarHtml = `<div class="rounded-circle ${bgClass} d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm" style="width: 45px; height: 45px; font-size: 1rem;">
+                ${inisial}
+            </div>`;
+                        }
+
+                        // Desain Card per Santri
+                        let cardItem = `
+        <div class="p-3 rounded-4 border bg-white shadow-sm d-flex align-items-center justify-content-between transition-hover">
+            <div class="d-flex align-items-center gap-3">
+                <!-- Avatar (Foto / Inisial) -->
+                ${avatarHtml}
+                
+                <!-- Detail Teks -->
+                <div>
+                    <h6 class="fw-bold text-dark mb-1">${anak.nama_santri ?? '-'}</h6>
+                    <div class="d-flex align-items-center gap-2 text-muted small">
+                        <span><i class="fa-solid fa-id-badge me-1"></i>NIS: <strong class="text-dark">${anak.nis ?? '-'}</strong></span>
+                        <span>•</span>
+                        <span class="${isLaki ? 'text-primary' : 'text-danger'} fw-semibold">
+                            <i class="fa-solid ${isLaki ? 'fa-mars' : 'fa-venus'} me-1"></i>${isLaki ? 'Laki-laki' : 'Perempuan'}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badge Kelas di Kanan -->
+            <div>
+                <span class="badge bg-success-subtle text-success px-3 py-2 mt-5 rounded-pill fw-semibold">
+                    <i class="fa-solid fa-school me-1"></i> ${anak.nama_kelas ?? 'Belum ada kelas'}
+                </span>
+            </div>
+        </div>`;
+
+                        containerAnak.insertAdjacentHTML('beforeend', cardItem);
                     });
                 } else {
-                    tbodyAnak.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Wali ini belum memiliki data anak/santri yang terdaftar.</td></tr>`;
+                    const badgeTotal = modalDetail.querySelector('#badgeTotalAnak');
+                    if (badgeTotal) badgeTotal.textContent = '0 Anak';
+
+                    containerAnak.innerHTML = `
+    <div class="text-center text-muted py-4 border rounded-4 bg-light">
+        <i class="fa-solid fa-face-smile fa-2x mb-2 opacity-50"></i>
+        <p class="mb-0 small">Wali ini belum memiliki data anak/santri yang terdaftar.</p>
+    </div>`;
                 }
             });
         }

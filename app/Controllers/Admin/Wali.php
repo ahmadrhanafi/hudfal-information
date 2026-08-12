@@ -52,7 +52,51 @@ class Wali extends BaseController
             !$this->validate([
                 'nama_wali' => 'required|min_length[3]',
                 'no_hp' => 'required|numeric|min_length[10]',
-                'alamat' => 'required'
+                'alamat' => 'required',
+                'foto' => 'uploaded[foto]|max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]'
+            ])
+        ) {
+            return redirect()->back()->withInput()->with('error', 'Gagal validasi data wali santri atau format foto tidak sesuai (Maks. 2MB).');
+        }
+
+        $namaWali = $this->request->getVar('nama_wali');
+        $noHp = $this->request->getVar('no_hp');
+
+        $fileFoto = $this->request->getFile('foto');
+        $namaFoto = null;
+        if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
+            $namaFoto = $fileFoto->getRandomName();
+            $fileFoto->move('uploads/profile', $namaFoto);
+        }
+
+        $this->waliModel->save([
+            'nama_wali' => $namaWali,
+            'no_hp' => $noHp,
+            'alamat' => $this->request->getVar('alamat'),
+        ]);
+
+        $waliId = $this->waliModel->insertID();
+
+        $this->userModel->save([
+            'name' => $namaWali,
+            'username' => $noHp,
+            'password' => password_hash($noHp, PASSWORD_DEFAULT),
+            'role' => 'wali',
+            'ref_id' => $waliId,
+            'foto' => $namaFoto
+        ]);
+
+        return redirect()->to(base_url('admin/wali-santri'))->with('success', 'Data wali santri dan akun login berhasil ditambahkan!');
+    }
+
+    public function update($id)
+    {
+        if (
+            !$this->validate([
+                'nama_wali' => 'required|min_length[3]',
+                'no_hp' => 'required|numeric|min_length[10]',
+                'alamat' => 'required',
+                'foto' => 'max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]'
             ])
         ) {
             return redirect()->back()->withInput()->with('error', 'Gagal validasi data wali santri.');
@@ -61,47 +105,32 @@ class Wali extends BaseController
         $namaWali = $this->request->getVar('nama_wali');
         $noHp = $this->request->getVar('no_hp');
 
-        // 1. Simpan data wali
-        $this->waliModel->save([
-            'nama_wali' => $namaWali,
-            'no_hp' => $noHp,
-            'alamat' => $this->request->getVar('alamat'),
-        ]);
-
-        // Ambil ID wali yang baru saja disimpan
-        $waliId = $this->waliModel->insertID();
-
-        // 2. Otomatis buatkan akun user yang sinkron dengan struktur migration
-        $this->userModel->save([
-            'name' => $namaWali,
-            'username' => $noHp, // Menggunakan nomor HP sebagai username login
-            'password' => password_hash($noHp, PASSWORD_DEFAULT), // Default password dari no HP
-            'role' => 'wali',
-            'ref_id' => $waliId
-        ]);
-
-        return redirect()->to(base_url('admin/wali-santri'))->with('success', 'Data wali santri dan akun login berhasil ditambahkan!');
-    }
-
-    public function update($id)
-    {
-        $namaWali = $this->request->getVar('nama_wali');
-        $noHp = $this->request->getVar('no_hp');
-
-        // Update data wali
         $this->waliModel->update($id, [
             'nama_wali' => $namaWali,
             'no_hp' => $noHp,
             'alamat' => $this->request->getVar('alamat'),
         ]);
 
-        // Opsional: Sinkronisasi perubahan nama/username ke tabel users berdasarkan ref_id
         $user = $this->userModel->where('ref_id', $id)->where('role', 'wali')->first();
         if ($user) {
-            $this->userModel->update($user['id'], [
+            $dataUpdateUser = [
                 'name' => $namaWali,
                 'username' => $noHp
-            ]);
+            ];
+
+            $fileFoto = $this->request->getFile('foto');
+            if ($fileFoto && $fileFoto->isValid() && !$fileFoto->hasMoved()) {
+                $namaFotoBaru = $fileFoto->getRandomName();
+                $fileFoto->move('uploads/profile', $namaFotoBaru);
+
+                if (!empty($user['foto']) && file_exists('uploads/profile/' . $user['foto'])) {
+                    unlink('uploads/profile/' . $user['foto']);
+                }
+
+                $dataUpdateUser['foto'] = $namaFotoBaru;
+            }
+
+            $this->userModel->update($user['id'], $dataUpdateUser);
         }
 
         return redirect()->to(base_url('admin/wali-santri'))->with('success', 'Data wali santri berhasil diperbarui!');
@@ -109,10 +138,14 @@ class Wali extends BaseController
 
     public function delete($id)
     {
-        // Hapus akun user yang berelasi dengan wali ini terlebih dahulu
-        $this->userModel->where('ref_id', $id)->where('role', 'wali')->delete();
+        $user = $this->userModel->where('ref_id', $id)->where('role', 'wali')->first();
+        if ($user) {
+            if (!empty($user['foto']) && file_exists('uploads/profile/' . $user['foto'])) {
+                unlink('uploads/profile/' . $user['foto']);
+            }
+            $this->userModel->delete($user['id']);
+        }
 
-        // Hapus data wali
         $this->waliModel->delete($id);
 
         return redirect()->to(base_url('admin/wali-santri'))->with('success', 'Data wali santri dan akun login berhasil dihapus!');
