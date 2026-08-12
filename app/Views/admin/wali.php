@@ -109,6 +109,7 @@
                             $no = ($currentPage - 1) * $perPage + 1;
 
                             foreach ($wali as $w):
+                                $fotoWali = !empty($w['foto']) && $w['foto'] !== 'null' && $w['foto'] !== 'undefined';
                                 ?>
                                 <?php
                                 $words = explode(' ', $w['nama_wali'] ?? '');
@@ -118,10 +119,16 @@
                                     <td class="text-center"><?= $no++; ?></td>
                                     <td class="fw-semibold text-dark">
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                                style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                                <?= $initials; ?>
-                                            </div>
+                                            <?php if ($fotoWali): ?>
+                                                <img src="<?= base_url('uploads/profile/' . $w['foto']); ?>"
+                                                    class="rounded-circle shadow-sm border border-2 border-white flex-shrink-0"
+                                                    style="width: 38px; height: 38px; object-fit: cover;" alt="Foto Wali">
+                                            <?php else: ?>
+                                                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+                                                    style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                    <?= $initials; ?>
+                                                </div>
+                                            <?php endif; ?>
                                             <div>
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($w['nama_wali']); ?>
