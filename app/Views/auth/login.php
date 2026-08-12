@@ -84,6 +84,20 @@
         .text-muted-gray {
             color: #6c757d !important;
         }
+
+        @media (max-width: 768px) {
+            body {
+                justify-content: center !important;
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+            }
+
+            .login-card {
+                width: 100% !important;
+                max-width: 420px !important;
+                padding: 30px !important;
+            }
+        }
     </style>
 </head>
 
