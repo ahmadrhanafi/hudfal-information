@@ -262,10 +262,20 @@
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-<?= $statusClass; ?> bg-opacity-10 text-<?= $statusClass; ?> rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                                style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                                <?= $initials; ?>
-                                            </div>
+                                            <?php if (!empty($row['foto_santri']) && file_exists('uploads/santri/' . $row['foto_santri'])): ?>
+                                                <img src="<?= base_url('uploads/santri/' . $row['foto_santri']); ?>"
+                                                    alt="Foto <?= esc($row['nama_santri']); ?>"
+                                                    class="rounded-circle object-fit-cover shadow-sm" width="38" height="38">
+                                            <?php else: ?>
+                                                <?php
+                                                $words = explode(' ', $row['nama_santri']);
+                                                $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+                                                ?>
+                                                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                                    style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                    <?= $initials; ?>
+                                                </div>
+                                            <?php endif; ?>
                                             <div>
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($row['nama_santri']); ?>
@@ -562,7 +572,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">Belum ada data riwayat transaksi
+                                <td colspan="7" class="text-center py-4 text-muted">Belum ada data riwayat transaksi
                                     pembayaran.</td>
                             </tr>
                         <?php endif; ?>

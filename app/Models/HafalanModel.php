@@ -651,7 +651,7 @@ class HafalanModel extends Model
     // Fungsi untuk mengambil data hafalan lengkap dengan relasi santri dan guru
     public function getHafalanWithRelations($id = null)
     {
-        $this->select('hafalan.*, santri.nama_santri, guru.nama_guru, kelas.nama_kelas AS nama_kelas')
+        $this->select('hafalan.*, santri.nama_santri, santri.foto AS foto_santri, guru.nama_guru, kelas.nama_kelas AS nama_kelas')
             ->join('santri', 'santri.id = hafalan.id_santri', 'left')
             ->join('guru', 'guru.id = hafalan.id_guru', 'left')
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left');

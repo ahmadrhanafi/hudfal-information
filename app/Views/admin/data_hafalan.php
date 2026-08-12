@@ -158,10 +158,16 @@ $hafalan = $hafalan ?? [];
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                                style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                                <?= $initials; ?>
-                                            </div>
+                                            <?php if (!empty($h['foto_santri']) && file_exists('uploads/santri/' . $h['foto_santri'])): ?>
+                                                <img src="<?= base_url('uploads/santri/' . $h['foto_santri']); ?>"
+                                                    alt="Foto <?= esc($h['nama_santri']); ?>"
+                                                    class="rounded-circle object-fit-cover shadow-sm" width="38" height="38">
+                                            <?php else: ?>
+                                                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                                    style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                    <?= $initials; ?>
+                                                </div>
+                                            <?php endif; ?>
                                             <?php
                                             date_default_timezone_set('Asia/Jakarta');
                                             $formattedDate = !empty($h['created_at']) ? date('d M Y, H:i', strtotime($h['created_at'])) : '-';

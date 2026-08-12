@@ -6,13 +6,13 @@ use CodeIgniter\Model;
 
 class PembayaranModel extends Model
 {
-    protected $table            = 'pembayaran';
-    protected $primaryKey       = 'id';
+    protected $table = 'pembayaran';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useTimestamps    = true;
+    protected $returnType = 'array';
+    protected $useTimestamps = true;
 
-    protected $allowedFields    = [
+    protected $allowedFields = [
         'id_santri',
         'tanggal',
         'jenis_pembayaran',
@@ -29,7 +29,7 @@ class PembayaranModel extends Model
     // Method untuk mengambil data pembayaran beserta relasi ke tabel santri dan kelas
     public function getPembayaranWithSantri()
     {
-        return $this->select('pembayaran.*, santri.nama_santri, kelas.nama_kelas, wali.nama_wali, wali.no_hp as no_hp_wali')
+        return $this->select('pembayaran.*, santri.nama_santri, santri.foto as foto_santri, kelas.nama_kelas, wali.nama_wali, wali.no_hp as no_hp_wali')
             ->join('santri', 'santri.id = pembayaran.id_santri', 'left')
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
             ->join('wali', 'wali.id = santri.id_wali', 'left')
