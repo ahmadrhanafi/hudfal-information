@@ -149,10 +149,21 @@ $santri = $santri ?? [];
                                     <td class="ps-4 fw-medium text-muted"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                                style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                                <?= $initials; ?>
-                                            </div>
+                                            <?php
+                                            $namaFile = $s['foto'] ?? '';
+                                            $pathFoto = 'uploads/santri/' . $namaFile;
+                                            $adaFoto = !empty($namaFile) && file_exists(FCPATH . $pathFoto);
+                                            ?>
+
+                                            <?php if ($adaFoto): ?>
+                                                <img src="<?= base_url($pathFoto); ?>" class="rounded-circle object-fit-cover"
+                                                    style="width: 38px; height: 38px;" alt="<?= esc($s['nama_santri']); ?>">
+                                            <?php else: ?>
+                                                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                                    style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                    <?= $initials; ?>
+                                                </div>
+                                            <?php endif; ?>
                                             <div>
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($s['nama_santri']); ?>

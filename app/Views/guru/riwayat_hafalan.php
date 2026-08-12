@@ -158,7 +158,6 @@ $santri = $santri ?? [];
                             <th class="py-3 ps-4" style="width: 5%;">No</th>
                             <th class="py-3" style="width: 30%;">Santri</th>
                             <th class="py-3" style="width: 25%;">NIS</th>
-                            <th class="py-3" style="width: 20%;">Kelas</th>
                             <th class="py-3 text-end pe-4" style="width: 20%;">Aksi</th>
                         </tr>
                     </thead>
@@ -185,25 +184,31 @@ $santri = $santri ?? [];
                                     <td class="ps-4 fw-medium text-muted nomor-urut"><?= $no++; ?></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                                                style="width: 38px; height: 38px; font-size: 0.9rem;">
-                                                <?= $initials; ?>
-                                            </div>
+                                            <?php
+                                            $pathFoto = 'uploads/santri/' . ($s['foto'] ?? '');
+                                            $adaFoto = !empty($s['foto']) && file_exists(FCPATH . $pathFoto);
+                                            ?>
+
+                                            <?php if ($adaFoto): ?>
+                                                <img src="<?= base_url($pathFoto); ?>" class="rounded-circle object-fit-cover"
+                                                    style="width: 38px; height: 38px;" alt="<?= esc($s['nama_santri']); ?>">
+                                            <?php else: ?>
+                                                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                                    style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                                    <?= $initials; ?>
+                                                </div>
+                                            <?php endif; ?>
                                             <div>
                                                 <h6 class="mb-0 fw-semibold text-dark-mode" style="font-size: 0.9rem;">
                                                     <?= esc($s['nama_santri']); ?>
                                                 </h6>
-                                                <small class="text-muted text-dark-mode">Wali:
+                                                <small class="text-secondary small">Wali:
                                                     <?= esc($s['nama_wali'] ?? 'N/A'); ?></small>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="text-dark-mode small"><?= esc($s['nis']); ?></span>
-                                    </td>
-                                    <td>
-                                        <span
-                                            class="badge bg-light text-dark border px-2 py-1"><?= esc($s['nama_kelas'] ?? '-'); ?></span>
+                                        <span class="text-dark-mode font-monospace small"><?= esc($s['nis']); ?></span>
                                     </td>
                                     <td class="text-end pe-4">
                                         <a href="<?= base_url('guru/detail-riwayat-hafalan/' . $s['id']); ?>"

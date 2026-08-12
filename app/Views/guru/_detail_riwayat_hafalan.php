@@ -43,12 +43,34 @@ $santri = $santri ?? [];
     <!-- Header Ringkas Identitas Santri -->
     <div class="card card-header bg-white border-0 p-4 pb-2">
         <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h5 class="fw-bold text-dark-mode mb-1"><?= esc($santri['nama_santri']); ?></h5>
-                <p class="text-secondary small mb-0">NIS: <?= esc($santri['nis']); ?> &bull; Kelas:
-                    <?= esc($santri['nama_kelas'] ?? 'Belum Ada Kelas'); ?>
-                </p>
+            <div class="d-flex align-items-center gap-3">
+                <?php
+                $namaFile = $santri['foto'] ?? '';
+                $pathFoto = 'uploads/santri/' . $namaFile;
+                $adaFoto = !empty($namaFile) && file_exists(FCPATH . $pathFoto);
+
+                $words = explode(' ', $santri['nama_santri']);
+                $initials = strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+                ?>
+
+                <?php if ($adaFoto): ?>
+                    <img src="<?= base_url($pathFoto); ?>" class="rounded-circle object-fit-cover shadow-sm"
+                        style="width: 50px; height: 50px;" alt="<?= esc($santri['nama_santri']); ?>">
+                <?php else: ?>
+                    <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                        style="width: 50px; height: 50px; font-size: 1.1rem;">
+                        <?= $initials; ?>
+                    </div>
+                <?php endif; ?>
+
+                <div>
+                    <h5 class="fw-bold text-dark-mode mb-1"><?= esc($santri['nama_santri']); ?></h5>
+                    <p class="text-secondary small mb-0">NIS: <?= esc($santri['nis']); ?> &bull; Kelas:
+                        <?= esc($santri['nama_kelas'] ?? 'Belum Ada Kelas'); ?>
+                    </p>
+                </div>
             </div>
+
             <a href="<?= base_url('guru/riwayat-hafalan'); ?>"
                 class="btn btn-sm btn-light text-secondary border rounded-3 px-3">
                 <i class="fa-solid fa-arrow-left me-1"></i> Kembali

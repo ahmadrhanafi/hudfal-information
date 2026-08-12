@@ -51,7 +51,7 @@ class RiwayatHafalan extends BaseController
             $namaKelasString = $kelas['nama_kelas'] ?? '-';
         }
 
-        $builder = $this->santriModel->select('santri.*, kelas.nama_kelas, users.name as nama_wali')
+        $builder = $this->santriModel->select('santri.*, kelas.nama_kelas, users.name as nama_wali, santri.foto')
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
             ->join('users', 'users.ref_id = santri.id_wali AND users.role = "wali"', 'left');
 
@@ -122,7 +122,7 @@ class RiwayatHafalan extends BaseController
     // Menampilkan detail riwayat setoran hafalan per santri
     public function detail($id_santri)
     {
-        $santri = $this->santriModel->select('santri.*, kelas.nama_kelas')
+        $santri = $this->santriModel->select('santri.*, kelas.nama_kelas, santri.foto')
             ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
             ->where('santri.id', $id_santri)
             ->first();

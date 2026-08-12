@@ -677,7 +677,7 @@ class HafalanModel extends Model
 
     public function getHafalanByGuru($idGuru)
     {
-        return $this->select('hafalan.*, santri.nama_santri, guru.nama_guru')
+        return $this->select('hafalan.*, santri.nama_santri, santri.foto, santri.nis, guru.nama_guru')
             ->join('santri', 'santri.id = hafalan.id_santri')
             ->join('guru', 'guru.id = hafalan.id_guru')
             ->where('hafalan.id_guru', $idGuru)
