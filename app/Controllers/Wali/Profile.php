@@ -15,6 +15,11 @@ class Profile extends BaseController
     {
         $this->userModel = new UserModel();
         $this->waliModel = new WaliModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'wali') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

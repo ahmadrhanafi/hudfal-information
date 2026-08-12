@@ -15,6 +15,11 @@ class Profile extends BaseController
     {
         $this->userModel = new UserModel();
         $this->guruModel = new GuruModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

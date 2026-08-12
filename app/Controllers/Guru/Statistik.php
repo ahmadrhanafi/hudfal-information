@@ -19,6 +19,11 @@ class Statistik extends BaseController
         $this->guruModel = new GuruModel();
         $this->kelasModel = new KelasModel();
         $this->hafalanModel = new HafalanModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

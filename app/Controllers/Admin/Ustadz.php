@@ -18,6 +18,11 @@ class Ustadz extends BaseController
         $this->guruModel = new GuruModel();
         $this->kelasModel = new KelasModel();
         $this->userModel = new UserModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

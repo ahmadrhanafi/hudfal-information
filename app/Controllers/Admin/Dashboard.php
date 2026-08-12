@@ -19,6 +19,11 @@ class Dashboard extends BaseController
         $this->guruModel = new GuruModel();
         $this->santriModel = new SantriModel();
         $this->hafalanModel = new HafalanModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

@@ -15,6 +15,18 @@ class Auth extends BaseController
 
     public function login()
     {
+        if (session()->get('logged_in')) {
+            $role = session()->get('role');
+
+            if ($role === 'admin') {
+                return redirect()->to(base_url('admin/dashboard'));
+            } elseif ($role === 'guru') {
+                return redirect()->to(base_url('guru/dashboard'));
+            } elseif ($role === 'wali') {
+                return redirect()->to(base_url('wali/dashboard'));
+            }
+        }
+
         return view('auth/login');
     }
 

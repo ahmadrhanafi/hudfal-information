@@ -18,6 +18,11 @@ class Pengaturan extends BaseController
         $this->userModel = new UserModel();
         $this->waliModel = new WaliModel();
         $this->santriModel = new SantriModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'wali') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

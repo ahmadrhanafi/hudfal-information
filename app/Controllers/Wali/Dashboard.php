@@ -19,6 +19,11 @@ class Dashboard extends BaseController
         $this->santriModel = new SantriModel();
         $this->hafalanModel = new HafalanModel();
         $this->pembayaranModel = new PembayaranModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'wali') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

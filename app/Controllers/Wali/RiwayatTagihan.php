@@ -8,9 +8,16 @@ use App\Models\PembayaranModel;
 
 class RiwayatTagihan extends BaseController
 {
+    public function __construct()
+    {
+        if (!session()->get('logged_in') || session()->get('role') !== 'wali') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
+    }
     public function index()
     {
-        $santriModel     = new SantriModel();
+        $santriModel = new SantriModel();
         $pembayaranModel = new PembayaranModel();
 
         $idWali = session()->get('ref_id') ?? session()->get('id');
@@ -24,7 +31,7 @@ class RiwayatTagihan extends BaseController
 
         $selectedSantri = $this->request->getGet('id_santri');
         $selectedStatus = $this->request->getGet('status');
-        $keyword        = $this->request->getGet('keyword');
+        $keyword = $this->request->getGet('keyword');
 
         $tagihan = [];
         $santriAktif = null;
@@ -85,15 +92,15 @@ class RiwayatTagihan extends BaseController
         }
 
         $data = [
-            'title'              => 'Riwayat Tagihan & Pembayaran',
-            'tagihan'            => $tagihan,
-            'santri_list'        => $anak,
-            'santri_aktif'       => $santriAktif,
-            'selectedStatus'     => $selectedStatus,
-            'keyword'            => $keyword,
-            'totalLunas'         => $totalLunas,
-            'totalTagihanAktif'  => $totalTagihanAktif,
-            'jumlahPending'      => $jumlahPending
+            'title' => 'Riwayat Tagihan & Pembayaran',
+            'tagihan' => $tagihan,
+            'santri_list' => $anak,
+            'santri_aktif' => $santriAktif,
+            'selectedStatus' => $selectedStatus,
+            'keyword' => $keyword,
+            'totalLunas' => $totalLunas,
+            'totalTagihanAktif' => $totalTagihanAktif,
+            'jumlahPending' => $jumlahPending
         ];
 
         return view('wali/riwayat_tagihan', $data);
@@ -118,9 +125,9 @@ class RiwayatTagihan extends BaseController
 
             $pembayaranModel->update($id, [
                 'tanggal_konfirmasi' => $this->request->getPost('tanggal_konfirmasi'),
-                'bank_tujuan'        => $this->request->getPost('bank_tujuan'),
-                'bukti_pembayaran'   => $namaFileBaru,
-                'status'             => 'Menunggu Verifikasi'
+                'bank_tujuan' => $this->request->getPost('bank_tujuan'),
+                'bukti_pembayaran' => $namaFileBaru,
+                'status' => 'Menunggu Verifikasi'
             ]);
 
             return redirect()->to(base_url('wali/riwayat-tagihan'))->with('success', 'Bukti pembayaran berhasil dikirim dan sedang menunggu verifikasi admin.');
@@ -161,7 +168,7 @@ class RiwayatTagihan extends BaseController
 
     public function exportExcel()
     {
-        $santriModel     = new SantriModel();
+        $santriModel = new SantriModel();
         $pembayaranModel = new PembayaranModel();
 
         $idWali = session()->get('ref_id') ?? session()->get('id');

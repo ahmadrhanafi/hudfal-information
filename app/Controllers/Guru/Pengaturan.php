@@ -15,6 +15,11 @@ class Pengaturan extends BaseController
     {
         $this->guruModel = new GuruModel();
         $this->userModel = new UserModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

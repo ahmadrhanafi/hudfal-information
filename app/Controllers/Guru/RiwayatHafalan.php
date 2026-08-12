@@ -18,9 +18,14 @@ class RiwayatHafalan extends BaseController
     public function __construct()
     {
         $this->hafalanModel = new HafalanModel();
-        $this->santriModel  = new SantriModel();
-        $this->guruModel    = new GuruModel();
-        $this->kelasModel   = new KelasModel();
+        $this->santriModel = new SantriModel();
+        $this->guruModel = new GuruModel();
+        $this->kelasModel = new KelasModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()
@@ -101,14 +106,14 @@ class RiwayatHafalan extends BaseController
         }
 
         $data = [
-            'title'                   => 'Riwayat Hafalan',
-            'santri'                  => $santri,
-            'keyword'                 => $keyword,
-            'nama_kelas'              => $namaKelasString,
+            'title' => 'Riwayat Hafalan',
+            'santri' => $santri,
+            'keyword' => $keyword,
+            'nama_kelas' => $namaKelasString,
             'total_setoran_bulan_ini' => $totalSetoranBulanIni,
-            'santri_aktif'            => $santriAktifBulanIni,
-            'total_santri'            => count($santri),
-            'predikat_umum'           => $predikatUmum
+            'santri_aktif' => $santriAktifBulanIni,
+            'total_santri' => count($santri),
+            'predikat_umum' => $predikatUmum
         ];
 
         return view('guru/riwayat_hafalan', $data);
@@ -131,9 +136,9 @@ class RiwayatHafalan extends BaseController
             ->findAll();
 
         $data = [
-            'title'   => 'Detail Riwayat Hafalan - ' . $santri['nama_santri'],
-            'icon'    => 'fa-solid fa-book-quran',
-            'santri'  => $santri,
+            'title' => 'Detail Riwayat Hafalan - ' . $santri['nama_santri'],
+            'icon' => 'fa-solid fa-book-quran',
+            'santri' => $santri,
             'riwayat' => $riwayat
         ];
 

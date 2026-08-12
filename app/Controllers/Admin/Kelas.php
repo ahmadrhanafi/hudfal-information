@@ -15,6 +15,11 @@ class Kelas extends BaseController
     {
         $this->kelasModel = new KelasModel();
         $this->guruModel = new GuruModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

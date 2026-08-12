@@ -8,6 +8,14 @@ use App\Models\HafalanModel;
 
 class Dashboard extends BaseController
 {
+    public function __construct()
+    {
+        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
+    }
+
     public function index()
     {
         $db = \Config\Database::connect();
@@ -58,12 +66,12 @@ class Dashboard extends BaseController
         }
 
         $data = [
-            'title'               => 'Dashboard Guru',
-            'setoran'             => $setoranHafalan,
-            'kelas_binaan'        => $infoKelasBinaan,
+            'title' => 'Dashboard Guru',
+            'setoran' => $setoranHafalan,
+            'kelas_binaan' => $infoKelasBinaan,
             'total_santri_binaan' => $totalSantriBinaan,
             'total_setoran_hari_ini' => $totalSetoranHariIni,
-            'guru'                => $guru
+            'guru' => $guru
         ];
 
         return view('guru/dashboard', $data);

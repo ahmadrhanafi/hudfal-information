@@ -16,8 +16,13 @@ class Administrasi extends BaseController
     public function __construct()
     {
         $this->pembayaranModel = new PembayaranModel();
-        $this->santriModel     = new SantriModel();
-        $this->kelasModel      = new KelasModel();
+        $this->santriModel = new SantriModel();
+        $this->kelasModel = new KelasModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()
@@ -26,9 +31,9 @@ class Administrasi extends BaseController
 
         // Ambil nilai filter dari parameter URL (GET), jika kosong gunakan bulan/tahun saat ini
         $selectedMonth = $this->request->getGet('month') ?? date('m');
-        $selectedYear  = $this->request->getGet('year') ?? date('Y');
+        $selectedYear = $this->request->getGet('year') ?? date('Y');
         $selectedStatus = $this->request->getGet('status') ?? '';
-        $keyword       = $this->request->getGet('keyword') ?? '';
+        $keyword = $this->request->getGet('keyword') ?? '';
 
         // Base query untuk pembayaran
         $builder = $this->pembayaranModel->getPembayaranWithSantri();
@@ -77,23 +82,23 @@ class Administrasi extends BaseController
             ->countAllResults();
 
         $data = [
-            'title'              => 'Administrasi',
-            'icon'               => 'fa-solid fa-file-invoice-dollar',
-            'administrasi'       => $builder->paginate($perPage, 'administrasi'),
-            'pager'              => $this->pembayaranModel->pager,
-            'listKelas'          => $this->kelasModel->findAll(),
-            'listSantri'         => $this->santriModel->select('santri.id, santri.nama_santri, santri.id_kelas, kelas.nama_kelas')
+            'title' => 'Administrasi',
+            'icon' => 'fa-solid fa-file-invoice-dollar',
+            'administrasi' => $builder->paginate($perPage, 'administrasi'),
+            'pager' => $this->pembayaranModel->pager,
+            'listKelas' => $this->kelasModel->findAll(),
+            'listSantri' => $this->santriModel->select('santri.id, santri.nama_santri, santri.id_kelas, kelas.nama_kelas')
                 ->join('kelas', 'kelas.id = santri.id_kelas', 'left')
                 ->where('santri.status_aktif', 'Aktif')
                 ->findAll(),
-            'role'               => session()->get('role') ?? 'admin',
-            'totalBulanIni'      => $totalBulanIni,
+            'role' => session()->get('role') ?? 'admin',
+            'totalBulanIni' => $totalBulanIni,
             'countLunasBulanIni' => $countLunasBulanIni,
-            'countPending'       => $countPending,
-            'selectedMonth'      => $selectedMonth,
-            'selectedYear'       => $selectedYear,
-            'selectedStatus'     => $selectedStatus,
-            'keyword'            => $keyword
+            'countPending' => $countPending,
+            'selectedMonth' => $selectedMonth,
+            'selectedYear' => $selectedYear,
+            'selectedStatus' => $selectedStatus,
+            'keyword' => $keyword
         ];
 
         return view('admin/administrasi', $data);
@@ -104,11 +109,11 @@ class Administrasi extends BaseController
         $targetType = $this->request->getPost('target_type') ?? 'satuan';
 
         $rules = [
-            'target_type'      => 'required|in_list[satuan,kelas,semua]',
-            'tanggal'          => 'required|valid_date',
+            'target_type' => 'required|in_list[satuan,kelas,semua]',
+            'tanggal' => 'required|valid_date',
             'jenis_pembayaran' => 'required|string|max_length[100]',
-            'jumlah'           => 'required|numeric',
-            'status'           => 'required|in_list[Lunas,Pending,Gagal,Menunggu Verifikasi]'
+            'jumlah' => 'required|numeric',
+            'status' => 'required|in_list[Lunas,Pending,Gagal,Menunggu Verifikasi]'
         ];
 
         if (!$this->validate($rules)) {
@@ -137,12 +142,12 @@ class Administrasi extends BaseController
         }
 
         $dataForm = [
-            'tanggal'          => $this->request->getPost('tanggal'),
+            'tanggal' => $this->request->getPost('tanggal'),
             'jenis_pembayaran' => $this->request->getPost('jenis_pembayaran'),
-            'jumlah'           => $this->request->getPost('jumlah'),
-            'status'           => $this->request->getPost('status'),
-            'keterangan'       => $this->request->getPost('keterangan'),
-            'created_at'       => date('Y-m-d H:i:s')
+            'jumlah' => $this->request->getPost('jumlah'),
+            'status' => $this->request->getPost('status'),
+            'keterangan' => $this->request->getPost('keterangan'),
+            'created_at' => date('Y-m-d H:i:s')
         ];
 
         $batchData = [];
@@ -161,11 +166,11 @@ class Administrasi extends BaseController
     public function update($id)
     {
         $rules = [
-            'id_santri'        => 'required|integer',
-            'tanggal'          => 'required|valid_date',
+            'id_santri' => 'required|integer',
+            'tanggal' => 'required|valid_date',
             'jenis_pembayaran' => 'required|string|max_length[100]',
-            'jumlah'           => 'required|numeric',
-            'status'           => 'required|in_list[Lunas,Pending,Gagal,Menunggu Verifikasi]'
+            'jumlah' => 'required|numeric',
+            'status' => 'required|in_list[Lunas,Pending,Gagal,Menunggu Verifikasi]'
         ];
 
         if (!$this->validate($rules)) {
@@ -173,12 +178,12 @@ class Administrasi extends BaseController
         }
 
         $this->pembayaranModel->update($id, [
-            'id_santri'        => $this->request->getPost('id_santri'),
-            'tanggal'          => $this->request->getPost('tanggal'),
+            'id_santri' => $this->request->getPost('id_santri'),
+            'tanggal' => $this->request->getPost('tanggal'),
             'jenis_pembayaran' => $this->request->getPost('jenis_pembayaran'),
-            'jumlah'           => $this->request->getPost('jumlah'),
-            'status'           => $this->request->getPost('status'),
-            'keterangan'       => $this->request->getPost('keterangan'),
+            'jumlah' => $this->request->getPost('jumlah'),
+            'status' => $this->request->getPost('status'),
+            'keterangan' => $this->request->getPost('keterangan'),
         ]);
 
         return redirect()->to(base_url('admin/administrasi'))->with('success', 'Data pembayaran berhasil diperbarui!');
@@ -215,8 +220,8 @@ class Administrasi extends BaseController
 
     public function exportExcel()
     {
-        $selectedMonth  = $this->request->getGet('month') ?? date('m');
-        $selectedYear   = $this->request->getGet('year') ?? date('Y');
+        $selectedMonth = $this->request->getGet('month') ?? date('m');
+        $selectedYear = $this->request->getGet('year') ?? date('Y');
         $selectedStatus = $this->request->getGet('status') ?? '';
 
         // Ambil data sesuai filter yang sedang aktif

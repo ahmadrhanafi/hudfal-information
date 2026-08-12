@@ -12,6 +12,11 @@ class Esertifikat extends BaseController
     public function __construct()
     {
         $this->santriModel = new SantriModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

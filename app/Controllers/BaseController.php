@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
+use CodeIgniter\HTTP\CLIRequest;
+use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -26,6 +28,8 @@ abstract class BaseController extends Controller
      */
 
     // protected $session;
+    protected $request;
+    protected $helpers = [];
 
     /**
      * @return void
@@ -41,5 +45,29 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         // $this->session = service('session');
+        $uri = service('uri');
+        $segment = $uri->getSegment(1); // Mengambil segment URL pertama (contoh: admin, guru, wali)
+
+        // Cek autentikasi umum
+        if (!session()->get('logged_in')) {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
+
+        // Validasi kecocokan role dengan URL segment
+        $roleSession = session()->get('role'); // misal: 'admin', 'guru', 'wali'
+
+        if ($segment === 'admin' && $roleSession !== 'admin') {
+            header('Location: ' . base_url('unauthorized'));
+            exit();
+        }
+        if ($segment === 'guru' && $roleSession !== 'guru') {
+            header('Location: ' . base_url('unauthorized'));
+            exit();
+        }
+        if ($segment === 'wali' && $roleSession !== 'wali') {
+            header('Location: ' . base_url('unauthorized'));
+            exit();
+        }
     }
 }

@@ -19,6 +19,11 @@ class Santri extends BaseController
         $this->santriModel = new SantriModel();
         $this->guruModel = new GuruModel();
         $this->kelasModel = new KelasModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()

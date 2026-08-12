@@ -16,8 +16,13 @@ class RiwayatHafalan extends BaseController
     public function __construct()
     {
         $this->hafalanModel = new HafalanModel();
-        $this->santriModel  = new SantriModel();
-        $this->guruModel    = new GuruModel();
+        $this->santriModel = new SantriModel();
+        $this->guruModel = new GuruModel();
+
+        if (!session()->get('logged_in') || session()->get('role') !== 'wali') {
+            header('Location: ' . base_url('login'));
+            exit();
+        }
     }
 
     public function index()
@@ -41,8 +46,8 @@ class RiwayatHafalan extends BaseController
         $periode = $this->request->getGet('periode') ?? 'bulan_ini';
 
         $statistik = [
-            'juz_aktif'        => '-',
-            'total_setoran'    => 0,
+            'juz_aktif' => '-',
+            'total_setoran' => 0,
             'predikat_dominan' => '-'
         ];
 
@@ -62,14 +67,14 @@ class RiwayatHafalan extends BaseController
         }
 
         $data = [
-            'title'            => 'Riwayat Hafalan',
-            'icon'             => 'fa-solid fa-history',
-            'santri_list'      => $santriList,
-            'santri_aktif'     => $santriAktif,
-            'riwayat'          => $riwayat,
-            'periodeVal'       => $periode,
-            'juz_aktif'        => $statistik['juz_aktif'],
-            'total_setoran'    => $statistik['total_setoran'],
+            'title' => 'Riwayat Hafalan',
+            'icon' => 'fa-solid fa-history',
+            'santri_list' => $santriList,
+            'santri_aktif' => $santriAktif,
+            'riwayat' => $riwayat,
+            'periodeVal' => $periode,
+            'juz_aktif' => $statistik['juz_aktif'],
+            'total_setoran' => $statistik['total_setoran'],
             'predikat_dominan' => $statistik['predikat_dominan']
         ];
 
