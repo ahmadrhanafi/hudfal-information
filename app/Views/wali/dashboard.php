@@ -213,7 +213,7 @@
                     <div class="d-flex align-items-center justify-content-between mb-3">
                         <h5 class="fw-bold text-dark-mode m-0"
                             style="text-transform: none !important; font-size: 1rem;">
-                            <i class="fa-solid fa-book-open-reader text-success me-2"></i> Setoran Hafalan Terbaru
+                            <i class="fa-solid fa-book-open-reader text-success me-2"></i> Hafalan Terbaru
                             Ananda
                         </h5>
                         <a href="<?= base_url('wali/riwayat-hafalan') ?>"

@@ -359,10 +359,25 @@
 
             .container-fluid h3,
             .card-title h3,
-            h3.fw-bold {
+            h3.fw-bold,
+            h5.fw-bold {
                 font-size: 1.1rem !important;
                 line-height: 1.3 !important;
                 word-break: break-word;
+            }
+
+            h2.fw-bold {
+                font-size: 1.6rem !important;
+                line-height: 1.3 !important;
+                word-break: break-word;
+            }
+
+            a.fw-semibold,
+            span.badge {
+                font-size: 0.8rem !important;
+                line-height: 0.6 !important;
+                word-break: break-word;
+                margin-top: 12px;
             }
 
             .container-fluid p,
@@ -420,6 +435,19 @@
 
             .table {
                 min-width: 100% !important;
+            }
+
+            .table-responsive {
+                width: 100% !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                display: block;
+            }
+
+            .card {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow: hidden !important;
             }
 
             .card-footer span {

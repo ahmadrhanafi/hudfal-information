@@ -30,12 +30,14 @@
 
                     <!-- Teks Nama & Role (Hidden di Mobile) -->
                     <div class="me-2 text-end d-none d-sm-block">
-                        <div class="small fw-bold text-dark-mode" style="font-size: 12px; line-height: 1.2;">
+                        <div class="small fw-bold text-dark-mode"
+                            style="font-size: 12px; line-height: 1.2; margin-bottom: -12px !important;">
                             <?= session()->get('name') ?>
                         </div>
                         <?php if (session()->get('role') == 'guru'): ?>
-                            <div class="ket-user mt-1">
-                                <span class="text-dark-mode" style="font-size: 8px;">Pengampu: </span>
+                            <div class="ket-user mt-1" style="font-size: 8px; margin-top: 17px !important;">
+                                <span class="text-dark-mode">Pengampu:
+                                </span>
                                 <span
                                     class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0"
                                     style="font-size: 8px;">
@@ -43,14 +45,15 @@
                                 </span>
                             </div>
                         <?php else: ?>
-                            <span class="text-dark-mode small d-block" style="font-size: 10px;">
-                                <?= ucfirst(session()->get('role') ?? 'Wali Santri') ?>
+                            <span class="text-dark-mode small d-block"
+                                style="font-size: 10px; margin-top: 17px !important;">
+                                <?= ucfirst(session()->get('role') ?? 'Anonymous') ?>
                             </span>
                         <?php endif; ?>
                     </div>
 
                     <!-- Foto Profil -->
-                    <div class="position-relative">
+                    <div class=" position-relative">
                         <?php
                         $fotoUser = session()->get('foto');
                         if (!empty($fotoUser) && file_exists(FCPATH . 'uploads/profile/' . $fotoUser)) {

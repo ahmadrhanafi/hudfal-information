@@ -125,7 +125,7 @@ $wali = $wali ?? [];
 
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label class="form-label small fw-semibold text-dark-mode">Nama Lengkap</label>
+                                <label class="form-label small fw-semibold text-dark-mode">Nama Pengguna</label>
                                 <input type="text"
                                     class="form-control form-control-sm bg-light border-0 py-2 <?= session('errors.name') ? 'is-invalid' : '' ?>"
                                     name="name" value="<?= old('name', $user['name']) ?>" required>
@@ -134,7 +134,7 @@ $wali = $wali ?? [];
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-semibold text-dark-mode">Username</label>
+                                <label class="form-label small fw-semibold text-dark-mode">Username Login</label>
                                 <input type="text"
                                     class="form-control form-control-sm bg-light border-0 py-2 <?= session('errors.username') ? 'is-invalid' : '' ?>"
                                     name="username" value="<?= old('username', $user['username']) ?>" required>

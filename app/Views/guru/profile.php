@@ -127,8 +127,7 @@ $guru = $guru ?? [];
 
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label class="form-label small fw-semibold text-dark-mode">Nama Lengkap
-                                    (Tampilan)</label>
+                                <label class="form-label small fw-semibold text-dark-mode">Nama Pengguna</label>
                                 <input type="text"
                                     class="form-control form-control-sm bg-light border-0 py-2 <?= session('errors.name') ? 'is-invalid' : '' ?>"
                                     name="name" value="<?= old('name', $user['name']) ?>" required>
@@ -137,7 +136,7 @@ $guru = $guru ?? [];
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-semibold text-dark-mode">Username</label>
+                                <label class="form-label small fw-semibold text-dark-mode">Username Login</label>
                                 <input type="text"
                                     class="form-control form-control-sm bg-light border-0 py-2 <?= session('errors.username') ? 'is-invalid' : '' ?>"
                                     name="username" value="<?= old('username', $user['username']) ?>" required>
@@ -196,37 +195,11 @@ $guru = $guru ?? [];
                             </div>
                         <?php endif; ?>
 
-                        <hr class="my-4 text-secondary opacity-25">
-
-                        <h6 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Ubah Kata Sandi
-                            <span class="text-secondary fw-normal small" style="font-size: 0.7rem;">(Opsional)</span>
-                        </h6>
-
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-6">
-                                <label class="form-label small fw-semibold text-dark-mode">Kata Sandi Baru</label>
-                                <input type="password"
-                                    class="form-control form-control-sm bg-light border-0 py-2 <?= session('errors.password') ? 'is-invalid' : '' ?>"
-                                    name="password" placeholder="Kosongkan jika tidak ingin mengubah">
-                                <div class="invalid-feedback">
-                                    <?= session('errors.password') ?>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label small fw-semibold text-dark-mode">Konfirmasi Kata Sandi
-                                    Baru</label>
-                                <input type="password"
-                                    class="form-control form-control-sm bg-light border-0 py-2 <?= session('errors.pass_confirm') ? 'is-invalid' : '' ?>"
-                                    name="pass_confirm" placeholder="Ulangi kata sandi baru">
-                                <div class="invalid-feedback">
-                                    <?= session('errors.pass_confirm') ?>
-                                </div>
-                            </div>
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-success btn-sm px-4 rounded-pill shadow-sm py-2">
+                                <i class="fa-solid fa-floppy-disk me-2"></i> Simpan Perubahan
+                            </button>
                         </div>
-
-                        <button type="submit" class="btn btn-success btn-sm px-4 rounded-pill shadow-sm py-2">
-                            <i class="fa-solid fa-floppy-disk me-2"></i> Simpan Perubahan
-                        </button>
                     </form>
                 </div>
             </div>

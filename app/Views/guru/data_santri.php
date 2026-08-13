@@ -104,14 +104,14 @@ $santri = $santri ?? [];
                     <thead class="bg-light text-muted small text-uppercase"
                         style="font-size: 0.75rem; letter-spacing: 0.5px;">
                         <tr>
-                            <th class="py-3 ps-4" style="width: 5%;">No</th>
-                            <th class="py-3" style="width: 30%;">Nama Santri</th>
-                            <th class="py-3" style="width: 30%;">Wali Santri</th>
-                            <th class="py-3" style="width: 15%;">NIS</th>
-                            <th class="py-3" style="width: 15%;">Jenis Kelamin</th>
-                            <th class="py-3" style="width: 15%;">Alamat</th>
-                            <th class="py-3 text-center" style="width: 15%;">Status</th>
-                            <th class="py-3 text-end pe-4" style="width: 20%;">Aksi</th>
+                            <th class="py-3 ps-4">No</th>
+                            <th class="py-3">Nama Santri</th>
+                            <th class="py-3">Wali Santri</th>
+                            <th class="py-3">NIS</th>
+                            <th class="py-3">Jenis Kelamin</th>
+                            <th class="py-3">Alamat</th>
+                            <th class="py-3 text-center">Status</th>
+                            <th class="py-3 text-end pe-4">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="tableBodySantri">
@@ -220,7 +220,7 @@ $santri = $santri ?? [];
 
                         <!-- Baris Kosong Jika Data Tidak Ditemukan -->
                         <tr id="emptyRowSantri" class="d-none">
-                            <td colspan="6" class="text-center py-4 text-muted">
+                            <td colspan="8" class="text-center py-4 text-muted">
                                 <i class="fa-solid fa-folder-open me-1"></i> Tidak ada data santri yang ditemukan.
                             </td>
                         </tr>

@@ -65,19 +65,14 @@ $wali = $wali ?? [];
             <div class="card border-0 shadow-sm rounded-4 bg-white">
                 <div class="card-body p-2">
                     <div class="nav flex-column nav-pills gap-1" id="settingsWaliTab" role="tablist">
-                        <button class="nav-link active text-start py-2 px-3 rounded-3 small fw-semibold"
-                            id="w-profile-tab" data-bs-toggle="pill" data-bs-target="#w-profile" type="button"
-                            role="tab">
-                            <i class="fa-solid fa-user-shield me-2 text-success"></i> Profil Orang Tua
-                        </button>
-                        <button class="nav-link text-start py-2 px-3 rounded-3 small fw-semibold text-dark"
+                        <button class="nav-link active text-start py-2 px-3 rounded-3 small fw-semibold text-dark"
                             id="w-student-tab" data-bs-toggle="pill" data-bs-target="#w-student" type="button"
-                            role="tab">
+                            role="tab" style="font-size: 14px;">
                             <i class="fa-solid fa-child-reaching me-2 text-success"></i> Data Ananda
                         </button>
                         <button class="nav-link text-start py-2 px-3 rounded-3 small fw-semibold text-dark"
                             id="w-security-tab" data-bs-toggle="pill" data-bs-target="#w-security" type="button"
-                            role="tab">
+                            role="tab" style="font-size: 14px;">
                             <i class="fa-solid fa-key me-2 text-success"></i> Keamanan Sandi
                         </button>
                     </div>
@@ -90,55 +85,14 @@ $wali = $wali ?? [];
 
             <div class="tab-content" id="settingsWaliTabContent">
 
-                <!-- Tab 1: Profil Orang Tua -->
-                <div class="tab-pane fade show active" id="w-profile" role="tabpanel">
-                    <div class="card border-0 shadow-sm rounded-4 bg-white">
-                        <div class="card-body p-4">
-                            <h5 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Informasi
-                                Kontak Wali Santri</h5>
-                            <p class="text-secondary small mb-4">Pastikan nomor WhatsApp dan email aktif untuk menerima
-                                laporan hafalan & tagihan.</p>
-
-                            <form action="<?= base_url('wali/pengaturan/update-profile'); ?>" method="POST">
-                                <?= csrf_field(); ?>
-                                <div class="row g-3 mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-semibold text-dark-mode">Nama Ayah / Bunda /
-                                            Wali</label>
-                                        <input type="text" name="nama_wali"
-                                            class="form-control form-control-sm bg-light border-0 py-2"
-                                            value="<?= esc($wali['nama_wali'] ?? ''); ?>" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-semibold text-dark-mode">Nomor
-                                            WhatsApp</label>
-                                        <input type="text" name="no_hp"
-                                            class="form-control form-control-sm bg-light border-0 py-2"
-                                            value="<?= esc($wali['no_hp'] ?? ''); ?>" required>
-                                    </div>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label small fw-semibold text-dark-mode">Alamat Rumah
-                                        Domisili</label>
-                                    <textarea name="alamat" class="form-control bg-light border-0" rows="3"
-                                        required><?= esc($wali['alamat'] ?? ''); ?></textarea>
-                                </div>
-                                <div class="d-flex justify-content-end">
-                                    <button type="submit"
-                                        class="btn btn-success btn-sm px-4 rounded-pill shadow-sm">Simpan
-                                        Perubahan</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Tab 2: Data Ananda -->
-                <div class="tab-pane fade" id="w-student" role="tabpanel">
+                <div class="tab-pane fade show active" id="w-student" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Informasi
-                                Ananda (Santri Terhubung)</h5>
+                            <h5 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Informasi
+                                Ananda <span class="text-success small"
+                                    style="font-weight: 500; font-size: 12px;">(Santri
+                                    Terhubung)</span></h5>
                             <p class="text-secondary small mb-4">Data santri yang terhubung dengan akun portal wali
                                 Anda.</p>
 
@@ -194,7 +148,7 @@ $wali = $wali ?? [];
                 <div class="tab-pane fade" id="w-security" role="tabpanel">
                     <div class="card border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
-                            <h5 class="fw-bold text-dark-mode mb-3" style="text-transform: none !important;">Keamanan
+                            <h5 class="fw-bold text-dark-mode mb-1" style="text-transform: none !important;">Keamanan
                                 Portal Wali</h5>
                             <p class="text-secondary small mb-4">Ganti kata sandi akun portal wali Anda.</p>
 
