@@ -289,6 +289,92 @@
             }
         }
 
+        /* ============================================ */
+        /* PRATINJAU/PREVIEW E-KARTU PADA DETAIL SANTRI */
+        /* ============================================ */
+        /* Container Utama Kartu Pratinjau */
+        .web-card-preview {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 1.58 / 1;
+            /* Mengikuti rasio kartu ID */
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #198754;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Gambar Background Template */
+        .web-card-preview img.bg-template {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        /* Kotak Foto Pratinjau */
+        .web-photo-box {
+            position: absolute;
+            top: 26%;
+            left: 6%;
+            width: 22%;
+            height: 52%;
+            border-radius: 4px;
+            overflow: hidden;
+            z-index: 2;
+            background: #eee;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Posisi Teks Menggunakan Persentase (%) agar Fleksibel di Web */
+        .w-text {
+            position: absolute;
+            z-index: 2;
+            font-family: sans-serif;
+            color: #333;
+            /* Sesuaikan warna teks jika background terang/gelap */
+            font-size: 11px;
+            /* Ukuran aman untuk preview web */
+            white-space: nowrap;
+        }
+
+        /* Sesuaikan titik koordinat (top & left) ini dengan letak kolom kosong pada gambar kartumu */
+        .pos-w-nama {
+            top: 27%;
+            left: 32%;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .pos-w-nis {
+            top: 40%;
+            left: 32%;
+            font-family: monospace;
+        }
+
+        .pos-w-ttl {
+            top: 52%;
+            left: 32%;
+        }
+
+        .pos-w-hp {
+            top: 64%;
+            left: 32%;
+        }
+
+        .pos-w-alamat {
+            top: 76%;
+            left: 32%;
+            font-size: 10px;
+            max-width: 60%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         /* --- Pengaturan Responsive Mobile Sidebar --- */
         @media (max-width: 992px) {
             .sidebar {

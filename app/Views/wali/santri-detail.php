@@ -41,39 +41,49 @@
                     <span class="badge bg-white text-success px-2 py-1 fw-bold" style="font-size: 10px;">AKTIF</span>
                 </div>
 
-                <div class="card-body p-4 text-center">
-                    <!-- Desain Fisik E-Card Mini -->
-                    <div class="p-4 rounded-4 text-white text-start position-relative overflow-hidden shadow-sm mb-4"
-                        style="background: linear-gradient(135deg, #198754 0%, #157347 100%);">
-                        <!-- Watermark Icon Background -->
-                        <div class="position-absolute opacity-10"
-                            style="right: -20px; bottom: -20px; font-size: 120px;">
-                            <i class="fa-solid fa-graduation-cap opacity-25"></i>
-                        </div>
+                <div class="card-body bg-success bg-opacity-25 border-2 border-success p-4 text-center">
+                    <!-- Pratinjau E-Card Menggunakan Gambar Desain Asli -->
+                    <div class="position-relative overflow-hidden shadow-sm mb-4 rounded-4 mx-auto"
+                        style="width: 100%; max-width: 380px; aspect-ratio: 1.58 / 1; background-color: #198754;">
 
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="small fw-bold tracking-wider" style="font-size: 11px; opacity: 0.85;">PONDOK
-                                PESANTREN HUDATUL FALAH</span>
-                            <i class="fa-solid fa-qrcode fs-3 text-white opacity-75"></i>
-                        </div>
+                        <!-- Background Kartu Depan (Otomatis pakai base64 jika dicetak, atau langsung file lokal via base_url saat di web) -->
+                        <img src="<?= !empty($base64ImgDepan) ? $base64ImgDepan : base_url('assets/img/depan_kartu.png'); ?>"
+                            alt="Desain Kartu Depan"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;"
+                            onerror="this.style.display='none';">
 
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="bg-white text-success rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4 shadow-sm flex-shrink-0"
-                                style="width: 50px; height: 50px;">
-                                <?= strtoupper(substr($santri['nama_santri'], 0, 1)); ?>
+                        <!-- Foto Santri -->
+                        <?php if (!empty($santri['foto'])): ?>
+                            <div
+                                style="position: absolute; top: 32%; left: 5%; width: 22%; height: 50%; border-radius: 4px; overflow: hidden; z-index: 2; background: #ddd;">
+                                <img src="<?= !empty($base64FotoSantri) ? $base64FotoSantri : base_url('uploads/santri/' . $santri['foto']); ?>"
+                                    alt="Foto Santri" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
-                            <div class="overflow-hidden">
-                                <h6 class="fw-bold mb-0 text-truncate text-white"><?= esc($santri['nama_santri']); ?>
-                                </h6>
-                                <span class="small text-white-50 font-monospace" style="font-size: 12px;">NIS:
-                                    <?= esc($santri['nis']); ?></span>
-                            </div>
+                        <?php endif; ?>
+
+                        <div
+                            style="position: absolute; top: 43.5%; left: 54%; z-index: 2; font-weight: 500; font-size: 8px; color: #07328f; text-align: left; white-space: nowrap;">
+                            <?= esc($santri['nama_santri'] ?? ''); ?>
                         </div>
 
-                        <div class="pt-2 border-top border-white border-opacity-25 d-flex justify-content-between align-items-center"
-                            style="font-size: 11px;">
-                            <span>Kelas: <strong><?= esc($santri['nama_kelas'] ?? 'Belum ada'); ?></strong></span>
-                            <span><?= ($santri['jenis_kelamin'] == 'L') ? 'Laki-laki' : 'Perempuan'; ?></span>
+                        <div
+                            style="position: absolute; top: 51.3%; left: 54%; z-index: 2; font-weight: 500; font-size: 8px; font-family: monospace; color: #07328f; text-align: left;">
+                            <?= esc($santri['nis'] ?? ''); ?>
+                        </div>
+
+                        <div
+                            style="position: absolute; top: 58.2%; left: 54%; z-index: 2; font-weight: 500; font-size: 8px; color: #07328f; text-align: left;">
+                            <?= esc(($santri['tempat_lahir'] ?? '-') . ', ' . ($santri['tanggal_lahir'] ?? '-')); ?>
+                        </div>
+
+                        <div
+                            style="position: absolute; top: 65.5%; left: 54%; z-index: 2; font-weight: 500; font-size: 8px; color: #07328f; text-align: left;">
+                            <?= esc($santri['no_hp_wali'] ?? '-'); ?>
+                        </div>
+
+                        <div
+                            style="position: absolute; top: 72.6%; left: 54%; z-index: 2; font-weight: 500; font-size: 8px; color: #07328f; text-align: left; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <?= esc($santri['alamat_wali'] ?? '-'); ?>
                         </div>
                     </div>
 
