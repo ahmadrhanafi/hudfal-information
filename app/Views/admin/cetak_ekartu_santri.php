@@ -60,10 +60,10 @@ if (file_exists($pathImgBelakang)) {
         /* Area Foto Santri */
         .photo-box {
             position: absolute;
-            left: 0.65cm;
-            top: 1.55cm;
+            left: 0.35cm;
+            top: 1.7cm;
             width: 2.15cm;
-            height: 2.9cm;
+            height: 2.65cm;
             background: #ffffff;
             overflow: hidden;
         }
@@ -72,13 +72,6 @@ if (file_exists($pathImgBelakang)) {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .default-user {
-            text-align: center;
-            padding-top: 1cm;
-            font-size: 20px;
-            color: #94a3b8;
         }
 
         /* Posisi HANYA untuk Isi Datanya Saja */
@@ -122,19 +115,16 @@ if (file_exists($pathImgBelakang)) {
             <img src="<?= $base64ImgDepan; ?>" class="bg-image">
         <?php endif; ?>
 
-        <!-- Foto Santri (Jika ingin diaktifkan, hapus komentar) -->
-        <!-- <div class="photo-box">
-            <?php if (!empty($santri['foto']) && file_exists(FCPATH . 'uploads/santri/' . $santri['foto'])): ?>
-                <img src="<?= base_url('uploads/santri/' . $santri['foto']); ?>" alt="Foto">
-            <?php else: ?>
-                <div class="default-user">👤</div>
-            <?php endif; ?>
-        </div> -->
+        <?php if (!empty($base64FotoSantri)): ?>
+            <div class="photo-box">
+                <img src="<?= $base64FotoSantri; ?>" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+        <?php endif; ?>
 
         <div class="val-text pos-nama"><?= esc($santri['nama_santri'] ?? ''); ?></div>
         <div class="val-text pos-nis" style="font-family: monospace;"><?= esc($santri['nis'] ?? ''); ?></div>
         <div class="val-text pos-ttl">
-            <?= esc(($santri['tempat_lahir'] ?? '-') . ', ' . ($santri['tgl_lahir'] ?? '-')); ?>
+            <?= esc(($santri['tempat_lahir'] ?? '-') . ', ' . ($santri['tanggal_lahir'] ?? '-')); ?>
         </div>
         <div class="val-text pos-hp"><?= esc($santri['no_hp_wali'] ?? '-'); ?></div>
         <div class="val-text pos-alamat"><?= esc($santri['alamat_wali'] ?? '-'); ?></div>

@@ -100,8 +100,24 @@ class Santri extends BaseController
         if (!$santri)
             return redirect()->back();
 
+        $base64FotoSantri = null;
+
+        if (!empty($santri['foto'])) {
+            $pathFoto = FCPATH . 'uploads/santri/' . $santri['foto'];
+            if (file_exists($pathFoto)) {
+                $type = pathinfo($pathFoto, PATHINFO_EXTENSION);
+                $data = file_get_contents($pathFoto);
+                $base64FotoSantri = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            }
+        }
+
         $dompdf = new Dompdf();
-        $html = view('guru/cetak_ekartu_santri', ['santri' => $santri]);
+
+        $html = view('guru/cetak_ekartu_santri', [
+            'santri' => $santri,
+            'base64FotoSantri' => $base64FotoSantri
+        ]);
+
         $dompdf->loadHtml($html);
         $dompdf->setPaper('a7', 'landscape');
         $dompdf->render();
