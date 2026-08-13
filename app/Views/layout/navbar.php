@@ -69,8 +69,7 @@
 
                 <!-- Dropdown Menu List -->
                 <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-2 rounded-4 animate-fade-in"
-                    aria-labelledby="dropdownUser"
-                    style="min-width: 220px; position: absolute !important; right: 0 !important; left: auto !important; top: 100% !important; z-index: 9999 !important;">
+                    aria-labelledby="dropdownUser">
                     <li class="px-3 py-2 d-sm-none mb-2">
                         <div class="fw-bold text-dark-mode"><?= session()->get('name') ?></div>
                         <small class="text-secondary">

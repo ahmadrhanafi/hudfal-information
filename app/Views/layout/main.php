@@ -1,24 +1,27 @@
-        <?= $this->include('layout/header') ?>
+<?= $this->include('layout/header') ?>
 
-        <body>
-            <div class="d-flex">
-                <!-- Sidebar -->
-                <?= $this->include('layout/sidebar') ?>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <?= $this->include('layout/sidebar') ?>
 
-                <!-- Content Wrapper -->
-                <div class="flex-grow-1 d-flex flex-column">
-                    <!-- Navbar / Header -->
-                    <?= $this->include('layout/navbar') ?>
+        <!-- Content Wrapper (Membungkus Navbar, Main, dan Footer sekaligus) -->
+        <div class="flex-grow-1 d-flex flex-column min-vh-100">
+            <!-- Navbar / Header -->
+            <?= $this->include('layout/navbar') ?>
 
-                    <!-- Page Main Content -->
-                    <main>
-                        <?= $this->renderSection('content') ?>
-                    </main>
-                </div>
-            </div>
+            <!-- Page Main Content -->
+            <main class="flex-grow-1">
+                <?= $this->renderSection('content') ?>
+            </main>
 
-            <!-- Bootstrap JS Bundle -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        </body>
+            <!-- Footer Pindah ke Sini (Di dalam pembungkus sebelah kanan) -->
+            <?= $this->include('layout/footer') ?>
+        </div>
+    </div>
 
-        </html>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
