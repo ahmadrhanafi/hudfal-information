@@ -7,6 +7,7 @@ use App\Models\SantriModel;
 use App\Models\KelasModel;
 use App\Models\WaliModel;
 use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class Santri extends BaseController
 {
@@ -217,7 +218,13 @@ class Santri extends BaseController
             }
         }
 
-        $dompdf = new Dompdf();
+        // Konfigurasi Options Dompdf untuk Production (Hosting)
+        $options = new \Dompdf\Options();
+        $options->set('isRemoteEnabled', true);
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('chroot', FCPATH);
+
+        $dompdf = new \Dompdf\Dompdf($options);
 
         $html = view('admin/cetak_ekartu_santri', [
             'santri' => $santri,
@@ -227,6 +234,18 @@ class Santri extends BaseController
         $dompdf->loadHtml($html);
         $dompdf->setPaper('a7', 'landscape');
         $dompdf->render();
-        $dompdf->stream("Kartu_Santri_" . $santri['nama_santri'] . ".pdf", ["Attachment" => 0]);
+
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
+
+        $namaFile = "Kartu_Santri_" . preg_replace('/[^A-Za-z0-9_]/', '_', $santri['nama_santri']) . ".pdf";
+
+        // Paksa header agar dibaca sebagai aplikasi PDF oleh browser
+        header("Content-Type: application/pdf");
+        header("Content-Disposition: inline; filename=\"" . $namaFile . "\"");
+
+        echo $dompdf->output();
+        exit();
     }
 }
