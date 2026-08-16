@@ -353,17 +353,25 @@ $santri_list = $santri_list ?? [];
                                                                 class="fa-solid fa-wallet text-primary me-1"></i> Silakan Transfer
                                                             ke Rekening Resmi:</div>
                                                         <div class="row g-2">
+                                                            <!-- Rekening BSI -->
                                                             <div class="col-12">
                                                                 <div
                                                                     class="p-3 border rounded-3 bg-white d-flex align-items-center justify-content-between">
-                                                                    <div>
-                                                                        <span
-                                                                            class="badge bg-success bg-opacity-10 text-success px-2 py-0.5 rounded-2 fw-semibold mb-1"
-                                                                            style="font-size: 0.65rem;">BSI</span>
-                                                                        <div class="font-monospace fw-bold text-dark fs-6">7123 4567
-                                                                            89</div>
-                                                                        <div class="text-muted" style="font-size: 0.7rem;">a.n.
-                                                                            Yayasan Hudfal</div>
+                                                                    <div class="d-flex align-items-center gap-3">
+                                                                        <!-- Logo Bank -->
+                                                                        <img src="<?= base_url('assets/img/bsi.png'); ?>"
+                                                                            alt="Logo BSI" style="width: 45px; height: auto;"
+                                                                            class="object-fit-contain">
+                                                                        <div>
+                                                                            <span
+                                                                                class="badge bg-success bg-opacity-10 text-success px-2 py-0.5 rounded-2 fw-semibold mb-1"
+                                                                                style="font-size: 0.65rem;">Bank Syariah Indonesia
+                                                                                (BSI)</span>
+                                                                            <div class="font-monospace fw-bold text-dark fs-6">7123
+                                                                                4567 89</div>
+                                                                            <div class="text-muted" style="font-size: 0.7rem;">a.n.
+                                                                                Yayasan Hudfal</div>
+                                                                        </div>
                                                                     </div>
                                                                     <button type="button"
                                                                         class="btn btn-light btn-sm rounded-2 text-muted px-2 py-1"
@@ -372,17 +380,26 @@ $santri_list = $santri_list ?? [];
                                                                     </button>
                                                                 </div>
                                                             </div>
+
+                                                            <!-- Rekening BCA -->
                                                             <div class="col-12">
                                                                 <div
                                                                     class="p-3 border rounded-3 bg-white d-flex align-items-center justify-content-between">
-                                                                    <div>
-                                                                        <span
-                                                                            class="badge bg-primary bg-opacity-10 text-primary px-2 py-0.5 rounded-2 fw-semibold mb-1"
-                                                                            style="font-size: 0.65rem;">BCA</span>
-                                                                        <div class="font-monospace fw-bold text-dark fs-6">1234 5678
-                                                                            90</div>
-                                                                        <div class="text-muted" style="font-size: 0.7rem;">a.n.
-                                                                            Yayasan Hudfal</div>
+                                                                    <div class="d-flex align-items-center gap-3">
+                                                                        <!-- Logo Bank -->
+                                                                        <img src="<?= base_url('assets/img/bca.png'); ?>"
+                                                                            alt="Logo BCA" style="width: 45px; height: auto;"
+                                                                            class="object-fit-contain">
+                                                                        <div>
+                                                                            <span
+                                                                                class="badge bg-primary bg-opacity-10 text-primary px-2 py-0.5 rounded-2 fw-semibold mb-1"
+                                                                                style="font-size: 0.65rem;">Bank Central
+                                                                                Asia (BCA)</span>
+                                                                            <div class="font-monospace fw-bold text-dark fs-6">1234
+                                                                                5678 90</div>
+                                                                            <div class="text-muted" style="font-size: 0.7rem;">a.n.
+                                                                                Yayasan Hudfal</div>
+                                                                        </div>
                                                                     </div>
                                                                     <button type="button"
                                                                         class="btn btn-light btn-sm rounded-2 text-muted px-2 py-1"
