@@ -142,6 +142,16 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Info Lupa Password diarahkan ke WhatsApp Admin -->
+                <div class="d-flex justify-content-start mb-4">
+                    <a href="https://wa.me/6285774109738?text=Halo%20Admin,%20saya%20lupa%20password%20akun%20saya%20di%20Sistem%20Monitoring%20Hafalan.%20Mohon%20bantuannya%20untuk%20reset%20password.%20Terima%20kasih."
+                        target="_blank" class="text-decoration-none text-muted" style="font-size: 11px;">
+                        Lupa password? <b>Hubungi Admin via</b> <span class="text-green fw-bold"><i
+                                class="fa-brands fa-whatsapp"></i> WhatsApp</span>
+                    </a>
+                </div>
+
                 <button type="submit" class="btn btn-custom w-100 shadow-sm">Login Sekarang</button>
             </form>
         </div>

@@ -152,6 +152,7 @@
                                         <!-- detail -->
                                         <button type="button" class="btn btn-sm btn-light text-primary border-0 rounded-2"
                                             title="Detail" data-bs-toggle="modal" data-bs-target="#modalDetail"
+                                            data-id="<?= $w['id']; ?>"
                                             data-nama="<?= esc($w['nama_wali']); ?>" data-nohp="<?= esc($w['no_hp'] ?? ''); ?>"
                                             data-alamat="<?= esc($w['alamat']); ?>" data-foto="<?= $w['foto']; ?>"
                                             data-santri='<?= json_encode($w['santri'] ?? []); ?>'>
@@ -316,27 +317,38 @@
                         <div class="position-absolute start-0 top-0 end-0 bg-success" style="height: 5px;"></div>
 
                         <div class="ps-2">
-                            <!-- Bagian Header (Foto di Kiri, Nama & Badge di Kanan) -->
-                            <div class="d-flex align-items-center mb-3">
-                                <!-- FOTO / INISIAL DI KIRI -->
-                                <div class="me-3 flex-shrink-0">
-                                    <img id="detailFotoWali" src=""
-                                        class="rounded-circle shadow-sm border border-2 border-white"
-                                        style="width: 75px; height: 75px; object-fit: cover;" alt="Foto Wali">
-                                    <div id="detailInisialWali"
-                                        class="bg-success bg-opacity-10 text-success rounded-circle align-items-center justify-content-center fw-bold"
-                                        style="width: 75px; height: 75px; font-size: 1.5rem;">
-                                        -
+                            <!-- Bagian Header (Foto, Nama, & Tombol Reset sejajar di kanan) -->
+                            <div class="d-flex align-items-start justify-content-between mb-3 flex-wrap gap-3">
+                                <div class="d-flex align-items-center">
+                                    <!-- FOTO / INISIAL DI KIRI -->
+                                    <div class="me-3 flex-shrink-0">
+                                        <img id="detailFotoWali" src=""
+                                            class="rounded-circle shadow-sm border border-2 border-white"
+                                            style="width: 75px; height: 75px; object-fit: cover;" alt="Foto Wali">
+                                        <div id="detailInisialWali"
+                                            class="bg-success bg-opacity-10 text-success rounded-circle align-items-center justify-content-center fw-bold"
+                                            style="width: 75px; height: 75px; font-size: 1.5rem;">
+                                            -
+                                        </div>
+                                    </div>
+
+                                    <!-- BADGE & NAMA -->
+                                    <div>
+                                        <span
+                                            class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-pill small fw-semibold mb-1">
+                                            <i class="fa-solid fa-id-card me-1"></i> Profil Wali Santri
+                                        </span>
+                                        <h5 class="fw-bold text-dark mb-0" id="detailNamaWali">-</h5>
                                     </div>
                                 </div>
 
-                                <!-- BADGE & NAMA DI KANAN -->
+                                <!-- TOMBOL RESET PASSWORD AKUN WALI -->
                                 <div>
-                                    <span
-                                        class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-pill small fw-semibold mb-1">
-                                        <i class="fa-solid fa-id-card me-1"></i> Profil Wali Santri
-                                    </span>
-                                    <h5 class="fw-bold text-dark mb-0" id="detailNamaWali">-</h5>
+                                    <a href="#" id="btnResetPassword"
+                                        onclick="return confirm('Yakin ingin mereset password akun wali ini menjadi default (hudfal123456)?');"
+                                        class="btn btn-danger btn-sm rounded-pill px-2.5 py-1.5 fw-semibold text-white shadow-sm small" style="font-size: 12px;">
+                                        <i class="fa-solid fa-lock-open me-1"></i> Reset Password
+                                    </a>
                                 </div>
                             </div>
 
@@ -435,11 +447,16 @@
                 const button = event.relatedTarget;
 
                 // Ambil data dari atribut tombol
+                const idUser = button.getAttribute('data-id');
                 const namaWali = button.getAttribute('data-nama');
                 const noHp = button.getAttribute('data-nohp');
                 const alamat = button.getAttribute('data-alamat');
                 const fotoWali = button.getAttribute('data-foto');
-
+                // --- SET URL TOMBOL RESET PASSWORD ---
+                const btnReset = modalDetail.querySelector('#btnResetPassword');
+                if (btnReset && idUser) {
+                    btnReset.href = "<?= base_url('admin/wali-santri/reset-password/'); ?>" + idUser;
+                }
                 // Parse data JSON santri/anak
                 let listSantri = [];
                 try {

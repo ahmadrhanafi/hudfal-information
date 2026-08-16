@@ -98,6 +98,17 @@ class Auth extends BaseController
         return view('auth/loading');
     }
 
+    public function resetPassword($id)
+    {
+        $defaultPassword = password_hash('hudfal123456', PASSWORD_DEFAULT);
+
+        $this->userModel->update($id, [
+            'password' => $defaultPassword
+        ]);
+
+        return redirect()->back()->with('success', 'Password berhasil direset menjadi: hudfal123456');
+    }
+
     public function logout()
     {
         session()->destroy();

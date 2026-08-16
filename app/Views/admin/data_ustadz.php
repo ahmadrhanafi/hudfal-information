@@ -194,6 +194,18 @@ $kelas = $kelas ?? [];
                                     </td>
                                     <td class="text-end pe-4">
                                         <div class="d-flex justify-content-end gap-1">
+                                            <!-- detail -->
+                                            <button type="button" class="btn btn-sm btn-light text-primary border-0 rounded-2"
+                                                title="Detail" data-bs-toggle="modal" data-bs-target="#modalDetail"
+                                                data-id="<?= $g['id']; ?>" data-nip="<?= esc($g['nip']); ?>"
+                                                data-namaguru="<?= esc($g['nama_guru']); ?>"
+                                                data-jeniskelamin="<?= esc($g['jenis_kelamin']); ?>"
+                                                data-nohp="<?= esc($g['no_hp'] ?? ''); ?>" data-foto="<?= $g['foto']; ?>"
+                                                data-idkelas="<?= esc($g['id_kelas_diampu']); ?>"
+                                                data-status="<?= $g['status_aktif']; ?>">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+                                            <!-- edit -->
                                             <button type="button"
                                                 class="btn btn-sm btn-light text-warning border-0 rounded-2 btn-edit"
                                                 title="Edit" data-bs-toggle="modal" data-bs-target="#modalEdit"
@@ -205,6 +217,7 @@ $kelas = $kelas ?? [];
                                                 data-status="<?= $g['status_aktif']; ?>">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
+                                            <!-- hapus -->
                                             <a href="<?= base_url('admin/ustadz/delete/' . $g['id']); ?>"
                                                 class="btn btn-sm btn-light text-danger border-0 rounded-2" title="Hapus"
                                                 onclick="return confirm('Yakin ingin menghapus data ustadz ini?')">
@@ -363,6 +376,71 @@ $kelas = $kelas ?? [];
     </div>
 </div>
 
+<!-- ================= MODAL DETAIL ================= -->
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header bg-light border-0 px-4 py-3">
+                <h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-user-tie text-primary me-2"></i> Detail
+                    Pengajar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <div class="text-center mb-4">
+                    <div class="position-relative d-inline-block mb-3">
+                        <!-- Foto Profil -->
+                        <img id="detailFoto" src="" alt="Foto Profil"
+                            class="rounded-circle object-fit-cover shadow-sm border border-3 border-white"
+                            style="width: 90px; height: 90px; display: none;">
+
+                        <!-- Inisial (d-flex dihapus agar tidak bentrok) -->
+                        <div id="detailInitials"
+                            class="bg-success bg-opacity-10 text-success rounded-circle align-items-center justify-content-center fw-bold shadow-sm mx-auto border border-3 border-white"
+                            style="width: 90px; height: 90px; font-size: 2rem; display: none;">
+                        </div>
+                    </div>
+                    <h4 id="detailNamaGuru" class="fw-bold text-dark mb-1">-</h4>
+                    <p class="text-muted small mb-2"><i class="fa-solid fa-id-card me-1"></i> NIP: <span
+                            id="detailNip">-</span></p>
+                    <div id="detailStatusBadge"></div>
+                </div>
+
+                <div class="bg-light rounded-3 p-3 mb-2">
+                    <ul class="list-unstyled mb-0 small">
+                        <li class="d-flex justify-content-between py-2 border-bottom border-light-subtle">
+                            <span class="text-muted"><i class="fa-solid fa-venus-mars me-2 text-secondary"></i> Jenis
+                                Kelamin</span>
+                            <span id="detailGender" class="fw-semibold text-dark">-</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom border-light-subtle">
+                            <span class="text-muted"><i class="fa-brands fa-whatsapp me-2 text-success"></i>
+                                WhatsApp</span>
+                            <a id="detailNoHpLink" href="#" target="_blank"
+                                class="fw-semibold text-success text-decoration-none">-</a>
+                        </li>
+                        <li class="d-flex justify-content-between py-2">
+                            <span class="text-muted"><i class="fa-solid fa-chalkboard-user me-2 text-primary"></i> Kelas
+                                Diampu</span>
+                            <span id="detailKelas" class="fw-semibold text-dark">-</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Modal Footer (Posisi Reset Password & Tutup yang lebih nyaman) -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0 justify-content-between">
+                <a href="#" id="btnResetPassword" class="btn btn-danger btn-sm rounded-pill px-3 fw-medium"
+                    onclick="return confirm('Yakin ingin mereset password pengajar ini ke default?')">
+                    <i class="fa-solid fa-lock-open me-1"></i> Reset Password
+                </a>
+                <button type="button" class="btn btn-dark btn-sm rounded-pill px-4"
+                    data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('searchInput');
@@ -437,6 +515,83 @@ $kelas = $kelas ?? [];
                 modalEdit.querySelector('#editStatus').value = status;
 
                 modalEdit.querySelector('#formEdit').action = '<?= base_url('admin/ustadz/update/'); ?>' + id;
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalDetail = document.getElementById('modalDetail');
+        if (modalDetail) {
+            modalDetail.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+
+                // Ambil data dari atribut tombol
+                const id = button.getAttribute('data-id');
+                const nip = button.getAttribute('data-nip') || '-';
+                const nama = button.getAttribute('data-namaguru') || '-';
+                const gender = button.getAttribute('data-jeniskelamin') || '-';
+                const noHp = button.getAttribute('data-nohp') || '';
+                const foto = button.getAttribute('data-foto');
+                const kelas = button.getAttribute('data-namakelas') || button.getAttribute('data-idkelas') || 'Unassigned'; // Sesuaikan jika ada teks nama kelas
+                const status = button.getAttribute('data-status') || 'Aktif';
+
+                // Set URL tombol Reset Password
+                const btnReset = modalDetail.querySelector('#btnResetPassword');
+                if (btnReset && id) {
+                    // Sesuaikan base_url route reset password ustadz kamu
+                    btnReset.href = "<?= base_url('admin/ustadz/reset-password/'); ?>" + id;
+                }
+
+                // Isi teks ke elemen modal
+                modalDetail.querySelector('#detailNamaGuru').textContent = nama;
+                modalDetail.querySelector('#detailNip').textContent = nip;
+
+                // Format Jenis Kelamin
+                const genderText = (gender.toUpperCase() === 'L') ? 'Laki-laki' : ((gender.toUpperCase() === 'P') ? 'Perempuan' : gender);
+                modalDetail.querySelector('#detailGender').textContent = genderText;
+
+                // Format WhatsApp
+                const hpLink = modalDetail.querySelector('#detailNoHpLink');
+                if (noHp) {
+                    hpLink.href = "https://wa.me/" + noHp;
+                    hpLink.textContent = noHp;
+                } else {
+                    hpLink.href = "#";
+                    hpLink.textContent = "Tidak ada nomor";
+                }
+
+                // Kelas Diampu
+                modalDetail.querySelector('#detailKelas').textContent = kelas;
+
+                // Status Badge
+                const statusContainer = modalDetail.querySelector('#detailStatusBadge');
+                if (status.toLowerCase() === 'aktif') {
+                    statusContainer.innerHTML = `<span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill small fw-semibold">Aktif</span>`;
+                } else {
+                    statusContainer.innerHTML = `<span class="badge bg-danger bg-opacity-10 text-danger px-3 py-1 rounded-pill small fw-semibold">Non-Aktif</span>`;
+                }
+
+                // Handle Foto Profil vs Inisial
+                const imgElement = modalDetail.querySelector('#detailFoto');
+                const initialsElement = modalDetail.querySelector('#detailInitials');
+
+                // Bersihkan string foto dari spasi kosong
+                const cleanFoto = foto ? foto.trim() : '';
+
+                // Cek apakah foto ada, tidak kosong, dan bukan string 'null' / 'undefined'
+                if (cleanFoto !== '' && cleanFoto !== 'null' && cleanFoto !== 'undefined') {
+                    imgElement.src = "<?= base_url('uploads/profile/'); ?>" + cleanFoto;
+                    imgElement.style.display = 'block';
+                    initialsElement.style.display = 'none';
+                } else {
+                    // Buat inisial otomatis dari nama
+                    const words = nama.trim().split(/\s+/);
+                    const initials = (words[0] ? words[0][0] : '') + (words[1] ? words[1][0] : '');
+                    initialsElement.textContent = initials.toUpperCase();
+
+                    imgElement.style.display = 'none';
+                    initialsElement.style.display = 'flex';
+                }
             });
         }
     });
