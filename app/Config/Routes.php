@@ -39,14 +39,14 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('ustadz/store', 'Admin\Ustadz::store');
     $routes->post('ustadz/update/(:num)', 'Admin\Ustadz::update/$1');
     $routes->get('ustadz/delete/(:num)', 'Admin\Ustadz::delete/$1');
-    $routes->get('ustadz/reset-password/(:num)', 'Auth::resetPassword/$1');
+    $routes->get('ustadz/reset-password/(:num)', 'Auth::resetPasswordGuru/$1');
 
     // Manajemen Wali Santri
     $routes->get('wali-santri', 'Admin\Wali::index');
     $routes->post('wali-santri/store', 'Admin\Wali::store');
     $routes->post('wali-santri/update/(:num)', 'Admin\Wali::update/$1');
     $routes->get('wali-santri/delete/(:num)', 'Admin\Wali::delete/$1');
-    $routes->get('wali-santri/reset-password/(:num)', 'Auth::resetPassword/$1');
+    $routes->get('wali-santri/reset-password/(:num)', 'Auth::resetPasswordWali/$1');
 
     // Manajemen Hafalan
     $routes->get('hafalan', 'Admin\Hafalan::index');
